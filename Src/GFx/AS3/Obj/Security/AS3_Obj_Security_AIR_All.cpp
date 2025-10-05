@@ -20,3 +20,4 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "AS3_Obj_Security_RevocationCheckSettings.cpp"
 #include "AS3_Obj_Security_SignatureStatus.cpp"
 #include "AS3_Obj_Security_SignerTrustSettings.cpp"
+#include "AS3_Obj_Security_XMLSignatureValidator.cpp"

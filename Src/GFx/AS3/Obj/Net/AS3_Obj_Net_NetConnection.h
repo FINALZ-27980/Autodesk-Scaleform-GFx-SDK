@@ -30,6 +30,8 @@ namespace fl_net
 {
     extern const TypeInfo NetConnectionTI;
     extern const ClassInfo NetConnectionCI;
+    extern const TypeInfo ResponderTI;
+    extern const ClassInfo ResponderCI;
 } // namespace fl_net
 namespace fl
 {
@@ -201,7 +203,7 @@ namespace Instances { namespace fl_net
 
 namespace InstanceTraits { namespace fl_net
 {
-    class NetConnection : public CTraits
+    class NetConnection : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -227,6 +229,8 @@ namespace InstanceTraits { namespace fl_net
 
         enum { ThunkInfoNum = 15 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[25];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -239,17 +243,19 @@ namespace InstanceTraits { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class NetConnection : public Traits
+    class NetConnection : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::NetConnection"; }
 #endif
     public:
-        typedef Classes::fl_net::NetConnection ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_net::NetConnection InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NetConnection(VM& vm);
+        NetConnection(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

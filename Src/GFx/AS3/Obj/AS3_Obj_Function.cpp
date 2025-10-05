@@ -42,23 +42,9 @@ namespace Classes
         // Functions do not have traits of their own, they use ActivationObject instead ...
         return Pickable<Instances::Function>(new(itr.Alloc()) Instances::Function(
             itr,
-            ss,
-            Value::GetUndefined()
+            ss
             SF_DEBUG_ARG(GetStringManager().CreateConstString("method id: ") + Scaleform::AsString(method_ind))
 			//SF_DEBUG_ARG(name)
-            ));
-    }
-    
-    Pickable<Instances::Function> Function::MakeInstance2(VMAbcFile& file, const UInt32 method_ind, const Value& _this, const ScopeStackType& ss, Instances::fl::GlobalObjectScript& gos SF_DEBUG_ARG(const ASString& name)) const
-    {
-        InstanceTraits::Function& itr = file.GetFunctionInstanceTraits(gos, method_ind);
-
-        // Functions do not have traits of their own, they use ActivationObject instead ...
-        return Pickable<Instances::Function>(new(itr.Alloc()) Instances::Function(
-            itr,
-            ss,
-            _this
-            SF_DEBUG_ARG(name)
             ));
     }
     
@@ -89,19 +75,6 @@ namespace Classes
             ));
     }
 
-    Pickable<Instances::Function> Function::MakeInstance2(const Instances::Function& f, const Value& _this) const
-    {
-        const InstanceTraits::Function& itr = f.GetInstanceTraitsFunction();
-
-        // Functions do not have traits of their own, they use ActivationObject instead ...
-        return Pickable<Instances::Function>(new(itr.Alloc()) Instances::Function(
-            const_cast<InstanceTraits::Function&>(itr),
-            f.GetStoredScopeStack(),
-            _this
-            SF_DEBUG_ARG(f.GetFunctionName())
-            ));
-    }
-    
     Pickable<AS3::Object> Function::MakePrototype() const
     {
         InstanceTraits::Function& itr = static_cast<InstanceTraits::Function&>(GetClassTraits().GetInstanceTraits());
@@ -135,11 +108,18 @@ namespace Classes
         Class::Construct(_this, argc, argv, extCall);
     }
 
+    const TypeInfo* Function::tit[6] = {
+        &AS3::fl::StringTI,
+        &AS3::fl::StringTI,
+        NULL, NULL, NULL, 
+        NULL, 
+    };
+
     const ThunkInfo Function::f[4] = {
-        {&Instances::FunctionBase::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&Instances::FunctionBase::toStringProto, &AS3::fl::StringTI, "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&Instances::FunctionBase::apply, NULL, "apply", NULL, Abc::NS_Public, CT_Method, 0, 2},
-        {&Instances::FunctionBase::call, NULL, "call", NULL, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
+        {&Instances::FunctionBase::toStringProto, &Function::tit[0], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&Instances::FunctionBase::toStringProto, &Function::tit[1], "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&Instances::FunctionBase::apply, &Function::tit[2], "apply", NULL, Abc::NS_Public, CT_Method, 0, 2, 1},
+        {&Instances::FunctionBase::call, &Function::tit[5], "call", NULL, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1},
     };
 
 } // namespace Classes
@@ -237,11 +217,11 @@ namespace Instances
                 Value result;
                 const ClassTraits::fl::Array& ctr = vm.GetClassTraitsArray();
                 const Value& v = argv[1]; // For debugging.
+
                 if (ctr.Coerce(v, result))
                 {
                     unsigned f_argc = 0;
                     const Value* f_argv = NULL;
-                    ValueArrayDH args(vm.GetMemoryHeap());
 
                     if (!result.IsNull())
                     {
@@ -249,6 +229,7 @@ namespace Instances
 
                         if (array->IsSparse())
                         {
+                            ValueArrayDH args(vm.GetMemoryHeap());
                             // Repack "array" into "args" because "array" is a sparse array.
                             args.Resize(array->GetSize());
                             for (UPInt i = 0; i < args.GetSize(); ++i)
@@ -382,13 +363,11 @@ namespace Instances
     ///////////////////////////////////////////////////////////////////////
     Function::Function(
         InstanceTraits::Function& tr,
-        const ScopeStackType& ss,
-        const Value& _this
+        const ScopeStackType& ss
         SF_DEBUG_ARG(const ASString& name)
         )
     : FunctionBase(tr)
     , StoredScopeStack(ss) // Add Saved Scope.
-    , This(_this)
     SF_DEBUG_ARG(Name(name))
     {
         // This is a correct implementation.
@@ -409,8 +388,9 @@ namespace Instances
     void Function::Execute(const Value& _this, unsigned argc, const Value* argv, bool discard_result)
     {
         VM& vm = GetVM();
-        const Value& correct_this = This.IsNullOrUndefined() ? _this : This;
         const InstanceTraits::Function& itr = GetInstanceTraitsFunction();
+        const ScopeStackType& sss = itr.GetStoredScopeStack();
+        const Value& correct_this = (_this.IsNullOrUndefined() && !sss.IsEmpty()) ? sss[0] : _this;
         const Abc::MbiInd mbi_ind = itr.GetMethodBodyInfoInd();
         const Traits& otr = itr.GetOriginationTraits();
         
@@ -468,7 +448,6 @@ namespace Instances
         FunctionBase::ForEachChild_GC(prcc, op);
         
         AS3::ForEachChild_GC(prcc, StoredScopeStack, op SF_DEBUG_ARG(*this));
-        AS3::ForEachChild_GC(prcc, This, op SF_DEBUG_ARG(*this));
     }
 
     void Function::StoreScopeStack(const UPInt baseSSInd, const ScopeStackType& ss)
@@ -587,9 +566,9 @@ namespace InstanceTraits
     {
         SF_UNUSED2(ti, vm);
         const ThunkInfo& ti2 = _this.AsThunk();
-        unsigned MaxArgNum = ti2.GetMaxArgNum();
+        UInt32 MaxArgNum = static_cast<UInt32>(ti2.GetMaxArgNum());
 
-        MaxArgNum = MaxArgNum == SF_AS3_VARARGNUM ? ti2.GetMinArgNum() : MaxArgNum;
+        MaxArgNum = (MaxArgNum == SF_AS3_VARARGNUM ? static_cast<UInt32>(ti2.GetMinArgNum()) : MaxArgNum);
         result.SetUInt32(MaxArgNum);
     }
 
@@ -599,11 +578,17 @@ namespace InstanceTraits
         SF_ASSERT(false);
     }
 
+    const TypeInfo* Thunk::tit[5] = {
+        NULL, NULL, NULL,
+        NULL,
+        &AS3::fl::uintTI,
+    };
+
     const ThunkInfo Thunk::f[3] = {
         // Apply() should go first because we refer to it in GetApply() (This is related to a different class).
-        {&Instances::FunctionBase::apply, NULL, "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&Instances::FunctionBase::call, NULL, "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {&Thunk::lengthGet, &AS3::fl::uintTI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
+        {&Instances::FunctionBase::apply, &Thunk::tit[0], "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1},
+        {&Instances::FunctionBase::call, &Thunk::tit[3], "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1},
+        {&Thunk::lengthGet, &Thunk::tit[4], "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -650,11 +635,17 @@ namespace InstanceTraits
         SF_ASSERT(false);
     }
 
+    const TypeInfo* MethodInd::tit[5] = {
+        NULL, NULL, NULL,
+        NULL,
+        &AS3::fl::uintTI,
+    };
+
     const ThunkInfo MethodInd::f[3] = {
         // Apply() should go first because we refer to it in GetApply() (This is related to a different class).
-        {&Instances::FunctionBase::apply, NULL, "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&Instances::FunctionBase::call, NULL, "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {&MethodInd::lengthGet, &AS3::fl::uintTI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
+        {&Instances::FunctionBase::apply, &MethodInd::tit[0], "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1},
+        {&Instances::FunctionBase::call, &MethodInd::tit[3], "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1},
+        {&MethodInd::lengthGet, &MethodInd::tit[4], "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -691,11 +682,17 @@ namespace InstanceTraits
         SF_ASSERT(false);
     }
 
+    const TypeInfo* VTableInd::tit[5] = {
+        NULL, NULL, NULL,
+        NULL,
+        &AS3::fl::uintTI,
+    };
+
     const ThunkInfo VTableInd::f[3] = {
         // Apply() should go first because we refer to it in GetApply() (This is related to a different class).
-        {&Instances::FunctionBase::apply, NULL, "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&Instances::FunctionBase::call, NULL, "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {&VTableInd::lengthGet, &AS3::fl::uintTI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
+        {&Instances::FunctionBase::apply, &VTableInd::tit[0], "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1},
+        {&Instances::FunctionBase::call, &VTableInd::tit[3], "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1},
+        {&VTableInd::lengthGet, &VTableInd::tit[4], "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -704,7 +701,6 @@ namespace InstanceTraits
     : CTraits(vm, AS3::fl::FunctionCIThunk) 
     {
         SetTraitsType(Traits_Function);
-        SetMemSize(sizeof(Instances::ThunkFunction));
 
         // ThunkFunction doesn't belong to any VMAbcFile.
 
@@ -729,8 +725,12 @@ namespace InstanceTraits
         SF_ASSERT(false);
     }
 
+    const TypeInfo* ThunkFunction::tit[1] = {
+        &AS3::fl::uintTI,
+    };
+
     const ThunkInfo ThunkFunction::f[1] = {
-        {TFunc_ThunkFunction_length::Func, &AS3::fl::uintTI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
+        {TFunc_ThunkFunction_length::Func, &ThunkFunction::tit[0], "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -747,7 +747,6 @@ namespace InstanceTraits
     {
         SetConstructor(file.GetVM().GetClassFunction());
         SetTraitsType(Traits_Function);
-        SetMemSize(sizeof(Instances::Function));
 
         /* !!! DO NOT delete this code.
         // !!! We MAY NOT do this !!!
@@ -767,7 +766,6 @@ namespace InstanceTraits
     , MethodInfoInd(0)
     {
         SetTraitsType(Traits_Function);
-        SetMemSize(sizeof(Instances::Function));
 
         RegisterSlots();
     }
@@ -819,11 +817,17 @@ namespace InstanceTraits
         result = MakeInstance(t);
     }
 
+    const TypeInfo* Function::tit[5] = {
+        NULL, NULL, NULL,
+        NULL,
+        &AS3::fl::uintTI,
+    };
+
     const ThunkInfo Function::f[3] = {
         // Apply() should go first because we refer to it in GetApply().
-        {&Instances::FunctionBase::apply, NULL, "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&Instances::FunctionBase::call, NULL, "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_FunctionBase_lengthGet::Func, &AS3::fl::uintTI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
+        {&Instances::FunctionBase::apply, &Function::tit[0], "apply", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1},
+        {&Instances::FunctionBase::call, &Function::tit[3], "call", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1},
+        {TFunc_FunctionBase_lengthGet::Func, &Function::tit[4], "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
     };
 
     Abc::MbiInd Function::GetMethodBodyInfoInd() const
@@ -929,6 +933,7 @@ void Value::Pick(Instances::FunctionBase* v)
 
 void Value::PickUnsafe(Instances::Function* v)
 {
+    SF_ASSERT(!IsRefCounted());
     SetKind(kFunction);
     value = v;
     // No AddRef() is necessary.
@@ -936,6 +941,7 @@ void Value::PickUnsafe(Instances::Function* v)
 
 void Value::PickUnsafe(Instances::FunctionBase* v)
 {
+    SF_ASSERT(!IsRefCounted());
     SetKind(kFunction);
     value = v;
     // No AddRef() is necessary.
@@ -951,6 +957,7 @@ void Value::Pick(Instances::ThunkFunction* v)
 
 void Value::PickUnsafe(Instances::ThunkFunction* v)
 {
+    SF_ASSERT(!IsRefCounted());
     SetKind(kThunkFunction);
     value = v;
     // No AddRef() is necessary.
@@ -989,7 +996,14 @@ namespace ClassTraits
         VTableTraits = MakePickable(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_ITraits_Mem) InstanceTraits::VTableInd(vm));
         VTableTraits->SetConstructor(Pickable<Class>(cl.GetPtr(), PickValue));
     }
-    
+
+    Pickable<Traits> Function::MakeClassTraits(VM& vm)
+    {
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Function(vm, AS3::fl::FunctionCI));
+
+        return ctr;
+    }
+
     void Function::ForEachChild_GC(Collector* prcc, RefCountBaseGC<Mem_Stat>::GcOp op) const
     {
         Traits::ForEachChild_GC(prcc, op);
@@ -1044,7 +1058,9 @@ namespace ClassTraits
 namespace fl
 {
     const TypeInfo FunctionTI = {
-        TypeInfo::CompileTime | TypeInfo::DynamicObject | TypeInfo::Abc, 
+        TypeInfo::CompileTime | TypeInfo::DynamicObject | TypeInfo::Abc,
+        sizeof(ClassTraits::Function::InstanceType),
+        0, 0, 0, 0,
         "Function", "", &ObjectTI,
         TypeInfo::None
     };
@@ -1052,6 +1068,9 @@ namespace fl
 
     const TypeInfo FunctionTICpp = {
         TypeInfo::CompileTime, 
+        // ???
+        sizeof(ClassTraits::Function::InstanceType),
+        0, 0, 0, 0,
         "Function", "", &ObjectTI,
         TypeInfo::None
     };
@@ -1059,6 +1078,8 @@ namespace fl
 
     const TypeInfo FunctionTIThunk = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject, 
+        sizeof(Instances::ThunkFunction),
+        0, 0, 0, 0,
         "Function", "", &ObjectTI,
         TypeInfo::None
     };

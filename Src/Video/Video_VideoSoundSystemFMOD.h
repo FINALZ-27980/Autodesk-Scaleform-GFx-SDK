@@ -17,7 +17,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #define INC_GFX_VIDEO_SYSTEMSOUND_FMOD_H
 
 #include "GFxConfig.h"
-#if defined(GFX_ENABLE_VIDEO) && defined(GFX_VIDEO_USE_FMOD)
+#ifdef GFX_ENABLE_VIDEO
 
 #include "Video/Video_Video.h"
 #include "Kernel/SF_MemoryHeap.h"

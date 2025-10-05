@@ -225,7 +225,9 @@ bool IMEManager::AcquireCandidateList()
             v.SetNumber(0);
         if (v.GetNumber() < 0)
             return false;
-        if (!pmovieRoot->GetLevelMovie(GFX_CANDIDATELIST_LEVEL) && v.GetNumber() != 1)
+
+		//We need reload the candidate list	for the case user use both AS2 and AS3 movie
+        if (/*!pmovieRoot->GetLevelMovie(GFX_CANDIDATELIST_LEVEL) &&*/ v.GetNumber() != 1)
         {
 			if (GetIMEManager() && GetIMEManager()->CheckCandListExists())
 			{
@@ -265,9 +267,12 @@ bool IMEManager::AcquireCandidateList()
 					else
 					{
 #if   defined(SF_OS_WIN32)
-						char workingDir[MAX_PATH];
-						GetCurrentDirectoryA(MAX_PATH, workingDir);
-						URLBuilder::LocationInfo loc(URLBuilder::File_Regular, CandidateSwfPath, String(workingDir));
+						wchar_t workingDir[MAX_PATH];
+						GetCurrentDirectoryW(MAX_PATH, workingDir);
+						char utf8workingDir[MAX_PATH];
+						UTF8Util::EncodeStringSafe(utf8workingDir, MAX_PATH, workingDir);
+						URLBuilder::LocationInfo loc(URLBuilder::File_Regular, CandidateSwfPath, String(utf8workingDir));
+
 						String path;
 						if (purlBuilder)
 							purlBuilder->BuildURL(&path, loc);

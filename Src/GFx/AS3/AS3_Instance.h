@@ -231,6 +231,9 @@ namespace InstanceTraits
     class Prototype : public CTraits
     {
     public:
+        typedef Instances::fl::Object InstanceType;
+
+    public:
         Prototype(VM& vm, const ClassInfo& ci);
         Prototype(VM& vm, const ClassInfo& ci, Class& c);
 

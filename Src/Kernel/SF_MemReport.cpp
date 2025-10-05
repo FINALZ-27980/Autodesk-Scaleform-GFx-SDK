@@ -411,6 +411,7 @@ private:
 
 void StatsUpdate::MemReport(MemItem* rootItem, MemoryHeap::MemReportType reportType)
 {
+    NextHandle = rootItem->GetMaxId() + 1;
     rootItem->ID = NextHandle++;
     rootItem->StartExpanded = true;
 
@@ -709,7 +710,7 @@ void StatsUpdate::MemReportHeapsDetailed(MemItem* rootItem, MemoryHeap* heap)
     HeapTreeCreator heapTreeCreator(Memory::GetHeapByAddress(rootItem), this, &NextHandle);
     heap->LockAndVisit(&heapTreeCreator);
 
-    MemItem* sysTotalItem = rootItem->AddChild(NextHandle++, "Total Footprint", 
+    MemItem* sysTotalItem = rootItem->AddChild(NextHandle++, "Scaleform Footprint", 
         static_cast<UInt32>(heapTreeCreator.RootHeapStats.SysMemFootprint));
     sysTotalItem->StartExpanded = true;
     MemItem* sysUsedItem = sysTotalItem->AddChild(NextHandle++, "Used Space", heapTreeCreator.UsedSpaceRoot->Value);

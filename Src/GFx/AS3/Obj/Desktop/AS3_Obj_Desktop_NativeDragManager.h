@@ -30,7 +30,28 @@ namespace fl_desktop
 {
     extern const TypeInfo NativeDragManagerTI;
     extern const ClassInfo NativeDragManagerCI;
+    extern const TypeInfo ClipboardTI;
+    extern const ClassInfo ClipboardCI;
+    extern const TypeInfo NativeDragOptionsTI;
+    extern const ClassInfo NativeDragOptionsCI;
 } // namespace fl_desktop
+namespace fl
+{
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+} // namespace fl
+namespace fl_display
+{
+    extern const TypeInfo InteractiveObjectTI;
+    extern const ClassInfo InteractiveObjectCI;
+    extern const TypeInfo BitmapDataTI;
+    extern const ClassInfo BitmapDataCI;
+} // namespace fl_display
+namespace fl_geom
+{
+    extern const TypeInfo PointTI;
+    extern const ClassInfo PointCI;
+} // namespace fl_geom
 
 namespace ClassTraits { namespace fl_desktop
 {
@@ -60,7 +81,7 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_desktop
 {
-    class NativeDragManager : public Traits
+    class NativeDragManager : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -68,9 +89,11 @@ namespace ClassTraits { namespace fl_desktop
 #endif
     public:
         typedef Classes::fl_desktop::NativeDragManager ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeDragManager(VM& vm);
+        NativeDragManager(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

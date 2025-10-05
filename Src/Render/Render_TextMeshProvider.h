@@ -511,6 +511,7 @@ private:
     float                HeightRatio;
     RectF                ClipBox;
     RectF                ClearBox;
+    RectF                Bounds;
     Renderer2DImpl*      pRenderer;
     HMatrix              ClearBounds;
 

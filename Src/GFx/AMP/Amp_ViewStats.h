@@ -17,6 +17,9 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef GFX_AMP_SCRIPT_PROFILE_STATS_H
 #define GFX_AMP_SCRIPT_PROFILE_STATS_H
 
+#include "GFxConfig.h"
+#ifdef SF_ENABLE_STATS
+
 #include "Kernel/SF_RefCount.h"
 #include "Kernel/SF_Array.h"
 #include "Kernel/SF_Hash.h"
@@ -25,6 +28,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "Kernel/SF_StringHash.h"
 #include "Kernel/SF_AmpInterface.h"
 #include "Amp_ProfileFrame.h"
+#include "GFx/GFx_PlayerStats.h"
 
 namespace Scaleform {
     class String;
@@ -70,6 +74,8 @@ public:
     // ParentChildFunctionPair is this key
     struct ParentChildFunctionPair
     {
+        // Make sure the member variables stay with no padding
+        // Padding breaks the hash function that uses this struct as a key
         UInt64 CallerId;    // SWF handle and byte offset
         UInt64 FunctionId;  // SWF handle and byte offset
         bool operator==(const ParentChildFunctionPair& kRhs) const 
@@ -82,6 +88,8 @@ public:
     // Struct for holding per-line timings
     struct FileLinePair
     {
+        // Make sure the member variables stay with no padding
+        // Padding breaks the hash function that uses this struct as a key
         UInt64 FileId;
         UInt32 LineNumber;
         bool operator==(const FileLinePair& rhs) const
@@ -126,6 +134,8 @@ public:
     void                CollectMemoryStats(ProfileFrame* frameProfile);
     void                GetStats(StatBag* bag, bool reset);
 
+    void        UpdateStats(UInt64 functionId, UInt32 functionTime, UInt32 functionCalls, ProfileFrame* frameProfile);
+
     // View information
     void            SetName(const char* pcName);
     const String&   GetName() const;
@@ -150,8 +160,6 @@ public:
     // GC stats
     virtual void AddGcRoots(UInt32 numRoots);
     virtual void AddGcFreedRoots(UInt32 numFreedRoots);
-
-    void        UpdateStats(UInt64 functionId, UInt32 functionTime, UInt32 functionCalls, ProfileFrame* frameProfile);
 
     // Debugger
     void        DebugStep(int depth);
@@ -284,5 +292,7 @@ private:
 } // namespace AMP
 } // namespace GFx
 } // namespace Scaleform
+
+#endif
 
 #endif

@@ -397,7 +397,7 @@ UPInt BoolFormatter::GetSize() const
 ////////////////////////////////////////////////////////////////////////////////
 // Return NULL on error.
 static
-char* AppendCharLeft(char* buff, char* value_ptr, UInt32 ucs_char)
+char* AppendCharLeft(char* buff, UPInt buffSz, char* value_ptr, UInt32 ucs_char)
 {
     if (ucs_char)
     {
@@ -407,7 +407,7 @@ char* AppendCharLeft(char* buff, char* value_ptr, UInt32 ucs_char)
             return NULL;
 
         SPInt index = 0;
-        UTF8Util::EncodeChar(value_ptr, &index, ucs_char);
+        UTF8Util::EncodeCharSafe(value_ptr, buffSz, &index, ucs_char);
     }
 
     return value_ptr;
@@ -572,6 +572,7 @@ void NumericBase::ULong2String(char* buff, UInt32 value, bool separator, unsigne
 
 
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef INTERNAL_D2A
 static const Double pow10_precalc[23] = 
 {
     1.0, 
@@ -598,7 +599,7 @@ static const Double pow10_precalc[23] =
     1e+21, 
     1e+22, 
 }; 
-
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 LongFormatter::LongFormatter(int v)
@@ -953,9 +954,9 @@ void LongFormatter::AppendSignCharLeft(bool negative)
         const Locale& locale = GetParent().GetLocaleProvider()->GetLocale();
 
         if (negative)
-            ValueStr = AppendCharLeft(Buff, ValueStr, locale.GetNegativeSign());
+            ValueStr = AppendCharLeft(Buff, 29, ValueStr, locale.GetNegativeSign());
         else if (ShowSign)
-            ValueStr = AppendCharLeft(Buff, ValueStr, locale.GetPositiveSign());
+            ValueStr = AppendCharLeft(Buff, 29, ValueStr, locale.GetPositiveSign());
     } else
     {
         if (negative)
@@ -1167,7 +1168,7 @@ void DoubleFormatter::DecimalFormat(Double v)
 
         if (Precision)
             // Take care of decimal separator.
-            ValueStr = AppendCharLeft(Buff, ValueStr, locale.GetDecimalSeparator());
+            ValueStr = AppendCharLeft(Buff, 348, ValueStr, locale.GetDecimalSeparator());
 
         // Do the whole part ...
         if (whole <= SF_MAX_UINT32)
@@ -1383,9 +1384,9 @@ void DoubleFormatter::AppendSignCharLeft(bool negative, bool show_sign)
         const Locale& locale = GetParent().GetLocaleProvider()->GetLocale();
 
         if (negative)
-            ValueStr = AppendCharLeft(Buff, ValueStr, locale.GetNegativeSign());
+            ValueStr = AppendCharLeft(Buff, 348, ValueStr, locale.GetNegativeSign());
         else if (show_sign)
-            ValueStr = AppendCharLeft(Buff, ValueStr, locale.GetPositiveSign());
+            ValueStr = AppendCharLeft(Buff, 348, ValueStr, locale.GetPositiveSign());
     } else
     {
         if (negative)
@@ -1745,7 +1746,7 @@ void MsgFormat::FormatF(const StringDataPtr& fmt, va_list argList)
                         SInt64   v_sint64;
                         unsigned v_uint;
                         UInt64   v_uint64;
-                        Double   v_double;
+                        double   v_double;
                         char*    v_str;
                     };
 

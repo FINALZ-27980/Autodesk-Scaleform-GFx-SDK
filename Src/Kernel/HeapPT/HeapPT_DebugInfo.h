@@ -136,6 +136,8 @@ public:
 
     void FreeAll();
 
+    unsigned GetStatId(UPInt parentAddr, const AllocInfo* info);
+
     bool AddAlloc(UPInt parentAddr, bool autoHeap, UPInt thisAddr, 
                   UPInt size, UPInt usable, const AllocInfo* info);
 
@@ -172,10 +174,12 @@ private:
 
     void            reportViolation(DebugData* data, const char* msg);
 
+#ifdef SF_ENABLE_STATS
     void            getStatNode(const DebugData* node, 
                                 AllocEngine* allocator, 
                                 StatBag* bag,
                                 unsigned& count ) const;
+#endif
 
     void            dumpMemoryLeaks(DebugData* data, MemLeaksSummary* leaks);
 

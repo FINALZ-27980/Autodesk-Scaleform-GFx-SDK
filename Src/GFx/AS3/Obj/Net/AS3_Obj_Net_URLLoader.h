@@ -30,7 +30,20 @@ namespace fl_net
 {
     extern const TypeInfo URLLoaderTI;
     extern const ClassInfo URLLoaderCI;
+    extern const TypeInfo URLRequestTI;
+    extern const ClassInfo URLRequestCI;
 } // namespace fl_net
+namespace fl
+{
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+    extern const TypeInfo FunctionTI;
+    extern const ClassInfo FunctionCI;
+    extern const TypeInfo BooleanTI;
+    extern const ClassInfo BooleanCI;
+    extern const TypeInfo int_TI;
+    extern const ClassInfo int_CI;
+} // namespace fl
 
 namespace ClassTraits { namespace fl_net
 {
@@ -84,6 +97,7 @@ namespace Instances { namespace fl_net
         URLLoader(InstanceTraits::Traits& t);
 
 //##protect##"instance$methods"
+        virtual void    AS3Constructor(unsigned argc, const Value* argv);
     public:
         void ExecuteOpenEvent();
         void ExecuteProgressEvent(UInt32 bytesLoaded, UInt32 totalBytes);
@@ -137,7 +151,7 @@ namespace Instances { namespace fl_net
 
 namespace InstanceTraits { namespace fl_net
 {
-    class URLLoader : public CTraits
+    class URLLoader : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -165,6 +179,8 @@ namespace InstanceTraits { namespace fl_net
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 3 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[9];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -177,17 +193,19 @@ namespace InstanceTraits { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class URLLoader : public Traits
+    class URLLoader : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::URLLoader"; }
 #endif
     public:
-        typedef Classes::fl_net::URLLoader ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_net::URLLoader InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        URLLoader(VM& vm);
+        URLLoader(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

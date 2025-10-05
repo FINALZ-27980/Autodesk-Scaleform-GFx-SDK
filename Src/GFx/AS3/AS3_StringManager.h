@@ -141,6 +141,9 @@ enum BuiltinType
     AS3Builtin_gamePadAnalogChange,
 #endif
 
+    AS3Builtin_update,
+	AS3Builtin_status,
+
     AS3Builtin_textInput,
     AS3Builtin_change,
     AS3Builtin_scroll,

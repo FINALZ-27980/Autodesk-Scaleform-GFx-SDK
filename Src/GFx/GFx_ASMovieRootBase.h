@@ -124,7 +124,11 @@ public:
 #ifdef GFX_ENABLE_ANALOG_GAMEPAD
     virtual void        NotifyGamePadAnalogEvent(const EventId* id) { SF_UNUSED1(id); }
 #endif
-
+	virtual void        NotifyStatusEvent(const EventId* id) { SF_UNUSED(id); }
+	
+	virtual void        NotifyAccelerometerEvent(const EventId* id, int evtIdAvv) { SF_UNUSED2(id, evtIdAvv); }
+	virtual void        NotifyGeolocationEvent(const EventId* id, int evtIdAvv) { SF_UNUSED2(id, evtIdAvv); }
+	
     // invoked when whole movie view gets or loses focus
     virtual void        OnMovieFocus(bool set) =0;
     // called BEFORE processing complete (non-partial) AdvanceFrame.
@@ -133,9 +137,15 @@ public:
     virtual void        OnDeviceOrientationChanged(const OrientationEvent&) {}
     virtual void        OnAppLifecycleEvent(const AppLifecycleEvent&) {}
 
+	virtual void		OnAccelerometerEvent(const AccelerometerEvent&) {}
+	virtual void		OnGeolocationEvent(const GeolocationEvent&) {}
+
     virtual void        PrintObjectsReport(UInt32 flags = 0, 
                                            Log* log = NULL,  
                                            const char* swfName = NULL) { SF_UNUSED3(flags, log, swfName); }
+    virtual void        GetObjectsTree(Array<Ptr<AmpMovieObjectDesc> >* rootObjects, MemoryHeap* heap) { SF_UNUSED2(rootObjects, heap); }
+    virtual AmpMovieObjectDesc* GetDisplayObjectsTree(MemoryHeap* heap) const { SF_UNUSED(heap); return NULL; }
+
     // Process load queue entry (single threaded)
     virtual void        ProcessLoadQueueEntry(GFx::LoadQueueEntry *pentry, LoadStates* pls) =0;
     virtual void        ProcessLoadVarsMT

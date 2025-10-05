@@ -186,7 +186,6 @@ public:
 
     void   SetAudioTrack(int track);
     void   SetSubAudioTrack(int track);
-    void   SetExtraAudioTrack(int track);
     void   ReplaceCenterVoice(int track);
 
     void   SetSubtitleChannel(int channel);

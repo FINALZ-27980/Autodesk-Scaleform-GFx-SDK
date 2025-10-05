@@ -52,10 +52,7 @@ public:
     {
         AvmInteractiveObj::OnEventLoad();
     }
-    virtual void                        OnEventUnload()
-    {
-        AvmInteractiveObj::OnEventUnload();
-    }
+    virtual void                        OnEventUnload();
     virtual bool                        OnUnloading(bool mayRemove)
     {
         return AvmInteractiveObj::OnUnloading(mayRemove);
@@ -85,6 +82,9 @@ public:
     { 
         return AvmInteractiveObj::OnEvent(id); 
     }
+
+    virtual TopMostResult               GetTopMostEntity(const Render::PointF &localPt, TopMostDescr* pdescr,
+                                                         const ArrayPOD<UByte>& hitTest);
     virtual void                        FillTabableArray(InteractiveObject::FillTabableParams* params);
     //virtual bool            IsTabable() const = 0;
     // returns true, if yellow focus rect is enabled for the character

@@ -9,13 +9,15 @@
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\..\..\..\Include;..\..\..\..\..\Src;..\..\..\..\..\Apps\Samples\Common;..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\3rdParty\glext;..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\3rdParty\pcre;..\..\..\..\..\3rdParty\nvidia;$(IncludePath);$(DXSDK_DIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-	  <AdditionalOptions>/MP /w44264</AdditionalOptions>
+      <AdditionalOptions>/w44264</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;SF_BUILD_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-	  <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libgfx.lib;libgfx_air.lib;libgfx_as2.lib;libgfx_as3.lib;libjpeg.lib;expat.lib;libpng.lib;zlib.lib;pcre.lib;XInput.lib;winmm.lib;odbc32.lib;odbccp32.lib;imm32.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\..\Lib\$(Platform)\$(MsvcVer)\$(ConfigShort)\;..\..\..\..\..\3rdParty\expat-2.1.0\lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\libpng-1.5.13\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\zlib-1.2.7\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\expat-2.1.0\lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\jpeg-8d\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\pcre\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\cri\pc\libs\$(Platform);..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\lib;$(LibraryPath);$(DXSDK_DIR)\lib\x$(BitSet);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libgfx.lib;libgfx_air.lib;libgfx_as2.lib;libgfx_as3.lib;libjpeg.lib;expat.lib;libpng.lib;zlib.lib;libcurl.lib;Wldap32.lib;pcre.lib;XInput.lib;winmm.lib;odbc32.lib;odbccp32.lib;imm32.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\Lib\$(Platform)\$(MsvcVer)\$(ConfigShort)\;..\..\..\..\..\3rdParty\curl-7.29.0\lib\$(Platform)\$(MsvcVer)\Release\;..\..\..\..\..\3rdParty\expat-2.1.0\lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\libpng-1.5.13\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\zlib-1.2.7\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\expat-2.1.0\lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\jpeg-8d\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\pcre\Lib\$(Platform)\$(MsvcVer)\Release;..\..\..\..\..\3rdParty\cri\pc\libs\$(Platform);..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\lib;$(LibraryPath);$(DXSDK_DIR)\lib\x$(BitSet);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

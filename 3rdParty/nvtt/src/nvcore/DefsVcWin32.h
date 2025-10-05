@@ -18,9 +18,9 @@
 #define NV_CONST
 
 // Set standard function names.
-#define snprintf _snprintf
 // !JW: for VC2008 compatibility
 #if defined(_MSC_VER) && _MSC_VER < 1500
+  #define snprintf _snprintf
   #define vsnprintf _vsnprintf
 #endif
 #define vsscanf _vsscanf

@@ -21,6 +21,9 @@ otherwise accompanies this software in either electronic or hard copy form.
 #endif
 #include <ShlObj.h>
 
+// Uncomment this to use a IDirect3DDevice9Ex device.
+//#define SF_D3D9_USE_D3D9EX
+
 namespace Scaleform { namespace Platform {
 
 // Define this to enable NVidia Perf HUD support.
@@ -71,6 +74,9 @@ public:
 
     // D3D Variables
     HWND                    hWnd;
+#ifdef SF_D3D9_USE_D3D9EX
+    LPDIRECT3D9EX           pD3DEx;         // Used to create the D3D9DeviceEx.
+#endif // SF_D3D9_USE_D3D9EX
     LPDIRECT3D9             pD3D;           // Used to create the D3D9Device.
     LPDIRECT3DDEVICE9       pDevice;        // Our rendering device.
     D3DPRESENT_PARAMETERS   PresentParams;
@@ -82,12 +88,39 @@ public:
 DeviceImpl::DeviceImpl(Render::ThreadCommandQueue *commandQueue)
  : pWindow(0), pHal(0), Status(Device_NeedInit),
    hWnd(0),
+#ifdef SF_D3D9_USE_D3D9EX
+   pD3DEx(0),
+#endif
+   pD3D(0),
    pDevice(0),
    FSAASupported(false)   
 {
-    pD3D = Direct3DCreate9(SF_PLATFORM_D3D_SDK_VERSION); 
+    bool createD3D9Ex = false;
+
+#ifdef SF_D3D9_USE_D3D9EX
+    // Check to see whether Direct3DCreate9Ex is present in the runtime.
+    HMODULE libHandle = LoadLibraryA("d3d9.dll");
+    if (libHandle != 0)
+        createD3D9Ex = GetProcAddress( libHandle, "Direct3DCreate9Ex" ) != 0;
+
+    if (createD3D9Ex)
+    {
+        Direct3DCreate9Ex(SF_PLATFORM_D3D_SDK_VERSION, &pD3DEx);
+
+        // The D3DEx interface is a subclass of D3D, so it can be reused without changing other code,
+        // except for those places where it must be used explicitly for new functionality.
+        pD3D = pD3DEx;
+    }
+#endif
+
+    if (!createD3D9Ex)
+    {
+        pD3D = Direct3DCreate9(SF_PLATFORM_D3D_SDK_VERSION); 
+    }
+
+
     if (pD3D)
-        pHal = *SF_NEW Render::D3D9::HAL(commandQueue);
+        pHal = *SF_NEW Render::D3D9::ProfilerHAL(commandQueue);
 }
 
 DeviceImpl::~DeviceImpl()
@@ -352,6 +385,20 @@ bool DeviceImpl::initGraphics(const ViewConfig& config, Device::Window* window,
     }
 #endif
 
+#ifdef SF_D3D9_USE_D3D9EX
+    SF_DEBUG_WARNING(pD3DEx == 0, "SF_D3D9_USE_D3D9EX was defined, but D3D9Ex it is not available (running on Windows pre-Vista?).");
+
+    // Create the D3DDeviceEx.
+    IDirect3DDevice9Ex* pdevice;
+    if (!pD3DEx || FAILED(pD3DEx->CreateDeviceEx(adapterToUse, deviceType, hWnd,
+        vertexProcessing, &PresentParams, 0, &pdevice)))
+    {        
+        pWindow = 0;
+        hWnd = 0;
+        return false;
+    }
+    pDevice = pdevice;
+#else
     // Create the D3DDevice.
     if (FAILED(pD3D->CreateDevice(adapterToUse, deviceType, hWnd,
                                   vertexProcessing, &PresentParams, &pDevice)))
@@ -360,6 +407,7 @@ bool DeviceImpl::initGraphics(const ViewConfig& config, Device::Window* window,
         hWnd = 0;
         return false;
     }
+#endif
 
     // Configure renderer in "Dependent mode", honoring externally
     // configured device settings.
@@ -523,7 +571,7 @@ void Device::Clear(UInt32 color)
     D3DVIEWPORT9 vp = { 0, 0, params.BackBufferWidth, params.BackBufferHeight, 0.0f, 0.0f };
     pImpl->pDevice->SetViewport(&vp);
     pImpl->pDevice->Clear(0, NULL, D3DCLEAR_TARGET, color, 1.0f, 0); // Normal
-    //pImpl->pDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_STENCIL, color, 1.0f, 255); // Debug Masks (dirty stencil)
+    pImpl->pDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_STENCIL, color, 1.0f, 255); // Debug Masks (dirty stencil)
 
     //pImpl->pDevice->SetViewport(&vps);
 }

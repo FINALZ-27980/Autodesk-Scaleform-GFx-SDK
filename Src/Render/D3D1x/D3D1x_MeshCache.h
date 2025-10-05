@@ -376,9 +376,6 @@ class MeshCache : public Render::MeshCache
     Ptr<ID3D1x(DeviceContext)>  pDeviceContext;
     ShaderManager*              pShaderManager;
     MeshCacheListSet            CacheList;
-    
-    // Handles synchronization between CPU writing of GPU resources
-    RenderSync                  RSync;
 
     // Allocators managing the buffers. 
     VertexBufferSet             VertexBuffers;
@@ -470,8 +467,6 @@ public:
                                       bool waitForCache, const VertexFormat* pDestFormat);
 
     virtual void GetStats(Stats* stats);
-
-    RenderSync*     GetRenderSync()     { return &RSync; }
 };
 
 

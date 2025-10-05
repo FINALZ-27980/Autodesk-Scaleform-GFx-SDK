@@ -35,6 +35,8 @@ namespace fl_geom
 } // namespace fl_geom
 namespace fl
 {
+    extern const TypeInfo NumberTI;
+    extern const ClassInfo NumberCI;
     extern const TypeInfo StringTI;
     extern const ClassInfo StringCI;
 } // namespace fl
@@ -118,8 +120,8 @@ namespace Instances { namespace fl_geom
         };
         void clone(SPtr<Instances::fl_geom::Matrix>& result);
         void concat(const Value& result, Instances::fl_geom::Matrix* m);
-        void createBox(const Value& result, Value::Number scaleX, Value::Number scaleY, Value::Number rotation = 0, Value::Number tx = 0, Value::Number ty = 0);
-        void createGradientBox(const Value& result, Value::Number width, Value::Number height, Value::Number rotation = 0, Value::Number tx = 0, Value::Number ty = 0);
+        void createBox(const Value& result, Value::Number scaleX, Value::Number scaleY, Value::Number rotation = 0.0, Value::Number tx = 0.0, Value::Number ty = 0.0);
+        void createGradientBox(const Value& result, Value::Number width, Value::Number height, Value::Number rotation = 0.0, Value::Number tx = 0.0, Value::Number ty = 0.0);
         void deltaTransformPoint(SPtr<Instances::fl_geom::Point>& result, Instances::fl_geom::Point* point);
         void identity(const Value& result);
         void invert(const Value& result);
@@ -140,11 +142,11 @@ namespace Instances { namespace fl_geom
         {
             concat(Value::GetUndefined(), m);
         }
-        void createBox(Value::Number scaleX, Value::Number scaleY, Value::Number rotation = 0, Value::Number tx = 0, Value::Number ty = 0)
+        void createBox(Value::Number scaleX, Value::Number scaleY, Value::Number rotation = 0.0, Value::Number tx = 0.0, Value::Number ty = 0.0)
         {
             createBox(Value::GetUndefined(), scaleX, scaleY, rotation, tx, ty);
         }
-        void createGradientBox(Value::Number width, Value::Number height, Value::Number rotation = 0, Value::Number tx = 0, Value::Number ty = 0)
+        void createGradientBox(Value::Number width, Value::Number height, Value::Number rotation = 0.0, Value::Number tx = 0.0, Value::Number ty = 0.0)
         {
             createGradientBox(Value::GetUndefined(), width, height, rotation, tx, ty);
         }
@@ -196,7 +198,7 @@ namespace Instances { namespace fl_geom
 
 namespace InstanceTraits { namespace fl_geom
 {
-    class Matrix : public CTraits
+    class Matrix : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -224,6 +226,9 @@ namespace InstanceTraits { namespace fl_geom
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 12 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[30];
+        static const Abc::ConstValue dva[6];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -236,17 +241,19 @@ namespace InstanceTraits { namespace fl_geom
     
 namespace ClassTraits { namespace fl_geom
 {
-    class Matrix : public Traits
+    class Matrix : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::Matrix"; }
 #endif
     public:
-        typedef Classes::fl_geom::Matrix ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_geom::Matrix InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Matrix(VM& vm);
+        Matrix(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

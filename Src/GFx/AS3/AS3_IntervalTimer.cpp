@@ -89,7 +89,7 @@ bool IntervalTimer::Invoke(MovieImpl* proot, float frameTime)
         else
         {
             // set new invoke time
-            UInt64 interval = GetNextInterval(currentTime, UInt64(frameTime * 1000000.f));
+            UInt32 interval = GetNextInterval(currentTime, UInt64(frameTime * 1000000.f));
             if (interval > 0)
                 InvokeTime += interval;
             else
@@ -100,19 +100,19 @@ bool IntervalTimer::Invoke(MovieImpl* proot, float frameTime)
     return retval;
 }
 
-UInt64 IntervalTimer::GetNextInterval(UInt64 currentTime, UInt64 frameTime) const
+UInt32 IntervalTimer::GetNextInterval(UInt64 currentTime, UInt64 frameTime) const
 {
     if (RepeatCount != 0 && CurrentCount >= RepeatCount)
         return 0;
 
-    UInt64 interval; 
-    if (Interval < frameTime/10) // make sure to have not more than 10 calls a frame
-        interval = unsigned(frameTime/10);
+    UInt32 interval; 
+    if (10 * Interval < frameTime) // make sure to have not more than 10 calls a frame
+        interval = UInt32(frameTime)/10;
     else
         interval = Interval;
     if (interval == 0)
         return 0;
-    return (((currentTime - InvokeTime) + interval)/interval)*interval;
+    return ((UInt32(currentTime - InvokeTime) + interval)/interval)*interval;
 }
 
 void IntervalTimer::Clear()

@@ -263,6 +263,13 @@ RectF  Sprite::GetBounds(const Matrix &transform) const
         }
     }
 
+    if (HasScrollRect())
+    {
+        const RectD& scrRectD = *GetScrollRect();
+        RectF scrRect(float(scrRectD.x1), float(scrRectD.y1), float(scrRectD.x2), float(scrRectD.y2));
+        scrRect = transform.EncloseTransform(scrRect);
+        r.Intersect(scrRect);
+    }
     return r;
 }
 
@@ -443,6 +450,7 @@ DisplayObject::TopMostResult Sprite::GetTopMostMouseEntity(
 Sprite::ActiveSounds::ActiveSounds()
 {
     Volume = 100;
+    SubVolume = 0;
     Pan = 0;
 }
 Sprite::ActiveSounds::~ActiveSounds()
@@ -1316,8 +1324,7 @@ int Sprite::CheckAdvanceStatus(bool playingNow)
 
     // Check if movie is playable.
     //bool advancable = (!advanceDisabled && GetPlayState() == State_Playing);
-    bool advancable = (!advanceDisabled && (GetPlayState() == State_Playing || 
-        GetMovieImpl()->IsDraggingCharacter(this)
+    bool advancable = (!advanceDisabled && (GetPlayState() == State_Playing
 #ifdef GFX_ENABLE_SOUND
         || (pActiveSounds && pActiveSounds->Sounds.GetSize() != 0)
 #endif
@@ -1633,9 +1640,7 @@ void Sprite::SetVisible(bool visible)
     {
         SetNoAdvanceGlobalFlag(noAdvGlob);
         ModifyOptimizedPlayListLocal<Sprite>();
-        InteractiveObject* pparent = GetParent();
-        if (pparent && !pparent->IsNoAdvanceGlobalFlagSet())
-            PropagateNoAdvanceGlobalFlag();
+        PropagateNoAdvanceGlobalFlag();
     }
     SetDirtyFlag(); 
 }

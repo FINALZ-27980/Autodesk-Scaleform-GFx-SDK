@@ -1,0 +1,9 @@
+"Loading time" of the game is decided by "Reading time" and "Seek time". 
+
+"Lead (read) time" is time to read the file as its name suggests. Naturally, "Reading time" becomes long in proportion to the read size of the file. Because the size of the file can be reduced by compressing the file, "Reading time" can be shortened. Of course, the compressed data should progress. The loading time might rather become long depending on the method of development. 
+The development time can be adjusted to almost 0 by executing reading and processing and the development processing in parallel. 
+"Seek (seek) time" is time to move the head (pick up) physically to read the file from a specific position in the disk media. Suppressing the generation greatly contributes to shortening the loading time because it takes time to the seek of the head very much. 
+Useless seek is generated if those files are disjointedly arranged though the read amount of the file is the same, the reading efficiency decreases, and it takes the loading time extra. 
+The generation of seek is controlled when the file is continuously arranged (Seek is not generated at all when arranged completely continuously), and because it is possible to read in bulk, the loading time can be shortened greatly. 
+The above-mentioned technique is effective for not only the disk media but also ROM media. The performance gain by the reading processing of the batch can expect the file in "Best arrangement" though seek is ROM media without relation. 
+'File felt-tipped marker RPRO' reduces reading time and the seek time by "Compression", "Development", and "Best arrangement", and makes the loading time a half. 

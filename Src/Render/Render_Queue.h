@@ -187,8 +187,8 @@ public:
     // which must respect these filters on a case-by-case basis.
     enum QueueProcessFilter
     {
-        QPF_All,        // All rendering commands are processed.
-        QPF_Filters,    // Only filter (ie. FilterPrimitive) commands are processed.
+        QPF_All,              // All rendering commands are processed.
+        QPF_CacheableOnly,    // Only cacheables (ie. FilterPrimitive/BlendPrimitive) commands are processed.
     };
 
     HAL*               GetHAL() const       { return pHAL; }

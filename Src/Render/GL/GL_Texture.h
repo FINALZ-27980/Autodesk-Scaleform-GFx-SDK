@@ -90,7 +90,6 @@ public:
     inline  HAL*            GetHAL() const;
     virtual bool            IsValid() const        { return pTextures != 0; }
 
-    void                    RestoreAfterLoss();
     virtual bool            Initialize();
     bool                    Initialize(GLuint texID);
     virtual void            ReleaseHWTextures(bool staging = true);
@@ -128,11 +127,9 @@ public:
     DepthStencilSurface(TextureManagerLocks* pmanagerLocks, const ImageSize& size);
     ~DepthStencilSurface();
 
-    virtual ImageSize               GetSize() const { return Size; }
     bool                            Initialize();
     inline HAL*                     GetHAL() const;
 
-    ImageSize                 Size;
     GLuint                    RenderBufferID;
 
     // We can't query ahead of time which stencil format is supported. So, we have to attempt
@@ -182,6 +179,7 @@ class TextureManager : public Render::TextureManager
         TC_NonPower2Full    = 0x02,
         TC_NonPower2RT      = 0x04,
         TC_UseBgra          = 0x08,
+		TC_UseAppleMaxLevel = 0x10,
     };
 
     MappedTexture       MappedTexture0;

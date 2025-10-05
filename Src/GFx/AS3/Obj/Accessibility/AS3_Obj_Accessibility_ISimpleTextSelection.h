@@ -57,17 +57,19 @@ namespace Classes { namespace fl_accessibility
     
 namespace ClassTraits { namespace fl_accessibility
 {
-    class ISimpleTextSelection : public Traits
+    class ISimpleTextSelection : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ISimpleTextSelection"; }
 #endif
     public:
-        typedef Classes::fl_accessibility::ISimpleTextSelection ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::Interface InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ISimpleTextSelection(VM& vm);
+        ISimpleTextSelection(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

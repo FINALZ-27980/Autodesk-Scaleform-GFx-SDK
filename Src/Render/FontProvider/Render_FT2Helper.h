@@ -81,12 +81,12 @@ private:
     {
         return float((int)v >> 6);
     }
-    static inline Render::CoordType SF_STDCALL FtToTwips(int v)
+    static inline Render::CoordType SF_STDCALL FtToTwips(long v)
     {
         return float((v * 20) >> 6);
     }
 
-    static inline Render::CoordType SF_STDCALL FtToS1024(int v)
+    static inline Render::CoordType SF_STDCALL FtToS1024(long v)
     {
         return float(v >> 6);
     }

@@ -30,6 +30,8 @@ namespace fl_net
 {
     extern const TypeInfo FileReferenceTI;
     extern const ClassInfo FileReferenceCI;
+    extern const TypeInfo URLRequestTI;
+    extern const ClassInfo URLRequestCI;
 } // namespace fl_net
 namespace fl
 {
@@ -41,6 +43,8 @@ namespace fl
     extern const ClassInfo NumberCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo ArrayTI;
+    extern const ClassInfo ArrayCI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl_net
@@ -68,17 +72,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_net
 {
-    class FileReference : public Traits
+    class FileReference : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::FileReference"; }
 #endif
     public:
-        typedef Classes::fl_net::FileReference ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FileReference(VM& vm);
+        FileReference(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

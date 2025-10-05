@@ -188,6 +188,11 @@ public:
     {
         pTextNode->SetFontSize(fontSize, startPos, endPos);
     }
+    void SetLetterSpacing(float letterSpacing, UPInt startPos = 0, UPInt endPos = UPInt(-1))
+    {
+        pTextNode->SetLetterSpacing(letterSpacing, startPos, endPos);
+    }
+
     void SetFontStyle(FontStyle fontStyle, UPInt startPos = 0, UPInt endPos = UPInt(-1))
     {
         pTextNode->SetFontStyle((TreeText::FontStyle)fontStyle, startPos, endPos);

@@ -15,6 +15,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 **********************************************************************/
 //##protect##"disclaimer"
 
+#include "AS3_Obj_Events_AccelerometerEvent.cpp"
 #include "AS3_Obj_Events_ActivityEvent.cpp"
 #include "AS3_Obj_Events_AsyncErrorEvent.cpp"
 #include "AS3_Obj_Events_ContextMenuEvent.cpp"
@@ -25,6 +26,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "AS3_Obj_Events_EventPhase.cpp"
 #include "AS3_Obj_Events_FocusEvent.cpp"
 #include "AS3_Obj_Events_FullScreenEvent.cpp"
+#include "AS3_Obj_Events_GeolocationEvent.cpp"
 #include "AS3_Obj_Events_HTTPStatusEvent.cpp"
 #include "AS3_Obj_Events_IEventDispatcher.cpp"
 #include "AS3_Obj_Events_IMEEvent.cpp"

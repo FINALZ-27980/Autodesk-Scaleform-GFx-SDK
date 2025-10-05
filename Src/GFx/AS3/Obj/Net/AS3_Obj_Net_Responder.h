@@ -52,17 +52,19 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class Responder : public Traits
+    class Responder : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::Responder"; }
 #endif
     public:
-        typedef Classes::fl_net::Responder ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Responder(VM& vm);
+        Responder(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

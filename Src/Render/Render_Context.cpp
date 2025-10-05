@@ -447,7 +447,7 @@ SnapshotPage* SnapshotPage::Alloc(MemoryHeap* pheap, EntryPage* pentryPage)
     SnapshotPage* ppage = (SnapshotPage*)
         SF_HEAP_MEMALIGN(pheap, sizeof(SnapshotPage), 16, StatRender_Context_Mem);
     if (!ppage)
-        return false;
+        return 0;
 #ifdef SF_BUILD_DEBUG
     memset(ppage, 0, sizeof(SnapshotPage));
 #endif
@@ -907,8 +907,7 @@ Context::~Context()
      while(!CaptureNotifyList.IsEmpty())
      {
          ContextCaptureNotify* notify = CaptureNotifyList.GetFirst();
-         notify->pOwnedContext = 0;
-         notify->RemoveNode();
+         RemoveCaptureNotify(notify);
      }
 }
 
@@ -1301,6 +1300,19 @@ bool Context::nextCapture_LockScope(Snapshot** updateSnapshot,
     {
         clearRTHandleList();
         shutdownRendering_NoLock();
+
+        // The capture notifies must still be notified of this NextCapture call. They have already received
+        // an OnShutdown() call at this point, and thus this call to will should call their shutdownRendering.
+        ContextCaptureNotify* notify = CaptureNotifyList.GetFirst(), *notifyNext;
+        while(!CaptureNotifyList.IsNull(notify))
+        {
+            // OnNextCapture may destroy the current notify.
+            notifyNext = notify->pNext;
+            notify->OnNextCapture(pnotify);
+            notify = notifyNext;
+        }
+        DIChangesRequired = false;
+
         return false;
     }
 
@@ -1434,9 +1446,14 @@ void Context::AddCaptureNotify(ContextCaptureNotify* notify)
 void Context::RemoveCaptureNotify(ContextCaptureNotify* notify)
 {
     Lock::Locker scopeLock(getLock());
-    SF_ASSERT(notify->pOwnedContext == this);    
-    notify->RemoveNode();
-    notify->pOwnedContext = 0;
+
+    // Note: the owned context may be NULL, if the context was destroyed on the main thread.
+    // In this case, assume the main thread has already removed this notify.
+    if (notify->pOwnedContext == this)
+    {
+        notify->RemoveNode();
+        notify->pOwnedContext = 0;
+    }
 }
 
 

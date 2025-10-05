@@ -31,24 +31,27 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace ClassTraits { namespace fl
 {
-    RangeError::RangeError(VM& vm)
-    : Traits(vm, AS3::fl::RangeErrorCI)
+
+    RangeError::RangeError(VM& vm, const ClassInfo& ci)
+    : fl::Error(vm, ci)
     {
 //##protect##"ClassTraits::RangeError::RangeError()"
 //##protect##"ClassTraits::RangeError::RangeError()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Error(vm, AS3::fl::RangeErrorCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassCallConstruct(*this));
 
     }
 
     Pickable<Traits> RangeError::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) RangeError(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) RangeError(vm, AS3::fl::RangeErrorCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::RangeErrorCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -59,6 +62,11 @@ namespace fl
 {
     const TypeInfo RangeErrorTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl::RangeError::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "RangeError", "", &fl::ErrorTI,
         TypeInfo::None
     };
@@ -66,10 +74,6 @@ namespace fl
     const ClassInfo RangeErrorCI = {
         &RangeErrorTI,
         ClassTraits::fl::RangeError::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

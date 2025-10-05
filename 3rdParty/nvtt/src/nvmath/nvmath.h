@@ -48,32 +48,6 @@
 #define IS_NEGATIVE_FLOAT(x)	(IR(x)&SIGN_BITMASK)
 */
 
-inline float sqrt_assert(const float f)
-{
-	nvDebugCheck(f >= 0.0f);
-	return sqrtf(f);
-}
-
-inline float acos_assert(const float f)
-{
-	nvDebugCheck(f >= -1.0f && f <= 1.0f);
-	return acosf(f);
-}
-
-inline float asin_assert(const float f)
-{
-	nvDebugCheck(f >= -1.0f && f <= 1.0f);
-	return asinf(f);
-}
-
-// Replace default functions with asserting ones.
-#define sqrt sqrt_assert
-#define sqrtf sqrt_assert
-#define acos acos_assert
-#define acosf acos_assert
-#define asin asin_assert
-#define asinf asin_assert
-
 #if NV_OS_WIN32
 #include <float.h>
 #endif

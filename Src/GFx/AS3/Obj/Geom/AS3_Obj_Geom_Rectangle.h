@@ -318,7 +318,7 @@ namespace Instances { namespace fl_geom
 
 namespace InstanceTraits { namespace fl_geom
 {
-    class Rectangle : public CTraits
+    class Rectangle : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -346,6 +346,8 @@ namespace InstanceTraits { namespace fl_geom
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 29 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[50];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -358,17 +360,19 @@ namespace InstanceTraits { namespace fl_geom
     
 namespace ClassTraits { namespace fl_geom
 {
-    class Rectangle : public Traits
+    class Rectangle : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::Rectangle"; }
 #endif
     public:
-        typedef Classes::fl_geom::Rectangle ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_geom::Rectangle InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Rectangle(VM& vm);
+        Rectangle(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

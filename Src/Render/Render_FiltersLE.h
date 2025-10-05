@@ -33,7 +33,7 @@ struct BlurFilterState
     const BlurFilterParams* CurPass;
     int                     BoxTCs, BaseTCs, TotalTCs, VertexAttrs;
 
-    BlurFilterState(int maxTex) : MaxTexOps(maxTex), Passes(0), Prims(0), UsesOriginal(0) {}
+    BlurFilterState(int maxTex = 8) : MaxTexOps(maxTex), Passes(0), Prims(0), UsesOriginal(0) {}
 
     bool Setup(const Filter* filter)
     {
@@ -181,6 +181,8 @@ struct BlurFilterState
 
 struct BlurFilterShaderKey
 {
+    // make sure these member variables continue to stay without padding
+    // Padding breaks the Hash function that uses this struct as a key
     unsigned Mode;
     int      BoxTCs, BaseTCs, TotalTCs;
 

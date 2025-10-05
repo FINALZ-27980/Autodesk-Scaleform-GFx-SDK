@@ -1242,10 +1242,12 @@ bool    ShapeDataBase::DefPointTestLocal(Render::ShapeMeshProvider* pshapeMeshPr
 
     Ptr<Render::Scale9GridInfo> s9g;
 
+#if defined (GFX_ENABLE_SCALE9_HITTEST)
     if (pinst && pinst->DoesScale9GridExist())
     {
         s9g = *pinst->CreateScale9Grid();
     }
+#endif //GFX_ENABLE_SCALE9_HITTEST
 
     RectF b = pshapeMeshProvider->GetIdentityBounds();
 

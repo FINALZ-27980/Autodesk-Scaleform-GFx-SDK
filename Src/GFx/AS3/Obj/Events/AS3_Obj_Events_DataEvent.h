@@ -59,7 +59,7 @@ namespace Classes { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class DataEvent : public Traits
+    class DataEvent : public fl_events::TextEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -67,9 +67,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::DataEvent ClassType;
+        typedef InstanceTraits::fl_events::TextEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        DataEvent(VM& vm);
+        DataEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

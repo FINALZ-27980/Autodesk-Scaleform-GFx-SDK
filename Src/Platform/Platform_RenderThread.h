@@ -182,7 +182,10 @@ protected:
     virtual void drawFrame1(DisplayWindow* pdispwin, bool capture);
     virtual void drawDisplayHandle(DisplayHandleDesc& desc, const Render::Viewport& vp, bool capture);
     virtual void createCursorPrimitives(Render::HAL* pHal);
-    virtual UInt64 getProfileMode() const { return 0; }
+
+    virtual Render::ProfilerModes   getProfileMode() const { return Render::Profile_None; }
+    virtual unsigned                getProfileFlags() const { return 0; }
+    virtual int                     getProfileBatchHighlight() const { return -1; }
 
     void         notifyShutdown(DHContainerType& arr) const;
 

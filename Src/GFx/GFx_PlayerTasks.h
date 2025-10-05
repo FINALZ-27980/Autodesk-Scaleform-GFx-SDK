@@ -67,7 +67,9 @@ public:
     {
         LM_None,
         LM_Get,
-        LM_Post
+        LM_Post,
+        LM_Put,
+        LM_Delete
     };
 
     LoadType            Type;

@@ -109,6 +109,8 @@ public:
     // If pcontext is specified it will update only roots corresponding to the
     // context; otherwise all roots will be used.
     void    ForceUpdateImages(Context* pcontext = NULL);
+
+    SF_AMP_CODE(void GetExternalMemory(MemItem* root);)
 protected:
     // Viewport and its HW matrix being used.
     Viewport            VP;

@@ -95,7 +95,7 @@ namespace Instances { namespace fl_gfx
 
 namespace InstanceTraits { namespace fl_gfx
 {
-    class FocusEventEx : public CTraits
+    class FocusEventEx : public fl_events::FocusEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -133,17 +133,19 @@ namespace InstanceTraits { namespace fl_gfx
     
 namespace ClassTraits { namespace fl_gfx
 {
-    class FocusEventEx : public Traits
+    class FocusEventEx : public fl_events::FocusEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::FocusEventEx"; }
 #endif
     public:
-        typedef Classes::fl_gfx::FocusEventEx ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_gfx::FocusEventEx InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FocusEventEx(VM& vm);
+        FocusEventEx(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

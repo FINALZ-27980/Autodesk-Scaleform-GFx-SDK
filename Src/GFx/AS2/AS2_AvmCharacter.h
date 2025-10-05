@@ -295,6 +295,7 @@ public:
         M_topmostLevel,
         M_noAdvance,
         M_focusGroupMask,
+        M_bidirectionalTextEnabled,
 
         // Dynamic Text
         M_autoFit,

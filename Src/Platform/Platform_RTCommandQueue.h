@@ -51,7 +51,7 @@ public:
 class RTCommand
 {
 public:
-    enum { MaxCommandSize = 128 };
+    enum { MaxCommandSize = 256 };
 
     enum WaitType {
         NoWait,

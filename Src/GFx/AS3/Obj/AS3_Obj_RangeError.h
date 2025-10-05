@@ -52,17 +52,19 @@ namespace Classes { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class RangeError : public Traits
+    class RangeError : public fl::Error
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::RangeError"; }
 #endif
     public:
-        typedef Classes::fl::RangeError ClassType;
+        typedef ClassCallConstruct ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        RangeError(VM& vm);
+        RangeError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

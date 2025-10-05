@@ -95,7 +95,7 @@ namespace Instances { namespace fl_gfx
 
 namespace InstanceTraits { namespace fl_gfx
 {
-    class KeyboardEventEx : public CTraits
+    class KeyboardEventEx : public fl_events::KeyboardEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -133,17 +133,19 @@ namespace InstanceTraits { namespace fl_gfx
     
 namespace ClassTraits { namespace fl_gfx
 {
-    class KeyboardEventEx : public Traits
+    class KeyboardEventEx : public fl_events::KeyboardEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::KeyboardEventEx"; }
 #endif
     public:
-        typedef Classes::fl_gfx::KeyboardEventEx ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_gfx::KeyboardEventEx InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        KeyboardEventEx(VM& vm);
+        KeyboardEventEx(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

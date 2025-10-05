@@ -45,6 +45,7 @@ enum StateType
     State_OrigScale9Parent,
     // Internal states should not be manipulated directly.
     State_Internal_MaskOwner, 
+    State_OrigNodeBounds,
     State_Type_Count
 };
 

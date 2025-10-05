@@ -35,10 +35,14 @@ namespace fl
 {
     extern const TypeInfo ArrayTI;
     extern const ClassInfo ArrayCI;
-    extern const TypeInfo ObjectTI;
-    extern const ClassInfo ObjectCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo ObjectTI;
+    extern const ClassInfo ObjectCI;
+    extern const TypeInfo FunctionTI;
+    extern const ClassInfo FunctionCI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl_desktop
@@ -102,7 +106,7 @@ namespace Instances { namespace fl_desktop
         void formatsGet(SPtr<Instances::fl::Array>& result);
         void clear(const Value& result);
         void clearData(const Value& result, const ASString& format);
-        void getData(SPtr<Instances::fl::Object>& result, const ASString& format, const ASString& transferMode);
+        void getData(Value& result, const ASString& format, const ASString& transferMode);
         void hasFormat(bool& result, const ASString& format);
         void setData(bool& result, const ASString& format, const Value& data, bool serializable);
         void setDataHandler(bool& result, const ASString& format, const Value& handler, bool serializable);
@@ -117,9 +121,9 @@ namespace Instances { namespace fl_desktop
         {
             clearData(Value::GetUndefined(), format);
         }
-        SPtr<Instances::fl::Object> getData(const ASString& format, const ASString& transferMode)
+        Value getData(const ASString& format, const ASString& transferMode)
         {
-            SPtr<Instances::fl::Object> result;
+            Value result;
             getData(result, format, transferMode);
             return result;
         }
@@ -150,7 +154,7 @@ namespace Instances { namespace fl_desktop
 
 namespace InstanceTraits { namespace fl_desktop
 {
-    class Clipboard : public CTraits
+    class Clipboard : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -176,6 +180,9 @@ namespace InstanceTraits { namespace fl_desktop
 
         enum { ThunkInfoNum = 7 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[17];
+        static const Abc::ConstValue dva[3];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -188,7 +195,7 @@ namespace InstanceTraits { namespace fl_desktop
     
 namespace ClassTraits { namespace fl_desktop
 {
-    class Clipboard : public Traits
+    class Clipboard : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -196,15 +203,70 @@ namespace ClassTraits { namespace fl_desktop
 #endif
     public:
         typedef Classes::fl_desktop::Clipboard ClassType;
+        typedef InstanceTraits::fl_desktop::Clipboard InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Clipboard(VM& vm);
+        Clipboard(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
+        enum { ThunkInfoNum = 1 };
+        static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[1];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 
     };
 }}
+
+namespace Classes { namespace fl_desktop
+{
+    class Clipboard : public Class
+    {
+        friend class ClassTraits::fl_desktop::Clipboard;
+        static const TypeInfo& GetTypeInfo() { return AS3::fl_desktop::ClipboardTI; }
+        
+#ifdef GFX_AS3_VERBOSE
+    private:
+        virtual const char* GetAS3ObjectType() const { return "Classes::Clipboard"; }
+#endif
+    public:
+        typedef Clipboard SelfType;
+        typedef Clipboard ClassType;
+        
+    private:
+        Clipboard(ClassTraits::Traits& t);
+       
+    private:
+        SelfType& GetSelf()
+        {
+            return *this;
+        }
+
+//##protect##"class_$methods"
+//##protect##"class_$methods"
+
+    public:
+        // AS3 API methods.
+        enum MethodID {
+            mid_generalClipboardGet, 
+        };
+        void generalClipboardGet(SPtr<Instances::fl_desktop::Clipboard>& result);
+
+        // C++ friendly wrappers for AS3 methods.
+        SPtr<Instances::fl_desktop::Clipboard> generalClipboardGet()
+        {
+            SPtr<Instances::fl_desktop::Clipboard> result;
+            generalClipboardGet(result);
+            return result;
+        }
+
+//##protect##"class_$data"
+//##protect##"class_$data"
+
+    };
+}}
+
 //##protect##"methods"
 //##protect##"methods"
 

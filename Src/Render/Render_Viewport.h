@@ -74,7 +74,11 @@ public:
         View_RenderTextureAlpha = View_IsRenderTexture|View_AlphaComposite,
 
         // The viewport should offset by a half-pixel to be on the pixel centers.
-        View_HalfPixelOffset    = 0x100
+        View_HalfPixelOffset    = 0x100,
+        
+        // The viewport should not invoke a clear operation. Useful if a customer knows that his or her
+        // content will have a fully opaque backdrop of some sort and wants to avoid an extra 100% overdraw.
+        View_NoClear            = 0x200
     };
 
     Viewport()

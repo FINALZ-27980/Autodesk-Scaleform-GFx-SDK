@@ -26,6 +26,7 @@ class TouchPoint
 public:
 	TouchPoint(UInt32 id,float x,float y);
 
+	bool active;
 	UInt32 id;
 	float x;
 	float y;
@@ -34,10 +35,12 @@ public:
 class GestureRecognizer : public Platform::GestureManager
 {
 public:
+	GestureRecognizer();
 	GestureRecognizer(class Platform::AppBase& app):GestureManager(app) { }
 	
 	void setup();
 	void update();
+	void reset();
 
 	void ProcessDown(UInt32 id, const Point<int>& screenPt, const PointF& moviePt);
 	void ProcessUp(UInt32 id, const Point<int>& screenPt, const PointF& moviePt);
@@ -50,6 +53,7 @@ public:
 	Gesture* supportedGestures[6];
 	Array<TouchPoint*> touchPointArr;
 
+	int numTouches;
 	int numSupportedGestures;
 	UInt32 oldTime;
 	float deltaSeconds;
@@ -65,6 +69,8 @@ public:
 
 	Gesture *selected;
 	Ptr<Movie> pMovie;
+
+	bool doingComplex;
 	
 };
 
@@ -79,10 +85,12 @@ public:
 
 	Gesture();
 	virtual void update();
+	void reset();
 
 	GestureRecognizer* parent;
 	GesturePhase currentPhase;
 
+	UInt32 lastTime;
 	float timeCounter;
 	bool started;
 	bool recognized;
@@ -156,7 +164,8 @@ public:
 	GestureTwoFingerTap();
 	virtual void update();
 
-	float timeCounter;
+	float lastCentroidX;
+	float lastCentroidY;
 };
 
 

@@ -1,0 +1,15 @@
+!!ARBfp1.0
+
+#Declarations
+TEMP r0;
+
+OUTPUT out = result.color;
+
+TEX r0, fragment.texcoord[0], texture[0], 2D;
+MUL r0.xyz, r0, fragment.color;
+MOV r0.w, 1.0;
+
+MOV out.xyzw, r0;
+
+END
+

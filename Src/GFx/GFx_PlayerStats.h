@@ -18,7 +18,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 #define INC_SF_GFX_PLAYERSTATS_H
 
 #include "GFxConfig.h"
-#include "Kernel/SF_Types.h"
 #include "GFx/GFx_Stats.h"
 
 namespace Scaleform { namespace GFx {
@@ -90,8 +89,9 @@ enum StatMovieView
         StatMV_Invoke_Tks,
           StatMV_InvokeAction_Tks,
       StatMV_Display_Tks,
-        StatMV_Tessellate_Tks,
+        StatMV_FontThrash_Tks,
         StatMV_GradientGen_Tks,
+        StatMV_FontMiss_Tks,
 
     // Counters.
     StatMV_Counters,

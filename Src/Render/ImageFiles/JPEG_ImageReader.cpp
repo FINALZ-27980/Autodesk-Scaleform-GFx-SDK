@@ -328,6 +328,9 @@ public:
         // loading work for SW8. Need to reseatcj JPeg integration further.
         if (CInfo.global_state != 202) 
             jpeg_read_header(&CInfo, TRUE);
+
+        // NOTE: Always request RGB images. 
+        CInfo.out_color_space = JCS_RGB;
         jpeg_start_decompress(&CInfo);
         CompressorOpened = true;
         return true;
@@ -345,6 +348,9 @@ public:
         // loading work for SW8. Need to reseatcj JPeg integration further.
         if (CInfo.global_state != 202) 
             jpeg_read_header(&CInfo, TRUE);
+
+        // NOTE: Always request RGB images. 
+        CInfo.out_color_space = JCS_RGB;
         CompressorOpened = true;
         return true;
     }
@@ -403,7 +409,7 @@ public:
     //  SF_ASSERT(cinfo.OutputScanline < cinfo.OutputHeight);
         int LinesRead = jpeg_read_scanlines(&CInfo, &prgbData, 1);
     //  SF_ASSERT(LinesRead == 1);
-        LinesRead = LinesRead;  // avoid warning in NDEBUG
+        SF_UNUSED(LinesRead);  // avoid warning in NDEBUG
         return true;
     }
 

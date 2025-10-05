@@ -15,7 +15,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 #include "Amp_ThreadMgr.h"
 
-#if defined(SF_ENABLE_THREADS) && defined(SF_ENABLE_SOCKETS)
+#ifdef SF_AMP_SERVER
 
 #include "Amp_Stream.h"
 #include "Kernel/SF_HeapNew.h"
@@ -23,6 +23,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "Kernel/SF_Debug.h"
 #include "Kernel/SF_Log.h"
 #include "Amp_MessageRegistry.h"
+#include "Amp_Message.h"
 
 #define MICROSECONDS_PER_SECOND 1000000
 
@@ -121,6 +122,7 @@ ThreadMgr::ThreadMgr(bool initSocketLib,
     Server(true),
     Sock(initSocketLib, socketFactory),
     HeartbeatIntervalMillisecs(DefaultHeartbeatIntervalMillisecs),
+    CompressMessages(true),
     InitSocketLib(initSocketLib),
     Exiting(false),
     LastSendHeartbeat(0),
@@ -303,6 +305,16 @@ void ThreadMgr::SetHeartbeatInterval(UInt32 heartbeatInterval)
     HeartbeatIntervalMillisecs = heartbeatInterval;
 }
 
+void ThreadMgr::SetCompressedMessages(bool on)
+{
+    CompressMessages = on;
+}
+
+bool ThreadMgr::IsCompressedMessages() const
+{
+    return CompressMessages != 0;
+}
+
 // Returns true when there is a thread still running
 bool ThreadMgr::IsRunning() const
 {
@@ -313,6 +325,12 @@ bool ThreadMgr::IsRunning() const
 
     return false;
 }
+
+void ThreadMgr::SetSocketImplFactory(SocketImplFactory* socketFactory)
+{
+    SocketFactory = socketFactory;
+}
+
 
 // Thread-safe status accessor
 bool ThreadMgr::IsExiting() const
@@ -906,7 +924,7 @@ bool ThreadMgr::CompressLoop()
 #ifdef SF_AMP_DEBUG_MSG_LOG
             SF_DEBUG_MESSAGE1(true, "Compressing %s\n", msg->GetMessageName().ToCStr());
 #endif
-            if (MsgVersion >= 18)  // To support older protocol
+            if (MsgVersion >= 18 && CompressMessages)  // To support older protocol
             {
                 msg->SetVersion(MsgVersion);
                 Array<UByte> compressedData;

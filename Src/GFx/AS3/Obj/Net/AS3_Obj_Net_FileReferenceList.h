@@ -59,17 +59,19 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class FileReferenceList : public Traits
+    class FileReferenceList : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::FileReferenceList"; }
 #endif
     public:
-        typedef Classes::fl_net::FileReferenceList ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FileReferenceList(VM& vm);
+        FileReferenceList(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

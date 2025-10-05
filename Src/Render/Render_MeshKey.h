@@ -116,6 +116,7 @@ class MeshKeySetHandle
 {
     friend class MeshKeyManager;
     friend class MeshKeySet;
+    friend class MeshProvider_KeySupport;
 
     AtomicPtr<MeshKeyManager> pManager;
     MeshKeySet* volatile      pKeySet;
@@ -139,6 +140,8 @@ class MeshProvider_KeySupport : public MeshProvider_RCImpl
     friend class MeshKeySet;
 
     MeshKeySetHandle hKeySet;
+protected:
+    inline void releaseKeySet();
 public:
     MeshProvider_KeySupport() { }
     ~MeshProvider_KeySupport() { }
@@ -228,6 +231,12 @@ private:
 
 inline bool MeshKeySetHandle::IsEmpty() const { return pKeySet == 0 || pKeySet->IsEmpty(); }
 inline bool MeshKeySetHandle::HasKeySet() const { return pKeySet != 0; }
+
+inline void MeshProvider_KeySupport::releaseKeySet()
+{
+    if (HasKeySet())
+        hKeySet.releaseCache();
+}
 
 
 //------------------------------------------------------------------------

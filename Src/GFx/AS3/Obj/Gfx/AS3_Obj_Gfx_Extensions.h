@@ -36,10 +36,12 @@ namespace fl
 {
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
-    extern const TypeInfo StringTI;
-    extern const ClassInfo StringCI;
+    extern const TypeInfo NumberTI;
+    extern const ClassInfo NumberCI;
     extern const TypeInfo uintTI;
     extern const ClassInfo uintCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
 } // namespace fl
 namespace fl_display
 {
@@ -72,7 +74,7 @@ namespace Classes { namespace fl_gfx
     
 namespace ClassTraits { namespace fl_gfx
 {
-    class Extensions : public Traits
+    class Extensions : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -80,14 +82,19 @@ namespace ClassTraits { namespace fl_gfx
 #endif
     public:
         typedef Classes::fl_gfx::Extensions ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Extensions(VM& vm);
+        Extensions(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 13 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[26];
+        static const Abc::ConstValue dva[3];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

@@ -64,7 +64,7 @@ namespace Classes { namespace fl_ui
     
 namespace ClassTraits { namespace fl_ui
 {
-    class Keyboard : public Traits
+    class Keyboard : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -72,14 +72,18 @@ namespace ClassTraits { namespace fl_ui
 #endif
     public:
         typedef Classes::fl_ui::Keyboard ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Keyboard(VM& vm);
+        Keyboard(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 244 };
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 3 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[3];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

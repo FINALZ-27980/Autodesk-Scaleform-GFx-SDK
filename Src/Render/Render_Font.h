@@ -34,12 +34,12 @@ class GlyphCache;
 struct TextureGlyph;
 
 //------------------------------------------------------------------------
-class GlyphRaster : public RefCountBaseNTS<GlyphRaster, StatRender_Font_Mem> // TO DO: StatID
+class GlyphRaster : public RefCountBaseNTS<GlyphRaster, StatRender_Font_Mem>
 {
 public:
     GlyphRaster() : Width(0), Height(0), OriginX(0), OriginY(0), HintedSize(0) {}
 
-    ArrayLH_POD<UByte, Stat_Default_Mem> Raster;
+    ArrayLH_POD<UByte, StatRender_Font_Mem> Raster;
     unsigned    Width, Height;
     int         OriginX, OriginY;
     unsigned    HintedSize;

@@ -51,6 +51,8 @@ class FontGlyphPacker : public RefCountBaseNTS<FontGlyphPacker, Stat_Default_Mem
 
     struct GlyphGeometryKey
     {
+        // Make sure the member variables stay with no padding
+        // Padding breaks the hash function that uses this struct as a key
         const FontResource*                 pFont;
         const Render::ShapeDataInterface*   pShape;
         UInt32                              Hash;

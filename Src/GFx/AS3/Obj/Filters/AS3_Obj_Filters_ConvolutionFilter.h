@@ -65,17 +65,19 @@ namespace Classes { namespace fl_filters
     
 namespace ClassTraits { namespace fl_filters
 {
-    class ConvolutionFilter : public Traits
+    class ConvolutionFilter : public fl_filters::BitmapFilter
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ConvolutionFilter"; }
 #endif
     public:
-        typedef Classes::fl_filters::ConvolutionFilter ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_filters::BitmapFilter InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ConvolutionFilter(VM& vm);
+        ConvolutionFilter(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

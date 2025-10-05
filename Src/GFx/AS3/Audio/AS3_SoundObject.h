@@ -59,6 +59,7 @@ public:
     void         LoadFile(const String& url, bool streaming = false);
     void         Play(int startTime, int loops);
     void         Stop();
+    void         Close();
     void         SetVolume(int volume);
     int          GetVolume();
     void         SetPan(int pan);

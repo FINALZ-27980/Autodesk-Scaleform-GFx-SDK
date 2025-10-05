@@ -52,7 +52,7 @@ namespace Classes { namespace fl_vec
     
 namespace ClassTraits { namespace fl_vec
 {
-    class Vector : public Traits
+    class Vector : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_vec
 #endif
     public:
         typedef Classes::fl_vec::Vector ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Vector(VM& vm);
+        Vector(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -96,8 +98,8 @@ namespace Classes { namespace fl_vec
 
 //##protect##"class_$methods"
     public:
-        const ClassTraits::Traits& Resolve2Vector(const ClassTraits::Traits& elem, VMFile* file) const;
-        virtual AS3::Class& ApplyTypeArgs(unsigned argc, const Value* argv);
+        const ClassTraits::Traits& Resolve2Vector(const ClassTraits::Traits& elem) const;
+        virtual const ClassTraits::Traits& ApplyTypeArgs(unsigned argc, const Value* argv);
 //##protect##"class_$methods"
 
 //##protect##"class_$data"

@@ -52,7 +52,7 @@ namespace Classes { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class GradientType : public Traits
+    class GradientType : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_display
 #endif
     public:
         typedef Classes::fl_display::GradientType ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        GradientType(VM& vm);
+        GradientType(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

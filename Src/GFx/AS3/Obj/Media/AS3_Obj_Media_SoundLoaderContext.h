@@ -92,7 +92,7 @@ namespace Instances { namespace fl_media
 
 namespace InstanceTraits { namespace fl_media
 {
-    class SoundLoaderContext : public CTraits
+    class SoundLoaderContext : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -130,17 +130,19 @@ namespace InstanceTraits { namespace fl_media
     
 namespace ClassTraits { namespace fl_media
 {
-    class SoundLoaderContext : public Traits
+    class SoundLoaderContext : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::SoundLoaderContext"; }
 #endif
     public:
-        typedef Classes::fl_media::SoundLoaderContext ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_media::SoundLoaderContext InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SoundLoaderContext(VM& vm);
+        SoundLoaderContext(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -44,7 +44,7 @@ public:
     {
         return VTMethods[ind.Get()];
     }
-    // Similar to Get(), but it will convert MethodInd to VTableInd.
+    // Similar to GetRaw(), but it will convert MethodInd to VTableInd.
     Value GetValue(AbsoluteIndex ind) const;
 	SF_DEBUG_CODE(const ASString& GetName(AbsoluteIndex ind) const { return Names[ind.Get()]; } )
     Traits& GetTraits() const

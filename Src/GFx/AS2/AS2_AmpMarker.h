@@ -18,6 +18,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #define INC_GAS_AMP_MARKER_H
 
 #include "GFxConfig.h"
+#ifdef SF_AMP_SERVER
 #include "GFx/AS2/AS2_Object.h"
 #include "GFx/AS2/AS2_ObjectProto.h"
 
@@ -72,5 +73,7 @@ public:
 };
 
 }}} // SF::GFx::AS2
+
+#endif
 
 #endif // INC_GAS_AMP_MARKER_H

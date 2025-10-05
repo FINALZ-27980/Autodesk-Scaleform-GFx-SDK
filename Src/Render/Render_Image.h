@@ -50,10 +50,12 @@ enum ImageTarget
     ImageTarget_X360      = 0x2000,
     ImageTarget_PS3       = 0x3000,
     ImageTarget_Wii       = 0x4000,
-	ImageTarget_3DS       = 0x5000,
+    ImageTarget_3DS       = 0x5000,
     ImageTarget_PSVita    = 0x6000,
     ImageTarget_WiiU      = 0x7000,  
     ImageTarget_Adreno    = 0x8000,
+    ImageTarget_DX11      = 0x9000,
+    ImageTarget_Orbis     = 0xA000,
 
     // Mask returning the 
     ImageTarget_Mask      = 0xF000
@@ -117,6 +119,11 @@ enum ImageFormat
     Image_DXT3          = 51, // DXT3 compatible (D3D10 -> BC2).
     Image_DXT5          = 52, // DXT5 compatible (D3D10 -> BC3).
 
+    Image_BC1           = Image_DXT1,   // Aliases
+    Image_BC2           = Image_DXT3,   
+    Image_BC3           = Image_DXT5,
+    Image_BC7,                // Compressed, D3D11 (+Durango)/GL/Orbis only.
+
     Image_PVRTC_RGB_4BPP,     // Compressed.
     Image_PVRTC_RGBA_4BPP,    // Compressed.
     Image_PVRTC_RGB_2BPP,     // Compressed.
@@ -124,6 +131,9 @@ enum ImageFormat
 
     Image_ETC1_RGB_4BPP,      // Compressed, compatible only with Android.
     Image_ETC1_RGBA_8BPP,     // Compressed.
+    Image_ETC2_RGB,
+    Image_ETC2_RGBA,
+    Image_ETC2_RGBA1,         // Punchthrough alpha
 
     Image_ATCIC,              // Compressed, compatible only with Android (RGB)
     Image_ATCICA,             // Compressed, compatible only with Android (RGB w/explicit A).
@@ -137,10 +147,16 @@ enum ImageFormat
     Image_P8            = 100,
     
     // Formats for video textures. Not usable for any other purpose.
+    Image_VideoFormat_Start = 200,
+
     // Image_Y8_U2_V2 is encoded with three separate data planes.
-    Image_Y8_U2_V2      = 200,
+    Image_Y8_U2_V2      = Image_VideoFormat_Start,
     // Image_Y8_U2_V2 is encoded with four separate data planes.
-    Image_Y8_U2_V2_A8   = 201,
+    Image_Y8_U2_V2_A8,
+    // Image_Y4_U2_V2 is encoded into one 32bit data plane.
+    Image_Y4_U2_V2,
+
+    Image_VideoFormat_End = Image_Y4_U2_V2,
 
     ImageFormat_Mask    = 0xFFF,
     
@@ -177,9 +193,14 @@ enum ImageFormat
     Image_PSVita_DXT3             = ImageTarget_PSVita | Image_DXT3            | ImageStorage_Swizzle,
     Image_PSVita_DXT5             = ImageTarget_PSVita | Image_DXT5            | ImageStorage_Swizzle,
 
-	Image_WiiU_DXT1				  = ImageTarget_WiiU   | Image_DXT1			   | ImageStorage_Swizzle,
-	Image_WiiU_DXT3				  = ImageTarget_WiiU   | Image_DXT3			   | ImageStorage_Swizzle,
-	Image_WiiU_DXT5				  = ImageTarget_WiiU   | Image_DXT5			   | ImageStorage_Swizzle,
+    Image_WiiU_DXT1               = ImageTarget_WiiU   | Image_DXT1            | ImageStorage_Swizzle,
+    Image_WiiU_DXT3               = ImageTarget_WiiU   | Image_DXT3            | ImageStorage_Swizzle,
+    Image_WiiU_DXT5               = ImageTarget_WiiU   | Image_DXT5            | ImageStorage_Swizzle,
+
+    Image_Orbis_BC1             = ImageTarget_Orbis    | Image_BC1            | ImageStorage_Tile,
+    Image_Orbis_BC2             = ImageTarget_Orbis    | Image_BC2            | ImageStorage_Tile,
+    Image_Orbis_BC3             = ImageTarget_Orbis    | Image_BC3            | ImageStorage_Tile,
+    Image_Orbis_BC7             = ImageTarget_Orbis    | Image_BC7            | ImageStorage_Tile,
 
     // The desired format can only be obtained through the Decode function;
     // it is not stored directly.
@@ -434,9 +455,9 @@ public:
 // future this may change, which would requre extra Image::Create functions.
 //
 // Image planes are numbered first by the order of data channels in ImageFormat, then
-// by mip-map level index. Image_ARBG_888, for example has only one channel thus the
+// by mip-map level index. Image_R8G8B8A8, for example, has only one channel, thus the
 // index of a plane and mipmap is the same. Image_Y8_U2_V2, however, has three data planes,
-// indexed as {Y = 0, U = 1, V = 2}. If such image also has mip-map levels, the U plane
+// indexed as {Y = 0, U = 1, V = 2}. If such an image also has mip-map levels, the U plane
 // of a second mipmap (first down from the top level), would have an index of 5.
 //
 // For efficiency, ImageData stores one ImagePlane directly as a data member, allocating
@@ -877,9 +898,9 @@ public:
     //    it is mapped.    
     virtual bool            Map(ImageData* pdata, unsigned mipLevel = 0, unsigned levelCount = 0);
     virtual bool            Unmap();
-	SF_AMP_CODE(
-    	virtual bool        Copy(ImageData* pdata);
-	)
+    SF_AMP_CODE(
+        virtual bool        Copy(ImageData* pdata);
+    )
 
     // Synchronizes RenderTarget and Staging content.
     //  - allows mapped changes to be transferred to HW without explicit Unmap call
@@ -1106,11 +1127,11 @@ public:
     virtual ImageFormat      GetDrawableImageFormat() const { return Image_R8G8B8A8; }
 
     // Determines whether the input format is an acceptable DrawableImage format for this texture manager.
-	virtual bool			 IsDrawableImageFormat(ImageFormat format) const { return (format == Image_R8G8B8A8); }
+    virtual bool             IsDrawableImageFormat(ImageFormat format) const { return (format == Image_R8G8B8A8); }
 
     // Returns the ImageSwizzler object compatible with this texture manager. This is used when the CPU accesses
     // GPU textures, which may be tiled and/or swizzled in a platform specific manner.
-	virtual ImageSwizzler&	 GetImageSwizzler() const;
+    virtual ImageSwizzler&   GetImageSwizzler() const;
 
     // Returns the TextureCache for this texture manager (may be NULL).
     TextureCache* GetTextureCache() const { return pTextureCache; }
@@ -1313,7 +1334,7 @@ public:
     virtual void            SetMatrix(const Matrix2F& mat, MemoryHeap* heap = 0);
     virtual void            GetMatrix(Matrix2F* mat) const;
     virtual void            SetMatrixInverse(const Matrix2F& mat, MemoryHeap* heap = 0);
-    virtual void            GetMatrixInverse(Matrix2F* mat) const;
+    virtual bool            GetMatrixInverse(Matrix2F* mat) const;
 
     // Map and Unmap are only available if image has ImageUse_MapSimThread flag.
     // If Map is used user is still responsible for calling Update to notify render thread
@@ -1416,6 +1437,10 @@ public:
     }
 
     virtual MemoryBufferImage* GetAsMemoryImage() { return NULL; }
+
+    SF_AMP_CODE(
+        virtual UPInt   GetBytes(int* memRegion) const;
+    )
 };
 
 // A wrapper around an Image to enable image substitution.
@@ -1442,7 +1467,7 @@ public:
     virtual void        GetMatrix(Matrix2F* mat) const { pImage->GetMatrix(mat); }
     virtual void    SetMatrixInverse(const Matrix2F& mat, MemoryHeap* heap = 0) 
     { pImage->SetMatrixInverse(mat, heap); }
-    virtual void    GetMatrixInverse(Matrix2F* mat) const { pImage->GetMatrixInverse(mat); }
+    virtual bool    GetMatrixInverse(Matrix2F* mat) const { return pImage->GetMatrixInverse(mat); }
     virtual void    GetUVGenMatrix(Matrix2F* mat, TextureManager* manager) 
     { pImage->GetUVGenMatrix(mat, manager); }
     virtual void    GetUVNormMatrix(Matrix2F* mat, TextureManager* manager)
@@ -1586,6 +1611,7 @@ public:
     ~RawImage();
 
     void freeData();
+    bool hasData() const;
 
     // Override original Create (?)
     // Or no TextureManager? Base Create is hidden
@@ -1665,12 +1691,12 @@ public:
     { releaseTexture(); }
 
     virtual Image* GetAsImage() { return this; }
-	SF_AMP_CODE(
-	    virtual bool    Decode(ImageData* pdest, CopyScanlineFunc copyScanline = CopyScanlineDefault, void* arg = 0) const;
+    SF_AMP_CODE(
+        virtual bool    Decode(ImageData* pdest, CopyScanlineFunc copyScanline = CopyScanlineDefault, void* arg = 0) const;
         virtual UPInt   GetBytes(int* memRegion) const { if (memRegion) *memRegion = 0; return pTexture ?  pTexture->GetBytes(memRegion) : Image::GetBytes(memRegion); }
         virtual UInt32  GetImageId() const { return ImageId; }
         virtual UInt32  GetBaseImageId() const { return 0; }
-	)
+    )
 };
 
 
@@ -1698,6 +1724,9 @@ public:
     virtual ImageSize       GetSize() const                 { return pImage->GetSize(); }
     virtual unsigned        GetMipmapCount() const          { return pImage->GetMipmapCount(); }
     virtual ImageRect       GetRect() const                 { return SubRect; }
+
+    virtual bool            GetMatrixInverse(Matrix2F* mat) const;
+
     // Map and Unmap are not allowed for SubImage.
     virtual bool            Map(ImageData*, unsigned, unsigned)     { return false; }
     virtual bool            Unmap()                         { return false; }
@@ -1706,7 +1735,7 @@ public:
     { return pImage->Decode(pdest, csf, arg); }
     virtual Texture*        GetTexture(TextureManager* pm)  { return pImage->GetTexture(pm); }
     virtual void            TextureLost(TextureLossReason reason) { pImage->TextureLost(reason); }
-	Image*					GetBaseImage() { return pImage; }
+    Image*                  GetBaseImage() { return pImage; }
 
     virtual Image* GetAsImage() { return this; }
     SF_AMP_CODE(

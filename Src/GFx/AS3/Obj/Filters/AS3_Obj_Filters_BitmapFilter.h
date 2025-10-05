@@ -108,7 +108,7 @@ namespace Instances { namespace fl_filters
 
 namespace InstanceTraits { namespace fl_filters
 {
-    class BitmapFilter : public CTraits
+    class BitmapFilter : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -134,6 +134,8 @@ namespace InstanceTraits { namespace fl_filters
 
         enum { ThunkInfoNum = 1 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[1];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -146,17 +148,19 @@ namespace InstanceTraits { namespace fl_filters
     
 namespace ClassTraits { namespace fl_filters
 {
-    class BitmapFilter : public Traits
+    class BitmapFilter : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::BitmapFilter"; }
 #endif
     public:
-        typedef Classes::fl_filters::BitmapFilter ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_filters::BitmapFilter InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        BitmapFilter(VM& vm);
+        BitmapFilter(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

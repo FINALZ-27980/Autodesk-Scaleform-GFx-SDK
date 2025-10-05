@@ -282,6 +282,20 @@ void RenderHALThread::setStereoParams(Render::StereoParams sparams)
     getHAL()->SetStereoParams(sparams);
 }
 
+void RenderHALThread::setProfileMode(Render::ProfilerModes mode)
+{
+    getHAL()->GetProfiler().SetProfileMode(mode);
+}
+void RenderHALThread::setProfileFlag(unsigned flag, bool state)
+{
+    getHAL()->GetProfiler().SetProfileFlag(flag, state);
+}
+
+unsigned RenderHALThread::getProfileFlag(unsigned flag)
+{
+    return getHAL()->GetProfiler().GetProfileFlag(flag);
+}
+
 void RenderHALThread::getMeshCacheParams(Render::MeshCacheParams* params)
 {
     *params = getHAL()->GetMeshCache().GetParams();

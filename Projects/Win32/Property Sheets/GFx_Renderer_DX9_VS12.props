@@ -8,7 +8,8 @@
       <PreprocessorDefinitions>SF_D3D_VERSION=9;FXPLAYER_RENDER_DIRECT3D;SF_BUILD_GFXSHADERMAKER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;libgfxrender_d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalLibraryDirectories>..\..\..\..\..\Lib\$(PlatformName)\$(MsvcVer)\$(ConfigShort);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

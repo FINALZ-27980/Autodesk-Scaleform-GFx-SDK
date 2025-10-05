@@ -31,16 +31,29 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 int_::tito[int_::ThunkInfoNum] = {
+    //    0, 2, 4, 6, 8, 
+    // };
+    const TypeInfo* int_::tit[9] = {
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::int_TI, 
+    };
+    const Abc::ConstValue int_::dva[1] = {
+        {Abc::CONSTANT_UInt, 1}, 
+    };
     const ThunkInfo int_::ti[int_::ThunkInfoNum] = {
-        {&InstanceTraits::fl::int_::AS3toExponential, &AS3::fl::StringTI, "toExponential", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::AS3toFixed, &AS3::fl::StringTI, "toFixed", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::AS3toPrecision, &AS3::fl::StringTI, "toPrecision", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::AS3toString, &AS3::fl::StringTI, "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::AS3valueOf, &AS3::fl::int_TI, "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::int_::AS3toExponential, &int_::tit[0], "toExponential", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::int_::AS3toFixed, &int_::tit[2], "toFixed", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::int_::AS3toPrecision, &int_::tit[4], "toPrecision", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::int_::AS3toString, &int_::tit[6], "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &int_::dva[0]},
+        {&InstanceTraits::fl::int_::AS3valueOf, &int_::tit[8], "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     int_::int_(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::int_::int_()"
         SetTraitsType(Traits_SInt);
@@ -68,7 +81,7 @@ namespace InstanceTraits { namespace fl
         if (fractionDigits > 20)
             return vm.ThrowRangeError(VM::Error(VM::eInvalidPrecisionError, vm));
 
-        DoubleFormatter f(static_cast<Double>(_this.AsInt()));
+        DoubleFormatter f(_this.AsInt());
         f.SetType(DoubleFormatter::FmtScientific).SetPrecision(fractionDigits).Convert();
         result = vm.GetStringManager().CreateString(f.GetResult().ToCStr(), f.GetSize());
 //##protect##"InstanceTraits::AS3toExponential()"
@@ -88,7 +101,7 @@ namespace InstanceTraits { namespace fl
         if (fractionDigits > 20)
             return vm.ThrowRangeError(VM::Error(VM::eInvalidPrecisionError, vm));
 
-        DoubleFormatter f(static_cast<Double>(_this.AsInt()));
+        DoubleFormatter f(_this.AsInt());
         f.SetType(DoubleFormatter::FmtDecimal).SetPrecision(fractionDigits).Convert();
         result = vm.GetStringManager().CreateString(f.GetResult().ToCStr(), f.GetSize());
 //##protect##"InstanceTraits::AS3toFixed()"
@@ -108,7 +121,7 @@ namespace InstanceTraits { namespace fl
         if (precision == 0 || precision > 21)
             return vm.ThrowRangeError(VM::Error(VM::eInvalidPrecisionError, vm));
 
-        DoubleFormatter f(static_cast<Double>(_this.AsInt()));
+        DoubleFormatter f(_this.AsInt());
         f.SetType(DoubleFormatter::FmtSignificant).SetPrecision(precision).Convert();
         result = vm.GetStringManager().CreateString(f.GetResult().ToCStr(), f.GetSize());
 //##protect##"InstanceTraits::AS3toPrecision()"
@@ -233,13 +246,28 @@ namespace InstanceTraits { namespace fl
 
 namespace Classes { namespace fl
 {
+    // const UInt16 int_::tito[int_::ThunkInfoNum] = {
+    //    0, 2, 4, 5, 7, 9, 
+    // };
+    const TypeInfo* int_::tit[11] = {
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::int_TI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+    };
+    const Abc::ConstValue int_::dva[2] = {
+        {Abc::CONSTANT_UInt, 1}, 
+        {Abc::CONSTANT_UInt, 1}, 
+    };
     const ThunkInfo int_::ti[int_::ThunkInfoNum] = {
-        {&InstanceTraits::fl::int_::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::toLocaleStringProto, &AS3::fl::StringTI, "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::valueOfProto, &AS3::fl::int_TI, "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::int_::toExponentialProto, &AS3::fl::StringTI, "toExponential", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::toFixedProto, &AS3::fl::StringTI, "toFixed", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::int_::toPrecisionProto, &AS3::fl::StringTI, "toPrecision", NULL, Abc::NS_Public, CT_Method, 0, 1},
+        {&InstanceTraits::fl::int_::toStringProto, &int_::tit[0], "toString", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &int_::dva[0]},
+        {&InstanceTraits::fl::int_::toLocaleStringProto, &int_::tit[2], "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &int_::dva[1]},
+        {&InstanceTraits::fl::int_::valueOfProto, &int_::tit[4], "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::int_::toExponentialProto, &int_::tit[5], "toExponential", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::int_::toFixedProto, &int_::tit[7], "toFixed", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::int_::toPrecisionProto, &int_::tit[9], "toPrecision", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
     };
 
     int_::int_(ClassTraits::Traits& t)
@@ -290,25 +318,28 @@ namespace ClassTraits { namespace fl
         {"MAX_VALUE", NULL, OFFSETOF(Classes::fl::int_, MAX_VALUE), Abc::NS_Public, SlotInfo::BT_Int, 1},
     };
 
-    int_::int_(VM& vm)
-    : Traits(vm, AS3::fl::int_CI)
+
+    int_::int_(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::int_::int_()"
         SetTraitsType(Traits_SInt);
 //##protect##"ClassTraits::int_::int_()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::int_(vm, AS3::fl::int_CI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::int_(*this));
 
     }
 
     Pickable<Traits> int_::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) int_(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) int_(vm, AS3::fl::int_CI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::int_CI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
     bool int_::Coerce(const Value& value, Value& result) const
@@ -335,6 +366,11 @@ namespace fl
 {
     const TypeInfo int_TI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl::int_::InstanceType),
+        0,
+        ClassTraits::fl::int_::MemberInfoNum,
+        InstanceTraits::fl::int_::ThunkInfoNum,
+        0,
         "int", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -342,10 +378,6 @@ namespace fl
     const ClassInfo int_CI = {
         &int_TI,
         ClassTraits::fl::int_::MakeClassTraits,
-        0,
-        ClassTraits::fl::int_::MemberInfoNum,
-        InstanceTraits::fl::int_::ThunkInfoNum,
-        0,
         NULL,
         ClassTraits::fl::int_::mi,
         InstanceTraits::fl::int_::ti,

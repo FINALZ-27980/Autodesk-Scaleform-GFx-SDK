@@ -26,18 +26,14 @@ enum GStatRenderer
     StatRender_Default = StatGroup_Renderer,
 
     StatRender_Mem,
-        StatRender_Buffers_Mem,
-        StatRender_RenderBatch_Mem,
-        StatRender_Primitive_Mem,
-        StatRender_Fill_Mem,
-        StatRender_Mesh_Mem,
-        StatRender_MeshBatch_Mem,
+        StatRender_MeshStaging_Mem,
+        StatRender_RenderPipeline_Mem,
+        StatRender_MeshCacheMgmt_Mem,
         StatRender_Context_Mem,
         StatRender_NodeData_Mem,
         StatRender_TreeCache_Mem,
         StatRender_TextureManager_Mem,
         StatRender_MatrixPool_Mem,
-        StatRender_MatrixPoolHandle_Mem,
         StatRender_Text_Mem,
         StatRender_Font_Mem
 };

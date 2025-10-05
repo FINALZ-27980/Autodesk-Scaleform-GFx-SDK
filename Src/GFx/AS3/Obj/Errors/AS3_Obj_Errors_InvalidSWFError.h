@@ -52,17 +52,19 @@ namespace Classes { namespace fl_errors
     
 namespace ClassTraits { namespace fl_errors
 {
-    class InvalidSWFError : public Traits
+    class InvalidSWFError : public fl::Error
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::InvalidSWFError"; }
 #endif
     public:
-        typedef Classes::fl_errors::InvalidSWFError ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        InvalidSWFError(VM& vm);
+        InvalidSWFError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

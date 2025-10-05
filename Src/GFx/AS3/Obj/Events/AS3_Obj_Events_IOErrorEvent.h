@@ -130,7 +130,7 @@ namespace Instances { namespace fl_events
 
 namespace InstanceTraits { namespace fl_events
 {
-    class IOErrorEvent : public CTraits
+    class IOErrorEvent : public fl_events::ErrorEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -156,6 +156,8 @@ namespace InstanceTraits { namespace fl_events
 
         enum { ThunkInfoNum = 4 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[5];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -168,7 +170,7 @@ namespace InstanceTraits { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class IOErrorEvent : public Traits
+    class IOErrorEvent : public fl_events::ErrorEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -176,9 +178,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::IOErrorEvent ClassType;
+        typedef InstanceTraits::fl_events::IOErrorEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IOErrorEvent(VM& vm);
+        IOErrorEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 1 };
         static const MemberInfo mi[MemberInfoNum];

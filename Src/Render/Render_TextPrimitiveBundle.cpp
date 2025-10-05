@@ -578,8 +578,7 @@ bool TextPrimitiveBundle::addAndPinBatchLayers(TreeCacheText* textCache, TextMes
         // Create mask primitive and add entries to it.
         if (!pMaskPrimitive)
         {            
-            pMaskPrimitive = *SF_HEAP_AUTO_NEW(this)
-                MaskPrimitive(textCache->GetHAL(),  MaskPrimitive::Mask_Combinable);
+            pMaskPrimitive = *SF_HEAP_AUTO_NEW(this) MaskPrimitive();
         }
         if (pMaskPrimitive)
         {

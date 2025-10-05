@@ -30,10 +30,10 @@ bool FileWriter::Write(File* out, const ImageData& imageData,
         return false;
 
     SF_ASSERT(imageData.RawPlaneCount > 0);
-    const ImageWriteArgs* args = 0;
+    // const ImageWriteArgs* args = 0;
     if (argsVal)
     {
-        args = (const ImageWriteArgs*)argsVal;
+        //  args = (const ImageWriteArgs*)argsVal;
         
     }
     out->WriteUByte('S');

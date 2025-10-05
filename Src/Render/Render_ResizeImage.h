@@ -34,7 +34,6 @@ class LinearInterpolator
 {
 public:
     //--------------------------------------------------------------------
-    LinearInterpolator() {}
     LinearInterpolator(int y1, int y2, int count) :
     Cnt(count),
         Lft((y2 - y1) / count),

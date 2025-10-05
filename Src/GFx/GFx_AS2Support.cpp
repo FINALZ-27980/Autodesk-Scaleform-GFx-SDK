@@ -38,12 +38,7 @@ MovieImpl* AS2Support::CreateMovie(MemoryContext* memContext)
     AS2::MemoryContextImpl* memContextImpl = static_cast<AS2::MemoryContextImpl*>(memContext);
     MemoryHeap* pheap = memContextImpl->Heap;
     MovieImpl* pmovie           = SF_HEAP_NEW(pheap) MovieImpl(pheap);
-#if defined(SF_SHOW_WATERMARK)
-    if(!pmovie->IsValidEval())
-    {
-        return NULL;
-    }
-#endif
+
     Ptr<ASMovieRootBase> pasmr = *SF_HEAP_NEW(pheap) AS2::MovieRoot(memContextImpl, pmovie, this);
     pmovie->SetAcceptAnimMovesWith3D(true);     // Set AS2-only default which allows timeline with 3D
     return pmovie;

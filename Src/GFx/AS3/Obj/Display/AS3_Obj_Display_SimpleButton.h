@@ -199,6 +199,10 @@ namespace Instances { namespace fl_display
         }
 
 //##protect##"instance$data"
+        SPtr<DisplayObject> OverStateObject;
+        SPtr<DisplayObject> UpStateObject;
+        SPtr<DisplayObject> DownStateObject;
+        SPtr<DisplayObject> HitTestStateObject;
 //##protect##"instance$data"
 
     };
@@ -206,7 +210,7 @@ namespace Instances { namespace fl_display
 
 namespace InstanceTraits { namespace fl_display
 {
-    class SimpleButton : public CTraits
+    class SimpleButton : public fl_display::InteractiveObject
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -232,6 +236,8 @@ namespace InstanceTraits { namespace fl_display
 
         enum { ThunkInfoNum = 16 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[24];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -244,17 +250,19 @@ namespace InstanceTraits { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class SimpleButton : public Traits
+    class SimpleButton : public fl_display::InteractiveObject
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::SimpleButton"; }
 #endif
     public:
-        typedef Classes::fl_display::SimpleButton ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_display::SimpleButton InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SimpleButton(VM& vm);
+        SimpleButton(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

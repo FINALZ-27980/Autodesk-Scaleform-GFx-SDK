@@ -1,0 +1,8 @@
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/ALL_BUILD.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/ZERO_CHECK.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/elements.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/expat.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/outline.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/runtests.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/runtestspp.dir
+D:/Development/op3d_active/expat-2.1.0/msvc/CMakeFiles/xmlwf.dir

@@ -49,6 +49,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #endif
 
 namespace Scaleform {
+    class File;
 
 namespace Render { 
     class Renderer2D; 
@@ -59,11 +60,12 @@ namespace GFx {
     class MovieImpl;
     class ImageResource;
     class LoadProcess;
+    class MovieDef;
+    class SocketImplFactory;
     namespace AMP {
         class AppControlInterface;
         class ServerState;
         class MessageAppControl;
-        class SocketImplFactory;
     }
 }
 
@@ -93,6 +95,7 @@ enum AmpNativeFunctionId
     Amp_Native_Function_Id_GradientFill,
     Amp_Native_Function_Id_GlyphCache_RasterizeGlyph,
     Amp_Native_Function_Id_GlyphCache_RasterizeShadow,
+    Amp_Native_Function_Id_GlyphCache_EvictText,
 
     Amp_Native_Function_Id_Begin_ObjectInterface,
     Amp_Native_Function_Id_GetVariable,
@@ -124,6 +127,7 @@ enum AmpNativeFunctionId
     Amp_Native_Function_Id_ObjectInterface_GetMatrix3D,
     Amp_Native_Function_Id_ObjectInterface_SetMatrix3D,
     Amp_Native_Function_Id_ObjectInterface_IsDisplayObjectActive,
+    Amp_Native_Function_Id_ObjectInterface_GetParent,
     Amp_Native_Function_Id_ObjectInterface_GetDisplayInfo,
     Amp_Native_Function_Id_ObjectInterface_SetDisplayInfo,
     Amp_Native_Function_Id_ObjectInterface_SetText,
@@ -136,10 +140,13 @@ enum AmpNativeFunctionId
     Amp_Native_Function_Id_ObjectInterface_ToString,
     Amp_Native_Function_Id_ObjectInterface_GetWorldMatrix,
     Amp_Native_Function_Id_ObjectInterface_InvokeClosure,
+	Amp_Native_Function_Id_ObjectInterface_IsInstanceOf,
     Amp_Native_Function_Id_ObjectInterface_IsByteArray,
     Amp_Native_Function_Id_ObjectInterface_GetByteArraySize,
+	Amp_Native_Function_Id_ObjectInterface_SetByteArraySize,
     Amp_Native_Function_Id_ObjectInterface_ReadFromByteArray,
     Amp_Native_Function_Id_ObjectInterface_WriteToByteArray,
+	Amp_Native_Function_Id_ObjectInterface_GetRawDataPtr,
     Amp_Native_Function_Id_End_ObjectInterface,
 
     Amp_Num_Native_Function_Ids
@@ -209,7 +216,7 @@ public:
     virtual void        SetConnectionWaitTime(unsigned waitTimeMilliseconds) = 0;
     virtual void        SetHeapLimit(UPInt memLimit) = 0;
     virtual void        SetInitSocketLib(bool initSocketLib) = 0;
-    virtual void        SetSocketImplFactory(GFx::AMP::SocketImplFactory* socketFactory) = 0;
+    virtual void        SetSocketImplFactory(GFx::SocketImplFactory* socketFactory) = 0;
 
     // Message handler
     virtual bool        HandleNextMessage() = 0;
@@ -244,8 +251,9 @@ public:
     // AMP keeps track of some renderer stats
     virtual void        AddStrokes(UInt32 numStrokes) = 0;
     virtual void        RemoveStrokes(UInt32 numStrokes) = 0;
-    virtual void        IncrementFontThrashing() = 0;
     virtual void        IncrementFontFailures() = 0;
+    virtual void        IncrementFontOptRead() = 0;
+    virtual void        DecrementFontOptRead() = 0;
     
     // AMP renderer is used to render overdraw
     virtual void        SetRenderer(Render::Renderer2D* renderer) = 0;
@@ -271,6 +279,7 @@ protected:
     static AmpServer* AmpServerSingleton;
 };
 
+
 class AmpStats : public RefCountBase<AmpStats, Stat_Default_Mem>
 {
 public:
@@ -280,6 +289,9 @@ public:
     virtual void    NativePopCallstack(UInt64 time) = 0;
     virtual void    AddGcRoots(UInt32 numRoots) = 0;
     virtual void    AddGcFreedRoots(UInt32 numFreedRoots) = 0;
+    virtual void    GetStats(StatBag* bag, bool reset) = 0;
+    virtual void    SetMovieDef(GFx::MovieDef* movieDef) = 0;
+    virtual void    SetName(const char* pcName) = 0;
 };
 
 
@@ -350,6 +362,16 @@ private:
     UInt64              StartTicks;
     AmpStats*           Stats;
     GPAScopedTask       GpaTask;
+};
+
+
+class AmpMovieObjectDesc : public RefCountBase<AmpMovieObjectDesc, Stat_Default_Mem>
+{
+public:
+    StringLH Description;
+    ArrayLH<Ptr<AmpMovieObjectDesc> > Children;
+    void Read(File& str);
+    void Write(File& str) const;
 };
 
 

@@ -59,17 +59,19 @@ namespace Classes { namespace fl_html
     
 namespace ClassTraits { namespace fl_html
 {
-    class HTMLHistoryItem : public Traits
+    class HTMLHistoryItem : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::HTMLHistoryItem"; }
 #endif
     public:
-        typedef Classes::fl_html::HTMLHistoryItem ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        HTMLHistoryItem(VM& vm);
+        HTMLHistoryItem(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

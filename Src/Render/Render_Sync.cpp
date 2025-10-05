@@ -108,6 +108,7 @@ RenderSync::~RenderSync()
 
 void RenderSync::BeginFrame()
 {
+    WithinFrame = true;
     FenceFrame* frame = FenceFrameAlloc.Alloc();
     frame->RSContext = this;
     FenceFrames.PushBack(frame);
@@ -155,11 +156,13 @@ bool RenderSync::EndFrame()
             passFrame = passFrame->pNext;
         }
     }
+    WithinFrame = false;
     return true;
 }
 
 Fence* RenderSync::InsertFence()
 {
+    SF_DEBUG_ASSERT(WithinFrame, "RenderSync::InsertFence - not within fence frame.");
     if (FenceFrames.IsEmpty())
         return 0;
     UInt64 apiHandle = SetFence();

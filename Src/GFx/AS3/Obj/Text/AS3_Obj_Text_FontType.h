@@ -52,7 +52,7 @@ namespace Classes { namespace fl_text
     
 namespace ClassTraits { namespace fl_text
 {
-    class FontType : public Traits
+    class FontType : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_text
 #endif
     public:
         typedef Classes::fl_text::FontType ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FontType(VM& vm);
+        FontType(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

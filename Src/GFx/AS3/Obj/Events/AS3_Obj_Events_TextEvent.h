@@ -89,6 +89,7 @@ namespace Instances { namespace fl_events
     public:
         void SetText(const ASString& t) { Text = t; }
         void SetText(wchar_t ch);
+        void SetText(const wchar_t* ch);
 //##protect##"instance$methods"
 
     public:
@@ -132,7 +133,7 @@ namespace Instances { namespace fl_events
 
 namespace InstanceTraits { namespace fl_events
 {
-    class TextEvent : public CTraits
+    class TextEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -158,6 +159,8 @@ namespace InstanceTraits { namespace fl_events
 
         enum { ThunkInfoNum = 4 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[5];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -170,7 +173,7 @@ namespace InstanceTraits { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class TextEvent : public Traits
+    class TextEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -178,9 +181,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::TextEvent ClassType;
+        typedef InstanceTraits::fl_events::TextEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        TextEvent(VM& vm);
+        TextEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

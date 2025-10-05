@@ -34,8 +34,11 @@ namespace InstanceTraits
         // Determines whether these traits implement the specified interface class.        
         virtual bool SupportsInterface(const Traits&) const;
         virtual VMAbcFile* GetFilePtr() const;
-        virtual VMAppDomain& GetAppDomain() const;
-        
+        VMAppDomain& GetAppDomain() const
+        {
+            return GetFile().GetAppDomain();
+        }
+
     public:
         virtual CheckResult PreInit(const Value& _this) const;
 #if 0
@@ -102,7 +105,10 @@ namespace ClassTraits
 
     public:
         virtual VMAbcFile* GetFilePtr() const;
-        virtual VMAppDomain& GetAppDomain() const;
+        VMAppDomain& GetAppDomain() const
+        {
+            return GetFile().GetAppDomain();
+        }
 
         Pickable<Classes::UserDefined> MakeClass();
 

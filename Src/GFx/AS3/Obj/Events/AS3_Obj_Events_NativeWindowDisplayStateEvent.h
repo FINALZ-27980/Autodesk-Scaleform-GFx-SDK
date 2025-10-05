@@ -59,7 +59,7 @@ namespace Classes { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class NativeWindowDisplayStateEvent : public Traits
+    class NativeWindowDisplayStateEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -67,9 +67,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::NativeWindowDisplayStateEvent ClassType;
+        typedef InstanceTraits::fl_events::Event InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeWindowDisplayStateEvent(VM& vm);
+        NativeWindowDisplayStateEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

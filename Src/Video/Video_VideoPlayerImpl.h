@@ -33,11 +33,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "Video/Video_Video.h"
 #include "Video/Video_VideoImage.h"
 
-#ifdef SF_OS_ORBIS
-#include <cri_movie_ps4.h>
-#include "Video/Video_VideoPS4.h"
-#endif
-
 namespace Scaleform { namespace GFx { namespace Video {
 
 class VideoPlayerImpl;
@@ -140,7 +135,6 @@ public:
 
     virtual void      SetAudioTrack(int trackIndex);
     virtual void      SetSubAudioTrack(int trackIndex);
-    virtual void      SetExtraAudioTrack(int trackIndex);
     virtual void      ReplaceCenterVoice(int trackIndex);
 
     virtual void      SetLoopFlag(bool flag);
@@ -173,7 +167,6 @@ private:
     Ptr<VideoReader>          pReader;
     Ptr<CriMvSound>           pSound;
     Ptr<CriMvSound>           pSubSound;
-    Ptr<CriMvSound>           pExtraSound;
 
     CriMvStreamingParameters  StreamParams;
     CriMvFrameInfo            FrameInfo;
@@ -213,11 +206,6 @@ private:
     MemoryHeap*               pGFxHeap;
     CriHeap                   Heap;
     Ptr<Log>                  pLog;
-
-#ifdef SF_OS_ORBIS
-    // Work buffer for H.264 decoder 
-    VideoPS4::OnionMemoryInfo   H264MemoryInfo;
-#endif
 };
 
 }}} // Scaleform::GFx::Video

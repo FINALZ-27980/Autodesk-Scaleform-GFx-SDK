@@ -55,7 +55,6 @@ void GlyphQueue::Clear()
         while(!slot->TextFields.IsEmpty())
         {
             pEvictNotifier->Evict(slot->TextFields.GetFirst()->pText);
-            SF_AMP_CODE(AmpServer::GetInstance().IncrementFontThrashing();)
         }
         slot = slot->pNext;
     }
@@ -359,6 +358,9 @@ GlyphSlot* GlyphQueue::initNewSlot(GlyphBand* band, unsigned x, unsigned w)
 //------------------------------------------------------------------------
 GlyphNode* GlyphQueue::allocateNewSlot(unsigned w, unsigned h)
 {
+    // Moved down here so we don't count early returns
+    SF_AMP_SCOPE_RENDER_TIMER_ID("GlyphQueue::allocateNewSlot", Amp_Native_Function_Id_GlyphCache_RasterizeGlyph);
+
     // Allocate a new slot if available. First, check for the necessity
     // to initialize a new band. 
     //----------------------
@@ -441,7 +443,6 @@ void GlyphQueue::releaseSlot(GlyphSlot* slot)
     while(!slot->TextFields.IsEmpty())
     {
         pEvictNotifier->Evict(slot->TextFields.GetFirst()->pText);
-        SF_AMP_CODE(AmpServer::GetInstance().IncrementFontThrashing();)
     }
 
     if (slot->pRoot->Param.pFont)
@@ -708,6 +709,7 @@ GlyphNode* GlyphQueue::evictOldSlot(unsigned w, unsigned h, unsigned pass)
 //------------------------------------------------------------------------
 GlyphNode* GlyphQueue::evictOldSlot(unsigned w, unsigned h)
 {
+    SF_AMP_SCOPE_RENDER_TIMER_ID("GlyphQueue::evictOldSlot", Amp_Native_Function_Id_GlyphCache_EvictText);
     pEvictNotifier->ApplyInUseList();
     GlyphNode* node = evictOldSlot(w, h, 0);
     if (node == 0)

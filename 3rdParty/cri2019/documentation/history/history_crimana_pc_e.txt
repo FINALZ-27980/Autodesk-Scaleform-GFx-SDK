@@ -1,0 +1,170 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2017 CRI Middleware Co., Ltd.
+ *
+ * Library : CRI Mana Library for PC
+ * Module  : Revision history
+ * File    : history_crimana_pc_e.txt
+ * Version : 2.18.00
+ *
+ ****************************************************************************/
+
+1. Library Version
+(1) CRI Mana library
+  [cri_mana_pcx86.lib] 1,567,064 bytes
+  CRI CFT      PCx86  Ver.2.31     Build:Feb 22 2019 16:14:09  MSC19.00.24215.1,MT
+  CRI CRS      PCx86  Ver.1.06     Build:Feb 22 2019 16:14:09  MSC19.00.24215.1,MT
+  CRI CRW:WIN  PCx86  Ver.0.84     Build:Feb 22 2019 16:14:10  MSC19.00.24215.1,MT
+  CRI DCT      PCx86  Ver.2.045    Build:Feb 22 2019 16:14:10  MSC19.00.24215.1,MT
+  CRI DLG      PCx86  Ver.1.22     Build:Feb 22 2019 16:14:10  MSC19.00.24215.1,MT
+  CRI ERR      PCx86  Ver.1.01     Build:Feb 22 2019 16:14:10  MSC19.00.24215.1,MT
+  CRI M2V      PCx86  Ver.2.079    Build:Feb 22 2019 16:14:56  MSC19.00.24215.1,MT
+  CRI Mana     PCx86  Ver.2.18.00  Build:Feb 22 2019 16:16:38  MSC19.00.24215.1,MT
+  CRI MEM      PCx86  Ver.1.001    Build:Feb 22 2019 16:14:56  MSC19.00.24215.1,MT
+  CRI Movie    PCx86  Ver.4.11.12  Build:Feb 22 2019 16:15:04  MSC19.00.24215.1,MT
+  CRI MPV      PCx86  Ver.2.109    Build:Feb 22 2019 16:14:58  MSC19.00.24215.1,MT
+  CRI MvCore   PCx86  Ver.1.26.04  Build:Feb 22 2019 16:14:10  MSC19.00.24215.1,MT
+  criAdec      PCx86  Ver.2.02     Build:Feb 22 2019 16:14:09  MSC19.00.24215.1,MT
+  criMvPly     PCx86  Ver.4.05.19  Build:Feb 22 2019 16:15:00  MSC19.00.24215.1,MT
+  criV264Mft   PCx86  Ver.1.01     Build:Feb 22 2019 16:15:05  MSC19.00.24215.1,MT
+  criVdec      PCx86  Ver.3.55     Build:Feb 22 2019 16:15:01  MSC19.00.24215.1,MT
+  criVmpv      PCx86  Ver.3.60     Build:Feb 22 2019 16:15:02  MSC19.00.24215.1,MT
+  SJ           PCx86  Ver.6.51     Build:Feb 22 2019 16:14:59  MSC19.00.24215.1,MT
+
+2. Library Size
+  [cri_mana_pcx86.lib]
+  Total Code size:	      706244	[BYTE]
+  Total Data size:	     3545412	[BYTE]
+  Total Lib  size:	     4251656	[BYTE]
+
+3. System requirements/Testing environment
+This release has been developed and tested in the following environment:
+
+3.1 Hardware
+  CPU       : Intel Core i7-3770 (3.4GHz) 
+  Memory    : 8GB
+
+3.2 Development environment
+(1) OS
+  Microsoft Windows 10 Professional
+
+(2) Compiler / Debugger
+  Microsoft Visual Studio 2015 Update 3
+
+4. Revision history
+[2019-02-25 CRI Mana Ver.2.18.00]------------------------------------------
+(1) New features
+  (a) Added an API to reset all bus send level information.
+      If you want to specify a total of eight or more bus send levels, reset with this function.
+      - criManaPlayer_ResetBusSendLevelAll
+      * Resetting of the CriManaPlayer with the "use_atomex_player" flag enabled is not supported.
+  (b) Added an API to set the sync mode of movie events (cue points, subtitles).
+      - criManaPlayer_SetMovieEventSyncMode
+
+(2) Bug fixes
+  (a) Fixed a bug where a crash would occur when calling the criManaPlayer_SetBusSendLevelByName function
+      on the 9th and subsequent DSP buses.
+  (b) Fixed a bug where playback did not proceed in the middle of the second lap
+      when loop playback and seek were performed on movies containing HCA codec.
+  (c) Fixed a bug where might not advance from the PREP status if H.264 playback included audio tracks
+      with 3 or more tracks. 
+      This correction increases the size of the player handle management memory by 4 KB.
+
+[2018-12-12 CRI Mana Ver.2.16.20]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where can not play 1920x1088 H.264 video in Windows 7 environment.
+  (b) Fixed a bug where sometimes does not transition to the error state,
+      even if an error occurs in internal decoding, when H.264 playback.
+
+[2018-10-04 CRI Mana Ver.2.16.17]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the application would crash when playing back movies continuously
+      in the CriManaPlayer if the "use_atomex_player" flag was enabled.
+
+[2018-09-26 CRI Mana Ver.2.16.16]------------------------------------------
+(1) New features
+  (a) Added functions to set the category to Movie audio track.
+      - criManaPlayer_SetSoundCategoryByName
+      - criManaPlayer_UnsetSoundCategory
+  (b) Added control flags designation API for whether or not to use the stream manager.
+      - criMana_UseStreamerManager
+      - criMana_IsStreamerManagerUsed
+  (c) Added the H.264 decoding function.
+      Please use the criMana_SetupMediaFoundationH264Decoder_PC function to activate.
+
+(2) Bug fixes
+  (a) Fixed a bug where CriManaPlayer could not correctly acquire the parameter of
+      the audio track when the "use_atomex_player" flag was activated.
+
+[2018-06-07 CRI Mana Ver.2.15.17]------------------------------------------
+(1) New features
+  (a) Added a video codec VP9.
+  (b) Added the common APIs and the platform specific APIs corresponding to VP9.
+      - criMana_SetDefaultVp9DecoderConfig
+      - criMana_CalculateVp9DecoderWorkSize
+      - criMana_SetupVp9Decoder
+      - criMana_SetVp9DecodeThreadPriority_PC
+  (c) Added the member of CriManaVideoCodecType.
+      - CRIMANA_VIDEO_CODEC_VP9
+
+(2) Bug fixes
+  (a) Fixed a bug where the internal frame management might be broken
+      when not discarding the frame in the order acquired by criManaPlayer_KeepFrame.
+  (b) Fixed a bug where could cause crash with illegal memory access
+      when concatenating and reproducing very small movie data by multithread decoding.
+  (c) Fixed a bug in which access violation may occur
+      if call criManaPlayer_Destroy after calling criManaPlayer_FreePlaybackWork.
+
+[2018-01-31 CRI Mana Ver.2.15.04]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the discarding of audio tracks was not executed correctly.
+  (b) Fixed a bug where some audio parameters that were set before the CriManaPlayer
+      was activated (with the use_atomex_player flag) were reset at the start of the next playback.
+
+[2017-10-06 CRI Mana Ver.2.14.00]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the decoding skip function did not work when using keep frame.
+  (b) Fixed a bug where the decoding skip function was skipped too much when it was enabled.
+
+[2017-06-30 CRI Mana Ver.2.13.04]------------------------------------------
+(1) Library operating conditions
+  (a) Execution (linking) of this library requires the CRI Atom Ver.2.14.00 library or a more recent version.
+
+(2) New features
+  (a) Added an API to play 3 audio tracks simultaneously in the movie.
+       - criManaPlayer_SetExtraAudioTrack
+       - criManaPlayer_SetExtraAudioVolume
+       - criManaPlayer_GetExtraAudioVolume
+       - criManaPlayer_SetExtraAudioBusSendLevelByName
+  (b) Added the "use_atomex_player" member to the CriManaPlayerConfig structure.
+      When enabled, CriManaPlayer will play the movie audio track with CriAtomExPlayer.
+      One CriAtomExPlayer is created for each CriManaPlayer.
+  (c) Added an API to get CriAtomExPlayer from CriManaPlayer.
+      - criManaPlayer_GetAtomExPlayer
+  (d) Added a function to perform the audio output of CriManaPlayer with CriAtomExPlayer.
+      You can create a CriAtomExPlayer by passing true to the "use_atomex_player" member of the
+      CriManaPlayerConfig structure and passing it to the criManaPlayer_CreateWithConfig function.
+  (e) Added a video playback function supporting Ambisonics audio.
+      It is available only on some platforms.
+      If you are interested in this feature, please contact support.
+      Specific usage methods and samples will be added in a future SDK update.
+      Along with this, "ambisonics" (Ambisonics flag) has been added to the audio parameters
+      that can be acquired by criManaPlayer_GetMovieInfo.
+
+(3) Specification changes
+  (a) Added the "extra_audio_params" member to the CriManaPlaybackExWorkConfig structure.
+      If you are directly manipulating the members of the CriManaPlaybackExWorkConfig structure,
+      please set the additional members.
+  (b) In order to reduce the size of the library, the information about the following submodules was deleted from
+      the version information of the library file. (The submodule itself persists)
+      - "CRI Mana Sound"
+      - "CRI Mana Streamer"
+
+ [2017-01-10 CRI Mana Ver.2.10.00]------------------------------------------
+The first release of the CRI Mana Library for PC.
+
+-END-
+
+/*--< end of file >---------------------------------------------------------*/

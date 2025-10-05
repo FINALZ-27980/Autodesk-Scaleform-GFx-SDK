@@ -141,7 +141,7 @@ namespace Instances { namespace fl_ui
 
 namespace InstanceTraits { namespace fl_ui
 {
-    class ContextMenu : public CTraits
+    class ContextMenu : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -167,6 +167,8 @@ namespace InstanceTraits { namespace fl_ui
 
         enum { ThunkInfoNum = 5 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[7];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -179,17 +181,19 @@ namespace InstanceTraits { namespace fl_ui
     
 namespace ClassTraits { namespace fl_ui
 {
-    class ContextMenu : public Traits
+    class ContextMenu : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ContextMenu"; }
 #endif
     public:
-        typedef Classes::fl_ui::ContextMenu ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_ui::ContextMenu InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ContextMenu(VM& vm);
+        ContextMenu(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -61,7 +61,7 @@ namespace Classes { namespace fl_system
     
 namespace ClassTraits { namespace fl_system
 {
-    class Capabilities : public Traits
+    class Capabilities : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -69,12 +69,16 @@ namespace ClassTraits { namespace fl_system
 #endif
     public:
         typedef Classes::fl_system::Capabilities ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Capabilities(VM& vm);
+        Capabilities(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 27 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[27];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

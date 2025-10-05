@@ -30,12 +30,6 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 //##protect##"methods"
 //##protect##"methods"
-
-// Values of default arguments.
-namespace Impl
-{
-
-} // namespace Impl
 typedef ThunkFunc0<Instances::fl::RegExp, Instances::fl::RegExp::mid_sourceGet, ASString> TFunc_Instances_RegExp_sourceGet;
 typedef ThunkFunc0<Instances::fl::RegExp, Instances::fl::RegExp::mid_globalGet, bool> TFunc_Instances_RegExp_globalGet;
 typedef ThunkFunc0<Instances::fl::RegExp, Instances::fl::RegExp::mid_ignoreCaseGet, bool> TFunc_Instances_RegExp_ignoreCaseGet;
@@ -170,14 +164,14 @@ namespace Instances { namespace fl
         MatchOffset = MatchLength = 0;
 
         const char *subject = s.ToCStr();
-        int subjectLen = s.GetLength();
+        int subjectLen = s.GetSize();
         int outputVector[OUTPUT_VECTOR_SIZE];
         int matchCount = 0;
 
         // Match a pattern
         if (startIndex < 0 || startIndex > subjectLen || (
-            matchCount = pcre_exec(CompRegExp, NULL, subject, subjectLen, startIndex, 0,
-                                   outputVector, OUTPUT_VECTOR_SIZE)) < 0)
+            matchCount = pcre_exec(CompRegExp, NULL, subject, subjectLen, startIndex,
+                                   PCRE_NO_UTF8_CHECK, outputVector, OUTPUT_VECTOR_SIZE)) < 0)
         {
             MatchOffset = matchCount;
             result = NULL;
@@ -195,11 +189,7 @@ namespace Instances { namespace fl
         {
             if (outputVector[i*2] > -1)
             {
-                char match[MATCH_BUFFER_SIZE];
-                const char *ptr = subject + outputVector[2*i];
-                int len = outputVector[i*2 + 1] - outputVector[i*2];
-                SFstrncpy(match, sizeof(match), ptr, len);
-                match[len] = 0;
+                String match(subject + outputVector[i*2], outputVector[i*2 + 1] - outputVector[i*2]);
                 parr->PushBack(Value(sm.CreateString(match)));
             }
             else
@@ -219,19 +209,10 @@ namespace Instances { namespace fl
 
 			for (int i = 0; i < nameCount; i++)
 			{
-                char name[MATCH_BUFFER_SIZE];
-                SFstrncpy(name, sizeof(name), nameTable + 2, SFstrlen(nameTable + 2));
-                name[SFstrlen(nameTable + 2)] = 0;
-
-                char value[MATCH_BUFFER_SIZE];
+                String name(nameTable + 2, SFstrlen(nameTable + 2));
                 int nameIdx = (nameTable[0] << 8) + nameTable[1];
-                const char *ptr = subject + outputVector[nameIdx*2];
-                int len = outputVector[nameIdx*2 + 1] - outputVector[nameIdx*2];
-                SFstrncpy(value, sizeof(value), ptr, len);
-                value[len] = 0;
-
+                String value(subject + outputVector[nameIdx*2], outputVector[nameIdx*2 + 1] - outputVector[nameIdx*2]);
                 parr->AddDynamicSlotValuePair(sm.CreateString(name), sm.CreateString(value));
-
 				nameTable += nameEntrySize;
 			}
 		}
@@ -393,25 +374,39 @@ namespace Instances { namespace fl
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 RegExp::tito[RegExp::ThunkInfoNum] = {
+    //    0, 1, 2, 3, 4, 5, 7, 8, 9, 11, 
+    // };
+    const TypeInfo* RegExp::tit[13] = {
+        &AS3::fl::StringTI, 
+        &AS3::fl::BooleanTI, 
+        &AS3::fl::BooleanTI, 
+        &AS3::fl::BooleanTI, 
+        &AS3::fl::int_TI, 
+        NULL, &AS3::fl::int_TI, 
+        &AS3::fl::BooleanTI, 
+        &AS3::fl::BooleanTI, 
+        &AS3::fl::ObjectTI, &AS3::fl::StringTI, 
+        &AS3::fl::BooleanTI, &AS3::fl::StringTI, 
+    };
     const ThunkInfo RegExp::ti[RegExp::ThunkInfoNum] = {
-        {TFunc_Instances_RegExp_sourceGet::Func, &AS3::fl::StringTI, "source", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_globalGet::Func, &AS3::fl::BooleanTI, "global", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_ignoreCaseGet::Func, &AS3::fl::BooleanTI, "ignoreCase", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_multilineGet::Func, &AS3::fl::BooleanTI, "multiline", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_lastIndexGet::Func, &AS3::fl::int_TI, "lastIndex", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_lastIndexSet::Func, NULL, "lastIndex", NULL, Abc::NS_Public, CT_Set, 1, 1},
-        {TFunc_Instances_RegExp_dotallGet::Func, &AS3::fl::BooleanTI, "dotall", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_extendedGet::Func, &AS3::fl::BooleanTI, "extended", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_RegExp_AS3exec::Func, &AS3::fl::ObjectTI, "exec", NS_AS3, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Instances_RegExp_AS3test::Func, &AS3::fl::BooleanTI, "test", NS_AS3, Abc::NS_Public, CT_Method, 1, 1},
+        {TFunc_Instances_RegExp_sourceGet::Func, &RegExp::tit[0], "source", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_globalGet::Func, &RegExp::tit[1], "global", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_ignoreCaseGet::Func, &RegExp::tit[2], "ignoreCase", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_multilineGet::Func, &RegExp::tit[3], "multiline", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_lastIndexGet::Func, &RegExp::tit[4], "lastIndex", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_lastIndexSet::Func, &RegExp::tit[5], "lastIndex", NULL, Abc::NS_Public, CT_Set, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_RegExp_dotallGet::Func, &RegExp::tit[7], "dotall", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_extendedGet::Func, &RegExp::tit[8], "extended", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_RegExp_AS3exec::Func, &RegExp::tit[9], "exec", NS_AS3, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_RegExp_AS3test::Func, &RegExp::tit[11], "test", NS_AS3, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
     };
 
     RegExp::RegExp(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::RegExp::RegExp()"
 //##protect##"InstanceTraits::RegExp::RegExp()"
-        SetMemSize(sizeof(Instances::fl::RegExp));
 
     }
 
@@ -461,8 +456,12 @@ namespace Classes { namespace fl
         InitPrototypeFromVTableCheckType(obj);
 
         // Created manually.
-        static ThunkInfo f[] = {
-            {&Instances::fl::RegExp::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        static const TypeInfo* tit[] = {
+            &AS3::fl::StringTI,
+        };
+
+        static const ThunkInfo f[] = {
+            {&Instances::fl::RegExp::toStringProto, &tit[0], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
         };
         for (unsigned i = 0; i < NUMBEROF(f); ++i)
             AddDynamicFunc(obj, f[i]);
@@ -475,24 +474,27 @@ namespace Classes { namespace fl
 
 namespace ClassTraits { namespace fl
 {
-    RegExp::RegExp(VM& vm)
-    : Traits(vm, AS3::fl::RegExpCI)
+
+    RegExp::RegExp(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::RegExp::RegExp()"
 //##protect##"ClassTraits::RegExp::RegExp()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::RegExp(vm, AS3::fl::RegExpCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::RegExp(*this));
 
     }
 
     Pickable<Traits> RegExp::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) RegExp(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) RegExp(vm, AS3::fl::RegExpCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::RegExpCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -503,6 +505,11 @@ namespace fl
 {
     const TypeInfo RegExpTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl::RegExp::InstanceType),
+        0,
+        0,
+        InstanceTraits::fl::RegExp::ThunkInfoNum,
+        0,
         "RegExp", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -510,10 +517,6 @@ namespace fl
     const ClassInfo RegExpCI = {
         &RegExpTI,
         ClassTraits::fl::RegExp::MakeClassTraits,
-        0,
-        0,
-        InstanceTraits::fl::RegExp::ThunkInfoNum,
-        0,
         NULL,
         NULL,
         InstanceTraits::fl::RegExp::ti,

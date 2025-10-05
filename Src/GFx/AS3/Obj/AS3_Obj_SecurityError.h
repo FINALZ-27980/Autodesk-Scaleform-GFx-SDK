@@ -52,17 +52,19 @@ namespace Classes { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class SecurityError : public Traits
+    class SecurityError : public fl::Error
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::SecurityError"; }
 #endif
     public:
-        typedef Classes::fl::SecurityError ClassType;
+        typedef ClassCallConstruct ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SecurityError(VM& vm);
+        SecurityError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

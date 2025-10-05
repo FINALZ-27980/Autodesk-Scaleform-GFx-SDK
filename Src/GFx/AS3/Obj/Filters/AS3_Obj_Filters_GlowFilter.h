@@ -225,7 +225,7 @@ namespace Instances { namespace fl_filters
 
 namespace InstanceTraits { namespace fl_filters
 {
-    class GlowFilter : public CTraits
+    class GlowFilter : public fl_filters::BitmapFilter
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -251,6 +251,8 @@ namespace InstanceTraits { namespace fl_filters
 
         enum { ThunkInfoNum = 17 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[25];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -263,17 +265,19 @@ namespace InstanceTraits { namespace fl_filters
     
 namespace ClassTraits { namespace fl_filters
 {
-    class GlowFilter : public Traits
+    class GlowFilter : public fl_filters::BitmapFilter
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::GlowFilter"; }
 #endif
     public:
-        typedef Classes::fl_filters::GlowFilter ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_filters::GlowFilter InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        GlowFilter(VM& vm);
+        GlowFilter(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

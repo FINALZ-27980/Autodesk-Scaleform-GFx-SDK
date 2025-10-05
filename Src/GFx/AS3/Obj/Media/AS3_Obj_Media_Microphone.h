@@ -69,7 +69,7 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_media
 {
-    class Microphone : public Traits
+    class Microphone : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -77,9 +77,11 @@ namespace ClassTraits { namespace fl_media
 #endif
     public:
         typedef Classes::fl_media::Microphone ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Microphone(VM& vm);
+        Microphone(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

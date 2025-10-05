@@ -97,10 +97,13 @@ void PrimitivePrepareBuffer::StartPrimitive(void* item,
                                             HAL* hal, MeshCache* cache)
 {
     RQPrepareBuffer::StartProcessing(item);
-    pEmitBuffer = emitBuffer;
-    pHal        = hal;
-    pCache      = cache;
-    pPrimitive  = p;
+
+    pEmitBuffer       = emitBuffer;
+    pHal              = hal;
+    pCache            = cache;
+    pPrimitive        = p;
+    MaximumBatchCount = 0;
+
     
     pSourceVFormat = p->GetVertexFormat();
 
@@ -113,6 +116,8 @@ void PrimitivePrepareBuffer::StartPrimitive(void* item,
         // if we are to make a decision about uploading large meshes early.
         // Needs research if this is possible for all back-ends.
         SF_ASSERT(pInstancedVFormat == NULL || *pSingleVFormat == *pInstancedVFormat);
+
+        MaximumBatchCount = pHal->GetMaximumBatchCount(p);
     }
     else
     {
@@ -298,10 +303,10 @@ void PrimitivePrepareBuffer::batchConvertStep()
             {
                 // If we already reached maximum number of items, done. This check
                 // is necessary to handle MaxBatchInstances == 1.
-                if (tailRepeatCount == params.MaxBatchInstances)
+                if (tailRepeatCount == MaximumBatchCount)
                     break;
                 tailRepeatCount++;
-                if (tailRepeatCount >= params.MaxBatchInstances)
+                if (tailRepeatCount >= MaximumBatchCount)
                 {
                     meshIndex++;
                     break;
@@ -358,7 +363,7 @@ void PrimitivePrepareBuffer::batchConvertStep()
 
         if (((totalIndexCount + pmesh->IndexCount) > params.MaxIndicesInBatch) ||
             ((totalVerticesSize + pmesh->VertexCount * batchVertexSize) > params.MaxVerticesSizeInBatch) ||
-            (meshIndex >= params.MaxBatchInstances))
+            (meshIndex >= MaximumBatchCount))
         {
             // We exceeded batching threshold, break.
             // At least one item should fit into the chunk according to the above criteria,
@@ -387,7 +392,7 @@ void PrimitivePrepareBuffer::batchConvertStep()
     {
         while((repeatMeshIndex < pConvert->MeshCount) &&
             (convertMeshes[repeatMeshIndex].pMesh == pmesh) &&
-            (tailRepeatCount < params.MaxBatchInstances))
+            (tailRepeatCount < MaximumBatchCount))
         {
             tailRepeatCount++;
             repeatMeshIndex++;
@@ -551,7 +556,7 @@ bool PrimitivePrepareBuffer::attemptMergeBatches(
 
     const MeshCacheParams& params = pCache->GetParams();
     unsigned totalMeshCount = pfirst->MeshCount + psecond->MeshCount;   
-    if (totalMeshCount > params.MaxBatchInstances)
+    if (totalMeshCount > MaximumBatchCount)
         return false;
         
     // Compute mesh space.

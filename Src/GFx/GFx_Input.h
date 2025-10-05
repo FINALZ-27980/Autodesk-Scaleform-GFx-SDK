@@ -58,7 +58,10 @@ public:
         QE_Key,
         QE_Touch,
         QE_Gesture,
-        QE_AnalogGamePad
+        QE_AnalogGamePad,
+		QE_Accelerometer,
+		QE_Geolocation,
+		QE_Status
     } t;
     struct MouseEntry
     {
@@ -156,6 +159,29 @@ public:
 
         PointF GetPosition() const   { return PointF(PosX, PosY); }
     };
+
+	struct AccelerometerEntry
+    {
+		int		IdAcc;
+        double  Timestamp;
+        double  AccelerationX, AccelerationY, AccelerationZ;
+    };
+
+	struct GeolocationEntry
+    {
+		int IdGeo;
+		double Latitude, Longitude, Altitude;
+		double HAccuracy, VAccuracy, Speed, Heading, Timestamp;
+    };
+
+	struct StatusEntry
+    {
+		String* Code;
+		String* Level;
+		String* ExtensionId;
+		String* ContextId;
+    };
+
     union Entry
     {
         MouseEntry      mouseEntry;
@@ -163,6 +189,9 @@ public:
         TouchEntry      touchEntry;
         GestureEntry    gestureEntry;
         GamePadAnalogEntry  gamepadAnalogEntry;
+		AccelerometerEntry accelerometerEntry;
+		GeolocationEntry geolocationEntry;
+		StatusEntry statusEntry;
     } u;
 
     bool IsMouseEntry() const { return t == QE_Mouse; }
@@ -170,6 +199,9 @@ public:
     bool IsTouchEntry() const { return t == QE_Touch; }
     bool IsGestureEntry() const { return t == QE_Gesture; }
     bool IsAnalogGampadEntry() const { return t == QE_AnalogGamePad; }
+	bool IsAccelerometerEntry() const { return t == QE_Accelerometer; }
+	bool IsGeolocationEntry() const { return t == QE_Geolocation; }
+	bool IsStatusEntry() const { return t == QE_Status; }
 
     MouseEntry& GetMouseEntry()             { return u.mouseEntry; }
     const MouseEntry& GetMouseEntry() const { return u.mouseEntry; }
@@ -185,6 +217,15 @@ public:
 
     GamePadAnalogEntry& GetGamePadAnalogEntry() { return u.gamepadAnalogEntry; }
     const GamePadAnalogEntry& GetGamePadAnalogEntry() const { return u.gamepadAnalogEntry; }
+
+	AccelerometerEntry& GetAccelerometerEntry() { return u.accelerometerEntry; }
+    const AccelerometerEntry& GetAccelerometerEntry() const { return u.accelerometerEntry; }
+
+	GeolocationEntry& GetGeolocationEntry() { return u.geolocationEntry; }
+    const GeolocationEntry& GetGeolocationEntry() const { return u.geolocationEntry; }
+
+	StatusEntry& GetStatusEntry() { return u.statusEntry; }
+    const StatusEntry& GetStatusEntry() const { return u.statusEntry; }
 };
 
 // This class provides queue for input events, such as keyboard and mouse (mice)
@@ -277,6 +318,12 @@ public:
     void AddGestureEvent(GesturePhase phase, unsigned gestureMask, const PointF& pos, const PointF& translationVector, 
                          float zoomX, float zoomY, float rotation);
 #endif
+
+	void AddAccelerometerEvent(int idAcc, double timestamp, double accelerationX, double accelerationY, double accelerationZ);
+	
+	void AddGeolocationEvent(int idGeo, double latitude, double longitude, double altitude, double hAccuracy, double vAccuracy, double speed, double heading, double timestamp);
+
+	void AddStatusEvent(String* code, String* level, String* extensionId, String* contextId);
 };
 
 
@@ -507,6 +554,12 @@ public:
 
         Event_GamePadAnalogChange, // 0x100001F
 
+		Event_AccelerometerUpdate,
+
+		Event_GeolocationUpdate,
+
+		Event_Status,
+
         Event_End,
         Event_COUNT = 20 + (Event_End - Event_NextAfterCombined) + 5  // PPS: 5 for Aux events
     };
@@ -671,6 +724,51 @@ public:
         : EventId(id), 
         Gesture(gesture), x(_x), y(_y), OffsetX(offX), OffsetY(offY), 
         ScaleX(scaleX), ScaleY(scaleY), Rotation(rotation), TapX(0), TapY(0), TapXYUse(false)
+    {
+    }
+};
+
+// This event id should be used for accelerometer events
+class AccelerometerEventId : public EventId
+{
+public:
+	int		 IdAcc;
+    double   Timestamp;
+    double   AccelerationX, AccelerationY, AccelerationZ;
+
+    AccelerometerEventId(int idAcc, double timestamp, double accelerationX, double accelerationY, double accelerationZ)
+        : EventId(EventId::Event_AccelerometerUpdate), IdAcc(idAcc), Timestamp(timestamp),
+		AccelerationX(accelerationX), AccelerationY(accelerationY), AccelerationZ(accelerationZ)
+    {
+    }
+};
+
+// This event id should be used for geolocation events
+class GeolocationEventId : public EventId
+{
+public:
+	int IdGeo;
+	double Latitude, Longitude, Altitude;
+	double HAccuracy, VAccuracy, Speed, Heading, Timestamp;
+
+    GeolocationEventId(int idGeo, double latitude, double longitude, double altitude, double hAccuracy, double vAccuracy, double speed, double heading, double timestamp)
+        : EventId(EventId::Event_GeolocationUpdate), IdGeo(idGeo), Latitude(latitude), Longitude(longitude), Altitude(altitude), HAccuracy(hAccuracy), VAccuracy(vAccuracy),
+		Speed(speed), Heading(heading), Timestamp(timestamp)
+    {
+    }
+};
+
+// This event id should be used for status events
+class StatusEventId : public EventId
+{
+public:
+    String*	Code;
+	String*	Level;
+	String*	ExtensionId;
+	String*	ContextId;
+
+    StatusEventId(String* code, String*	level, String* extensionId, String* contextId)
+        : EventId(EventId::Event_Status), Code(code), Level(level), ExtensionId(extensionId), ContextId(contextId)
     {
     }
 };

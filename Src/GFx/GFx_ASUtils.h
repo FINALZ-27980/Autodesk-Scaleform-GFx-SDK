@@ -45,15 +45,18 @@ namespace ASUtils
         // escaped; if the param is false then Unicode string will be used for escaping. The difference
         // between these two approaches will be something like "%D0%3e" vs "%u0420".
         void EscapeWithMask
-            (const char* psrc, UPInt length, String& escapedStr, const unsigned* escapeMask, bool useUtf8 = false);
+            (const char* psrc, UPInt length, StringBuffer& b, const unsigned* escapeMask, bool useUtf8 = false);
         // psrc must be an UTF8 encoded string.
-        void Escape(const char* psrc, UPInt length, String& escapedStr, bool useUtf8 = false);
-        void EncodeVar(const char* psrc, UPInt length, String& escapedStr, bool useUtf8 = false);
-        void EncodeURI(const char* psrc, UPInt length, String& escapedStr, bool useUtf8 = false);
-        void EncodeURIComponent(const char* psrc, UPInt length, String& escapedStr, bool useUtf8 = false);
+        void Escape(const char* psrc, UPInt length, StringBuffer& b, bool useUtf8 = false);
+        void EncodeVar(const char* psrc, UPInt length, StringBuffer& b, bool useUtf8 = false);
+        // Return true in case of success.
+        bool EncodeURI(const char* psrc, UPInt length, StringBuffer& escapedStr, bool isComp = false);
+        void EncodeURIComponent(const char* psrc, UPInt length, StringBuffer& b, bool useUtf8 = false);
         // psrc must be an UTF8 encoded string.
         // Return true in case of success.
-        bool Unescape(const char* psrc, UPInt length, String& unescapedStr, bool useUtf8 = false);
+        bool Unescape(const char* psrc, UPInt length, StringBuffer& b, bool useUtf8 = false);
+        // Return true in case of success.
+        bool DecodeURI(const char* psrc, UPInt length, StringBuffer& b, bool isComp = false);
     }
 }
 
@@ -64,105 +67,58 @@ namespace NumberUtil {
     // support for double.
     float           ConvertDouble2Float(double v);
 
-    Double SF_CDECL NaN();
-    Double SF_CDECL POSITIVE_INFINITY();
-    Double SF_CDECL NEGATIVE_INFINITY();
-    Double SF_CDECL MIN_VALUE();
-    Double SF_CDECL MAX_VALUE();
-    Double SF_CDECL POSITIVE_ZERO();
-    Double SF_CDECL NEGATIVE_ZERO();
+    GFx::Double SF_CDECL NaN();
+    GFx::Double SF_CDECL POSITIVE_INFINITY();
+    GFx::Double SF_CDECL NEGATIVE_INFINITY();
+    GFx::Double SF_CDECL MIN_VALUE();
+    GFx::Double SF_CDECL MAX_VALUE();
+    GFx::Double SF_CDECL POSITIVE_ZERO();
+    GFx::Double SF_CDECL NEGATIVE_ZERO();
 
-#ifndef SF_NO_DOUBLE
     inline bool SF_STDCALL IsNaN(Double v)
     {
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt64));
+        SF_COMPILER_ASSERT(sizeof(double) == sizeof(UInt64));
         union
         {
             UInt64  I;
-            Double  D;
+            double  D;
         } u;
         u.D = v;
         return ((u.I & SF_UINT64(0x7FF0000000000000)) == SF_UINT64(0x7FF0000000000000) && (u.I & SF_UINT64(0xFFFFFFFFFFFFF)));
     }
     inline bool SF_STDCALL IsPOSITIVE_INFINITY(Double v) 
     { 
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt64));
+        SF_COMPILER_ASSERT(sizeof(double) == sizeof(UInt64));
         union
         {
             UInt64  I;
-            Double  D;
+            double  D;
         } u;
         u.D = v;
         return (u.I == SF_UINT64(0x7FF0000000000000));
     }
     inline bool SF_STDCALL IsNEGATIVE_INFINITY(Double v) 
     { 
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt64));
+        SF_COMPILER_ASSERT(sizeof(double) == sizeof(UInt64));
         union
         {
             UInt64  I;
-            Double  D;
+            double  D;
         } u;
         u.D = v;
         return (u.I == SF_UINT64(0xFFF0000000000000));
     }
     inline bool SF_STDCALL IsNaNOrInfinity(Double v)
     {
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt64));
+        SF_COMPILER_ASSERT(sizeof(double) == sizeof(UInt64));
         union
         {
             UInt64  I;
-            Double  D;
+            double  D;
         } u;
         u.D = v;
         return ((u.I & SF_UINT64(0x7FF0000000000000)) == SF_UINT64(0x7FF0000000000000));
     }
-#else
-    inline bool SF_STDCALL IsNaN(Double v)
-    {
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt32));
-        union
-        {
-            UInt32  I;
-            float   F;
-        } u;
-        u.F = v;
-        return ((u.I & 0x7F800000u) == 0x7F800000u && (u.I & 0x7FFFFFu));
-    }
-    inline bool SF_STDCALL IsPOSITIVE_INFINITY(Double v) 
-    { 
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt32));
-        union
-        {
-            UInt32  I;
-            float   F;
-        } u;
-        u.F = v;
-        return (u.I == 0x7F800000u);
-    }
-    inline bool SF_STDCALL IsNEGATIVE_INFINITY(Double v) 
-    { 
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt32));
-        union
-        {
-            UInt32  I;
-            float   F;
-        } u;
-        u.F = v;
-        return (u.I == 0xFF800000u);
-    }
-    inline bool SF_STDCALL IsNaNOrInfinity(Double v) 
-    { 
-        SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt32));
-        union
-        {
-            UInt32  I;
-            float   F;
-        } u;
-        u.F = v;
-        return ((u.I & 0x7F800000u) == 0x7F800000u);
-    }
-#endif
 
     bool SF_STDCALL IsPOSITIVE_ZERO(Double v);
     bool SF_STDCALL IsNEGATIVE_ZERO(Double v);
@@ -186,8 +142,8 @@ namespace NumberUtil {
     const char* SF_STDCALL IntToString(SInt32 value, char destStr[], size_t destStrSize);
 
     //ECMA-262 implementations
-    Double SF_STDCALL StringToInt(const char* str, UInt32 strLen, SInt32 radix, UInt32 *endIndex);
-    Double SF_STDCALL StringToDouble(const char* str, UInt32 strLen,  UInt32 *endIndex);
+    GFx::Double SF_STDCALL StringToInt(const char* str, UInt32 strLen, SInt32 radix, UInt32 *endIndex);
+    GFx::Double SF_STDCALL StringToDouble(const char* str, UInt32 strLen,  UInt32 *endIndex);
 } // NumberUtil
 
 }} // namespace Scaleform::GFx

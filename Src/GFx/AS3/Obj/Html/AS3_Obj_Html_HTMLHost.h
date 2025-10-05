@@ -32,12 +32,19 @@ namespace fl_html
     extern const ClassInfo HTMLHostCI;
     extern const TypeInfo HTMLLoaderTI;
     extern const ClassInfo HTMLLoaderCI;
+    extern const TypeInfo HTMLWindowCreateOptionsTI;
+    extern const ClassInfo HTMLWindowCreateOptionsCI;
 } // namespace fl_html
 namespace fl_geom
 {
     extern const TypeInfo RectangleTI;
     extern const ClassInfo RectangleCI;
 } // namespace fl_geom
+namespace fl
+{
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+} // namespace fl
 
 namespace ClassTraits { namespace fl_html
 {
@@ -64,17 +71,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_html
 {
-    class HTMLHost : public Traits
+    class HTMLHost : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::HTMLHost"; }
 #endif
     public:
-        typedef Classes::fl_html::HTMLHost ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        HTMLHost(VM& vm);
+        HTMLHost(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

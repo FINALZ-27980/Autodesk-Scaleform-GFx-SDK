@@ -16,7 +16,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 //##protect##"disclaimer"
 
 #include "AS3_Obj_System_ApplicationDomain.cpp"
-#include "AS3_Obj_System_Domain.cpp"
 #include "AS3_Obj_System_Capabilities.cpp"
 #include "AS3_Obj_System_IME.cpp"
 #include "AS3_Obj_System_IMEConversionMode.cpp"

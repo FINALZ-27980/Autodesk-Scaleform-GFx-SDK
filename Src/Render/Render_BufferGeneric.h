@@ -120,6 +120,7 @@ public:
 
     virtual void    Reset();
 
+    virtual void    DumpUsage();
 
     virtual Render::RenderTarget* CreateRenderTarget(const ImageSize& size, RenderBufferType type,
                                                      ImageFormat format, Texture* texture = 0);
@@ -128,7 +129,7 @@ public:
     //  - call TextureManager to allocate texture
     virtual Render::RenderTarget* CreateTempRenderTarget(const ImageSize& size);
 
-    virtual Render::DepthStencilBuffer* CreateDepthStencilBuffer(const ImageSize& size);
+    virtual Render::DepthStencilBuffer* CreateDepthStencilBuffer(const ImageSize& size, bool temporary=true);
 
 
 protected:
@@ -207,7 +208,8 @@ public:
 
     virtual Texture*    GetTexture() const  { return pTexture; }
     virtual RenderTargetStatus GetStatus() const { return RTStatus; }
-    virtual void        SetInUse(bool inUse);
+    void                SetInUse(bool inUse) { SetInUse(inUse ? RTUse_InUse : RTUse_Unused); }
+    virtual void        SetInUse(RenderTargetUse inUse);
 
     virtual void AddRef();
     virtual void Release();
@@ -238,8 +240,8 @@ class DepthStencilBuffer : public Render::DepthStencilBuffer, public CacheData
 {
     friend class RenderBufferManager;
 public:
-    DepthStencilBuffer(RenderBufferManager* manager, const ImageSize& bufferSize)
-        : Render::DepthStencilBuffer(manager, bufferSize), CacheData(getThis())
+    DepthStencilBuffer(RenderBufferManager* manager, const ImageSize& bufferSize, bool temporary=true)
+        : Render::DepthStencilBuffer(manager, bufferSize, temporary), CacheData(getThis())
     { }
 
     DepthStencilBuffer* getThis() { return this; }

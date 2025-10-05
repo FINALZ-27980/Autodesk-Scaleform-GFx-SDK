@@ -128,6 +128,7 @@ void    StaticTextDef::Read(LoadProcess* p, TagType tagType)
     // Style offset starts at 0 and is overwritten when specified.
     offset.SetPoint(0.0f);
 
+	float prevOffY = 0;
     for (;;)
     {
         int FirstByte = in->ReadU8();
@@ -208,21 +209,35 @@ void    StaticTextDef::Read(LoadProcess* p, TagType tagType)
             int GlyphCount = FirstByte;
             // Don't mask the top GlyphCount bit; the first record is allowed to have > 127 glyphs.
 
-            StaticTextRecord* precord = TextRecords.AddRecord();
-            if (precord)
-            {
-                precord->Offset     = offset;
-                precord->pFont      = pfont;
-                precord->TextHeight = textHeight;
-                precord->ColorV     = color;
-                precord->FontId     = fontId;
-                precord->Read(in, GlyphCount, GlyphBits, AdvanceBits);
+			if (offset.y < 0 && prevOffY > 0)
+			{
+				in->LogParse("  Negative Y-offset, 16-bit value rollover, skipping the line...\n");
+				// skipping glyph records
+				for (int i = 0; i < GlyphCount; i++)
+				{
+					in->ReadUInt(GlyphBits);
+					in->ReadSInt(AdvanceBits);
+				}
+			}
+			else
+			{
+				StaticTextRecord* precord = TextRecords.AddRecord();
+				if (precord)
+				{
+					prevOffY = offset.y;
+					precord->Offset     = offset;
+					precord->pFont      = pfont;
+					precord->TextHeight = textHeight;
+					precord->ColorV     = color;
+					precord->FontId     = fontId;
+					precord->Read(in, GlyphCount, GlyphBits, AdvanceBits);
 
-                // Add up advances and adjust offset.
-                offset.x += precord->GetCumulativeAdvance();
-            }
+					// Add up advances and adjust offset.
+					offset.x += precord->GetCumulativeAdvance();
+				}
 
-            in->LogParse("  GlyphRecords: count = %d\n", GlyphCount);
+				in->LogParse("  GlyphRecords: count = %d\n", GlyphCount);
+			}
         }
     }
 }
@@ -389,10 +404,24 @@ StaticTextCharacter::StaticTextCharacter(StaticTextDef* pdef,
     pdef->SetHasInstances();  
 
     RecreateVisibleTextLayout();
+
+#ifdef SF_AMP_SERVER
+    if (pDef->IsAAForReadability())
+    {
+        AmpServer::GetInstance().IncrementFontOptRead();
+    }
+#endif
 }
 
 StaticTextCharacter::~StaticTextCharacter()
 {
+#ifdef SF_AMP_SERVER
+    if (pDef->IsAAForReadability())
+    {
+        AmpServer::GetInstance().DecrementFontOptRead();
+    }
+#endif
+
     if (pHighlight)
         delete pHighlight;
 }
@@ -894,7 +923,7 @@ int     StaticTextSnapshotData::HitTestTextNearPos(float x, float y, float close
     {
         StaticTextCharacter* pstc = StaticTextCharRefs[i].pChar;    
         Render::PointF ip = pstc->GetMatrix().TransformByInverse(cpb);
-        RectF& tf = pstc->TextGlyphRecords.Geom.VisibleRect;        
+        const RectF& tf = pstc->TextGlyphRecords.Geom.VisibleRect;        
         // If point is inside textfield rect, we're done searching
         if (tf.Contains(ip))
         {

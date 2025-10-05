@@ -33,15 +33,20 @@ namespace fl_accessibility
 } // namespace fl_accessibility
 namespace fl
 {
-    extern const TypeInfo StringTI;
-    extern const ClassInfo StringCI;
     extern const TypeInfo uintTI;
     extern const ClassInfo uintCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
     extern const TypeInfo ArrayTI;
     extern const ClassInfo ArrayCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
 } // namespace fl
+namespace fl_geom
+{
+    extern const TypeInfo RectangleTI;
+    extern const ClassInfo RectangleCI;
+} // namespace fl_geom
 
 namespace ClassTraits { namespace fl_accessibility
 {
@@ -112,7 +117,7 @@ namespace Instances { namespace fl_accessibility
 
 namespace InstanceTraits { namespace fl_accessibility
 {
-    class AccessibilityImplementation : public CTraits
+    class AccessibilityImplementation : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -140,6 +145,8 @@ namespace InstanceTraits { namespace fl_accessibility
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 12 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[22];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -152,17 +159,19 @@ namespace InstanceTraits { namespace fl_accessibility
     
 namespace ClassTraits { namespace fl_accessibility
 {
-    class AccessibilityImplementation : public Traits
+    class AccessibilityImplementation : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::AccessibilityImplementation"; }
 #endif
     public:
-        typedef Classes::fl_accessibility::AccessibilityImplementation ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_accessibility::AccessibilityImplementation InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        AccessibilityImplementation(VM& vm);
+        AccessibilityImplementation(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

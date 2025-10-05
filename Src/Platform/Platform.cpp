@@ -151,6 +151,7 @@ bool AppImplBase::OnArgs(const Args& args, Args::ParseResult parseResult)
 void AppBase::ApplyViewConfigArgs(ViewConfig* config, const Args& args)
 {
     pImplBase->ApplyViewConfigArgs(config, args);
+    config->CommandLineArgs = &args;
 }
 
 // Applies default command line arguments to ViewConfig.

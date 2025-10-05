@@ -1,0 +1,114 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2017 CRI Middleware Co., Ltd.
+ *
+ * Library : CRI File System Library for PC
+ * Module  : Revision history
+ * File    : history_crifilesystem_pc_e.txt
+ * Version : 2.78.07
+ *
+ ****************************************************************************/
+
+1. Library Version
+(1) CRI File System library
+  [cri_file_system_pcx86.lib] 732,138 bytes
+  CRI CPK Analyzer   PCx86  Ver.0.99.54  Build:May  8 2019 11:07:41  MSC19.00.24210.0,MT
+  CRI File System    PCx86  Ver.2.78.07  Build:May  8 2019 11:07:41  MSC19.00.24210.0,MT
+  CriFsBinder        PCx86  Ver.1.02.71  Build:May  8 2019 11:07:41  MSC19.00.24210.0,MT
+  CriFsGroupLoader   PCx86  Ver.1.00.75  Build:May  8 2019 11:07:41  MSC19.00.24210.0,MT
+  CriFsWebInstaller  PCx86  Ver.2.01.09  Build:May  8 2019 11:07:41  MSC19.00.24210.0,MT
+
+  [cri_file_system_pcx86D.lib] 4,699,704 bytes
+  CRI CPK Analyzer   PCx86  Ver.0.99.54  Build:May  8 2019 11:07:44  MSC19.00.24210.0,DEBUG,MT
+  CRI File System    PCx86  Ver.2.78.07  Build:May  8 2019 11:07:44  MSC19.00.24210.0,DEBUG,MT
+  CriFsBinder        PCx86  Ver.1.02.71  Build:May  8 2019 11:07:44  MSC19.00.24210.0,DEBUG,MT
+  CriFsGroupLoader   PCx86  Ver.1.00.75  Build:May  8 2019 11:07:44  MSC19.00.24210.0,DEBUG,MT
+  CriFsWebInstaller  PCx86  Ver.2.01.09  Build:May  8 2019 11:07:44  MSC19.00.24210.0,DEBUG,MT
+
+2. Library Size
+  [cri_file_system_pcx86.lib]
+  Total Code size:	       79686	[BYTE]
+  Total Data size:	      172376	[BYTE]
+  Total Lib  size:	      252062	[BYTE]
+
+  [cri_file_system_pcx86D.lib]
+  Total Code size:	      214458	[BYTE]
+  Total Data size:	      219228	[BYTE]
+  Total Lib  size:	      433686	[BYTE]
+
+3. System requirements/Testing environment
+This release has been developed and tested in the following environment:
+
+3.1 Hardware
+  CPU       : Intel Core i7-3770 (3.4GHz) 
+  Memory    : 8GB
+
+3.2 Development environments
+(1) OS
+  Microsoft Windows 10 Professional
+
+(2) Compiler / Debugger
+  Microsoft Visual Studio 2015 Update 3
+
+4. Revision history
+ [2019-05-17 CRI File System Ver.2.78.07]--------------------------------------
+Internal modification only.
+
+ [2019-02-28 CRI File System Ver.2.78.05]--------------------------------------
+(1) Specification changes
+  (a) Changed the specification to include the target file's path in warning messages by error callback,
+      when loading or writing fails.
+  (b) Disabled the double bind function which is not currently used.
+      Following this specification change, consistency between the primary CPK and the secondary CPK
+      can not be confirmed.
+
+(2) New features
+  (a) Added a flag to the member of the CriFsConfig to switch whether to perform CRC check of CPK.
+  (b) Added the CRC output function to the CriFsWebInstaller.
+      - criFsWebInstaller_GetCRC32
+  (c) Added the HTTP request header setting function to the CriFsWebInstaller.
+      - criFsWebInstaller_SetRequestHeader
+
+(3) Bug fixes
+  (a) Fixed a bug in which CRC check of TOC at CPK loading was not done.
+      CRC check of TOC is done by calling the criCpkAnalyzer_SetCrcCheckFlag function.
+  (b) Fixed a bug where the CriFsWebInstaller was able to create more than the maximum number of handles.
+
+ [2018-12-07 CRI File System Ver.2.77.03]--------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where downloading from HTTP server that only uses TLS1.1 or TLS1.2 fails
+      when CriFsWebInstaller is used.
+
+ [2018-09-26 CRI File System Ver.2.77.01]--------------------------------------
+Internal modification only.
+
+ [2018-06-11 CRI File System Ver.2.76.07]--------------------------------------
+Internal modification only.
+
+ [2018-01-31 CRI File System Ver.2.76.04]--------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where temporary files were not closed or deleted
+      at the end of a file installation when using CriFsWebInstaller.
+  (b) Fixed a bug where a memory leak occurred when CriFsWebInstaller was called.
+
+ [2017-12-19 CRI File System Ver.2.75.06]--------------------------------------
+Internal modification only.
+
+ [2017-06-30 CRI File System Ver.2.75.05]--------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug for which processing would end without transitioning to error status
+      even when an error occured during file installation.
+
+(2) New features
+  (a) Added a function to change the character used by the criFsBinder_BindFiles function as a separator.
+      - criFsBinder_SetPathSeparatorForBindFiles
+  (b) Added the CriFsWebInstaller module to install files with HTTP / HTTPS.
+
+ [2017-01-10 CRI File System Ver.2.74.01]--------------------------------------
+The first release of the CRI File System Library for PC.
+
+-END-
+
+/*--< end of file >---------------------------------------------------------*/

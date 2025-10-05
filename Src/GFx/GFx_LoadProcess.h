@@ -90,7 +90,7 @@ private:
     Ptr<LoadTaskData>       pLoadData;
 
     // A pointer to DataDef used to pass to SpriteDef constructor.
-    // This pointer is usuable from the sprite instance point of view,
+    // This pointer is usable from the sprite instance point of view,
     // but it can go bad if pMovieDef is released in playback thread.
     // Therefore, we can't really use it during loading.
     MovieDataDef*           pDataDef_Unsafe;

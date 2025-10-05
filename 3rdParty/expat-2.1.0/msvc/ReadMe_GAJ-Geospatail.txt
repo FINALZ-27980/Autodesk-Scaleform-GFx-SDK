@@ -1,0 +1,1 @@
+This project should be installed as EXPAT_DIR with ProjectTool.

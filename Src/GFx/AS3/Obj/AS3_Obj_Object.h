@@ -32,6 +32,8 @@ namespace fl
     extern const ClassInfo ObjectCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl
@@ -155,6 +157,8 @@ namespace InstanceTraits { namespace fl
 
         enum { ThunkInfoNum = 3 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[5];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -175,9 +179,11 @@ namespace ClassTraits { namespace fl
 #endif
     public:
         typedef Classes::fl::Object ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Object(VM& vm);
+        Object(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -206,6 +212,9 @@ namespace Classes { namespace fl
         virtual void InitPrototype(AS3::Object& obj) const;
         enum { ThunkInfoNum = 7 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[11];
+        static const Abc::ConstValue dva[1];
        
     private:
         SelfType& GetSelf()
@@ -234,6 +243,9 @@ namespace InstanceTraits
 {
     class Interface : public CTraits
     {
+    public:
+        typedef Instances::fl::Object InstanceType;
+
     public:
         Interface(VM& vm, const ClassInfo& ci);
 

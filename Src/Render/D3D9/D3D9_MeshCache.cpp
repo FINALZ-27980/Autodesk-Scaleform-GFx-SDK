@@ -64,12 +64,6 @@ bool MeshCache::Initialize(IDirect3DDevice9* pdevice, bool dynamicMeshes)
     SF_ASSERT(!pDevice);    
     adjustMeshCacheParams(&Params, pdevice);
 
-    // If SetDevice fails, it means that creating queries failed, fallback to using static meshes.
-    if ( !RSync.SetDevice(pdevice))
-    {
-        SF_DEBUG_WARNING(1, "RenderSync initialization failed. Using static buffers in MeshCache.");
-        dynamicMeshes = false;
-    }
     BufferCreateFlags = dynamicMeshes ? Buffer_Dynamic : 0;
 
     if (!StagingBuffer.Initialize(pHeap, Params.StagingBufferSize))
@@ -94,10 +88,6 @@ bool MeshCache::Initialize(IDirect3DDevice9* pdevice, bool dynamicMeshes)
 
 void MeshCache::Reset()
 {
-    // This must happen before destroying buffers. If the device is lost, then the WaitFence implementation
-    // depends on the RenderSync to be reset before any meshes are destroy. Otherwise and infinite wait may occur.
-    RSync.SetDevice(0);
-
     if (pDevice)
         destroyBuffers();
     // Unconditional to simplify Initialize fail logic:
@@ -111,6 +101,8 @@ void MeshCache::Reset()
 void MeshCache::ClearCache()
 {
     destroyBuffers(MeshBuffer::AT_Chunk);
+    StagingBuffer.Reset();
+    StagingBuffer.Initialize(pHeap, Params.StagingBufferSize);
     SF_ASSERT(BatchCacheItemHash.GetSize() == 0);
 }
 
@@ -188,11 +180,6 @@ void MeshCache::adjustMeshCacheParams(MeshCacheParams* p, IDirect3DDevice9* pdev
         // batches which are too large.
         if (p->MaxBatchInstances > SF_RENDER_MAX_BATCHES)
             p->MaxBatchInstances = SF_RENDER_MAX_BATCHES;
-
-        // TEMP
-        // -1, because we use one VS register for a solid color constant.
-        //unsigned maxInstances = (caps.MaxVertexShaderConst-1) / SF_RENDER_D3D9_ROWS_PER_INSTANCE;
-        //p->MaxBatchInstances = Alg::Min(p->MaxBatchInstances, maxInstances);
     }
 
     if (p->VBLockEvictSizeLimit < 1024 * 256)
@@ -240,16 +227,9 @@ void MeshCache::destroyPendingBuffers()
     PendingDestructionBuffers.PushListToFront(remainingBuffers);
 }
 
-void MeshCache::BeginFrame()
-{
-    RSync.BeginFrame();
-}
-
 void MeshCache::EndFrame()
 {
     SF_AMP_SCOPE_RENDER_TIMER(__FUNCTION__, Amp_Profile_Level_Medium);
-
-    RSync.EndFrame();
 
     CacheList.EndFrame();
 
@@ -555,8 +535,14 @@ bool MeshCache::allocBuffer(UPInt* poffset, MeshBuffer** pbuffer,
         {
             if (Evict(pitems, &mbs.GetAllocator()) >= size)
                 goto alloc_size_available;
+
+            // Get the first item in the list, because and the head of the list will now be different, due to eviction.
+            pitems = (MeshCacheItem*)prevFrameList.GetFirst();
         }
-        pitems = (MeshCacheItem*)prevFrameList.GetFirst();
+        else
+        {
+            pitems = (MeshCacheItem*)prevFrameList.GetNext(pitems);
+        }
     }
 
     // #4. If MRU swapping didn't work for ThisFrame items due to them still
@@ -610,6 +596,11 @@ bool MeshCache::PreparePrimitive(PrimitiveBatch* pbatch,
         return true;
     }
 
+    // Prepare and Pin mesh data with the StagingBuffer. NOTE: this must happen before calculating mesh sizes.
+    // This stage updates the mesh vertex/index counts, so calculating them first, it could be incorrect, for
+    // example in the case of MeshCache::ClearCache, and changing ToleranceParams.
+    StagingBufferPrep   meshPrep(this, mc, prim->GetVertexFormat(), false);
+
     // NOTE: We always know that meshes in one batch fit into Mesh Staging Cache.
     unsigned totalVertexCount, totalIndexCount;
     pbatch->CalcMeshSizes(&totalVertexCount, &totalIndexCount);
@@ -635,8 +626,10 @@ bool MeshCache::PreparePrimitive(PrimitiveBatch* pbatch,
 
     pbatch->SetCacheItem(batchData);
 
-    // Prepare and Pin mesh data with the StagingBuffer.
-    StagingBufferPrep meshPrep(this, mc, prim->GetVertexFormat(), false);
+    // This step either generates the mesh into the staging buffer, or locates an existing MeshCacheItem
+    // that we can copy the mesh from. It must be done after creating the cache item, because that may
+    // evict the item that would be copied from.
+    meshPrep.GenerateMeshes(batchData);
 
     // Copy meshes into the Vertex/Index buffers.
 

@@ -211,7 +211,12 @@ public:
 		InteractiveObject* pnewFocusingItem, 
 		InteractiveObject* ptopMostItem)
 	{
-		return GetASIMEManager()->HandleFocus(pmovie, poldFocusedItem, pnewFocusingItem, ptopMostItem);
+		ASIMEManager* pasIMEManager = GetASIMEManager();
+		if (pasIMEManager)
+		{
+			return pasIMEManager->HandleFocus(pmovie, poldFocusedItem, pnewFocusingItem, ptopMostItem);
+		}
+		return pnewFocusingItem;
 	};
 
 	// Returns true, if text field is currently focused.

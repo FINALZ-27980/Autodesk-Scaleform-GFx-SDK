@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_security
         {"VALID", NULL, OFFSETOF(Classes::fl_security::SignatureStatus, VALID), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    SignatureStatus::SignatureStatus(VM& vm)
-    : Traits(vm, AS3::fl_security::SignatureStatusCI)
+
+    SignatureStatus::SignatureStatus(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::SignatureStatus::SignatureStatus()"
 //##protect##"ClassTraits::SignatureStatus::SignatureStatus()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_security::SignatureStatusCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_security::SignatureStatus(*this));
 
     }
 
     Pickable<Traits> SignatureStatus::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) SignatureStatus(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) SignatureStatus(vm, AS3::fl_security::SignatureStatusCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_security::SignatureStatusCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_security
 {
     const TypeInfo SignatureStatusTI = {
         TypeInfo::CompileTime | TypeInfo::Final | TypeInfo::NotImplemented,
+        sizeof(ClassTraits::fl_security::SignatureStatus::InstanceType),
+        0,
+        ClassTraits::fl_security::SignatureStatus::MemberInfoNum,
+        0,
+        0,
         "SignatureStatus", "flash.security", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_security
     const ClassInfo SignatureStatusCI = {
         &SignatureStatusTI,
         ClassTraits::fl_security::SignatureStatus::MakeClassTraits,
-        0,
-        ClassTraits::fl_security::SignatureStatus::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_security::SignatureStatus::mi,
         NULL,

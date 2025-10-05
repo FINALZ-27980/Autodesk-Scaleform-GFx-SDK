@@ -52,17 +52,19 @@ namespace Classes { namespace fl_errors
     
 namespace ClassTraits { namespace fl_errors
 {
-    class EOFError : public Traits
+    class EOFError : public fl_errors::IOError
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::EOFError"; }
 #endif
     public:
-        typedef Classes::fl_errors::EOFError ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        EOFError(VM& vm);
+        EOFError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

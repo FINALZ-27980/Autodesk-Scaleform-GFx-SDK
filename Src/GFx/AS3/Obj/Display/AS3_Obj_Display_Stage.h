@@ -50,6 +50,8 @@ namespace fl
     extern const ClassInfo uintCI;
     extern const TypeInfo int_TI;
     extern const ClassInfo int_CI;
+    extern const TypeInfo anyTI;
+    extern const ClassInfo anyCI;
 } // namespace fl
 namespace fl_geom
 {
@@ -61,6 +63,11 @@ namespace fl_text
     extern const TypeInfo TextSnapshotTI;
     extern const ClassInfo TextSnapshotCI;
 } // namespace fl_text
+namespace fl_events
+{
+    extern const TypeInfo EventTI;
+    extern const ClassInfo EventCI;
+} // namespace fl_events
 
 namespace ClassTraits { namespace fl_display
 {
@@ -473,7 +480,7 @@ namespace Instances { namespace fl_display
 
 namespace InstanceTraits { namespace fl_display
 {
-    class Stage : public CTraits
+    class Stage : public fl_display::DisplayObjectContainer
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -499,6 +506,8 @@ namespace InstanceTraits { namespace fl_display
 
         enum { ThunkInfoNum = 51 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[88];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -511,7 +520,7 @@ namespace InstanceTraits { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class Stage : public Traits
+    class Stage : public fl_display::DisplayObjectContainer
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -519,12 +528,16 @@ namespace ClassTraits { namespace fl_display
 #endif
     public:
         typedef Classes::fl_display::Stage ClassType;
+        typedef InstanceTraits::fl_display::Stage InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Stage(VM& vm);
+        Stage(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 1 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[1];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

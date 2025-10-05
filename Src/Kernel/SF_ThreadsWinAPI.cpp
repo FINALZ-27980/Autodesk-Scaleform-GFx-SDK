@@ -934,7 +934,7 @@ bool    Thread::Start(ThreadState initialState)
     
     ExitCode        = 0;
     SuspendCount    = 0;
-    ThreadFlags     = (initialState == Running) ? 0 : SF_THREAD_START_SUSPENDED;
+    ThreadFlags     = (initialState == Running) ? SF_THREAD_STARTED : SF_THREAD_START_SUSPENDED;
     ThreadHandle = (HANDLE) _beginthreadex(0, (unsigned)StackSize,
                                            Thread_Win32StartFn, this, 0, (unsigned*)&IdValue);
 

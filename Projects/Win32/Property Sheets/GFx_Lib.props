@@ -7,11 +7,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\..\Include;..\..\..\..\..\Src;..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\3rdParty\libpng-1.5.13;..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\3rdParty\pcre;..\..\..\..\..\3rdParty\glext;..\..\..\..\..\3rdParty\PlatformSDK;..\..\..\..\..\3rdParty\cri\pc\include;..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;$(IncludePath);$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\Include;..\..\..\..\..\Src;..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\3rdParty\libpng-1.5.13;..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\3rdParty\pcre;..\..\..\..\..\3rdParty\glext;..\..\..\..\..\3rdParty\PlatformSDK;..\..\..\..\..\3rdParty\cri\pc\include;..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;..\..\..\..\..\3rdParty\curl-7.29.0\include;$(IncludePath);$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-	  <AdditionalOptions>/MP /w44264 /w44062 /w44265 /w44287 /w44289 /w44296 /w44431 /w44545 /w44546 /w44547 /w44548 /w44549 /w44623</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;SF_BUILD_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+	  <AdditionalOptions>/w44264 /w44062 /w44265 /w44287 /w44289 /w44296 /w44431 /w44545 /w44546 /w44547 /w44548 /w44549 /w44623</AdditionalOptions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;SF_BUILD_STATICLIB;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 	  <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

@@ -32,6 +32,8 @@ namespace fl
     extern const ClassInfo int_CI;
     extern const TypeInfo StringTI;
     extern const ClassInfo StringCI;
+    extern const TypeInfo uintTI;
+    extern const ClassInfo uintCI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl
@@ -54,7 +56,7 @@ namespace Classes { namespace fl
 
 namespace InstanceTraits { namespace fl
 {
-    class int_ : public CTraits
+    class int_ : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -79,6 +81,9 @@ namespace InstanceTraits { namespace fl
         static void toPrecisionProto(const ThunkInfo& ti, VM& vm, const Value& _this, Value& result, unsigned argc, const Value* argv);
         enum { ThunkInfoNum = 5 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[9];
+        static const Abc::ConstValue dva[1];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -91,7 +96,7 @@ namespace InstanceTraits { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class int_ : public Traits
+    class int_ : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -99,9 +104,11 @@ namespace ClassTraits { namespace fl
 #endif
     public:
         typedef Classes::fl::int_ ClassType;
+        typedef InstanceTraits::fl::int_ InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        int_(VM& vm);
+        int_(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];
@@ -134,6 +141,9 @@ namespace Classes { namespace fl
         virtual void InitPrototype(AS3::Object& obj) const;
         enum { ThunkInfoNum = 6 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[11];
+        static const Abc::ConstValue dva[2];
        
     private:
         SelfType& GetSelf()

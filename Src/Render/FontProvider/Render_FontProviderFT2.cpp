@@ -116,11 +116,12 @@ ExternalFontFT2::~ExternalFontFT2()
 //------------------------------------------------------------------------
 ExternalFontFT2::ExternalFontFT2(FontProviderFT2* pprovider, FT_Library lib, 
                                  const String& fontName, unsigned fontFlags,
-                                 const char* fileName, unsigned faceIndex) :
+                                 const char* fileName, unsigned faceIndex, Lock* plock) :
     Font(fontFlags),
     pFontProvider(pprovider),
     Name(fontName),
-    LastFontHeight(FontHeight)
+    LastFontHeight(FontHeight),
+    pFontLock(plock)
 {
     int err = FT_New_Face(lib, fileName, faceIndex, &Face);
     if (err)
@@ -135,10 +136,12 @@ ExternalFontFT2::ExternalFontFT2(FontProviderFT2* pprovider, FT_Library lib,
 ExternalFontFT2::ExternalFontFT2(FontProviderFT2* pprovider, FT_Library lib, 
                                  const String& fontName, unsigned fontFlags,
                                  const char* fontMem, unsigned fontMemSize, 
-                                 unsigned faceIndex) :
+                                 unsigned faceIndex,
+                                 Lock* plock) :
     Font(fontFlags),
     pFontProvider(pprovider),
-    Name(fontName)
+    Name(fontName),
+    pFontLock(plock)
 {
     int err = FT_New_Memory_Face(lib, 
                                  (const FT_Byte*)fontMem, 
@@ -182,6 +185,7 @@ int ExternalFontFT2::GetGlyphIndex(UInt16 code)
 {
     if (Face)
     {
+        Lock::Locker locker(pFontLock);
         const unsigned* indexPtr = CodeTable.Get(code);
         if (indexPtr)
             return *indexPtr;
@@ -229,6 +233,7 @@ bool ExternalFontFT2::IsHintedVectorGlyph(unsigned glyphIndex, unsigned glyphSiz
     if (VectorHintingRange == HintAll)
         return true;
 
+    Lock::Locker locker(pFontLock);
     return IsCJK(UInt16(Glyphs[glyphIndex].Code));
 }
 
@@ -244,7 +249,7 @@ bool ExternalFontFT2::IsHintedRasterGlyph(unsigned glyphIndex, unsigned glyphSiz
 
     if (RasterHintingRange == HintAll)
         return true;
-
+    Lock::Locker locker(pFontLock);
     return IsCJK(UInt16(Glyphs[glyphIndex].Code));
 }
 
@@ -258,7 +263,7 @@ bool ExternalFontFT2::GetTemporaryGlyphShape(unsigned glyphIndex,
 
     if (!IsHintedVectorGlyph(glyphIndex, glyphSize))
         glyphSize = 0;
-
+    Lock::Locker locker(pFontLock);
     unsigned pixelSize = glyphSize ? glyphSize : FontHeight;
 
     if (LastFontHeight != pixelSize)
@@ -284,7 +289,7 @@ bool ExternalFontFT2::GetGlyphRaster(unsigned glyphIndex, unsigned glyphSize, Gl
 {
     if (!IsHintedRasterGlyph(glyphIndex, glyphSize))
         return false;
-
+    Lock::Locker locker(pFontLock);
     GlyphType& glyph = Glyphs[glyphIndex];
 
     if (LastFontHeight != glyphSize)
@@ -315,12 +320,14 @@ float ExternalFontFT2::GetAdvance(unsigned glyphIndex) const
     if (IsMissingGlyph(glyphIndex))
         return GetDefaultGlyphWidth();
 
+    Lock::Locker locker(pFontLock);
     return Glyphs[glyphIndex].Advance;
 }
 
 //------------------------------------------------------------------------
 float ExternalFontFT2::GetKerningAdjustment(unsigned lastCode, unsigned thisCode) const
 {
+    Lock::Locker locker(pFontLock);
     if(Face && FT_HAS_KERNING(Face))
     {
         FT_Vector delta;
@@ -339,6 +346,7 @@ float ExternalFontFT2::GetGlyphWidth(unsigned glyphIndex) const
     if (IsMissingGlyph(glyphIndex))
         return GetDefaultGlyphWidth();
 
+    Lock::Locker locker(pFontLock);
     const RectF& r = Glyphs[glyphIndex].Bounds;
     return r.Width();
 }
@@ -349,6 +357,7 @@ float ExternalFontFT2::GetGlyphHeight(unsigned glyphIndex) const
     if (IsMissingGlyph(glyphIndex))
         return GetDefaultGlyphHeight();
 
+    Lock::Locker locker(pFontLock);
     const RectF& r = Glyphs[glyphIndex].Bounds;
     return r.Height();
 }
@@ -359,7 +368,10 @@ RectF& ExternalFontFT2::GetGlyphBounds(unsigned glyphIndex, RectF* prect) const
     if (IsMissingGlyph(glyphIndex))
         prect->SetRect(GetDefaultGlyphWidth(), GetDefaultGlyphHeight());
     else
+    {
+        Lock::Locker locker(pFontLock);
         *prect = Glyphs[glyphIndex].Bounds;
+    }
     return *prect;
 }
 
@@ -444,8 +456,8 @@ void FontProviderFT2::MapFontToMemory(const char* fontName, unsigned fontFlags,
 ExternalFontFT2* FontProviderFT2::createFont(const FontType& font)
 {
     ExternalFontFT2* newFont = font.FontData?
-        new ExternalFontFT2(this, Lib, font.FontName, font.FontFlags, font.FontData, font.FontDataSize, font.FaceIndex):
-        new ExternalFontFT2(this, Lib, font.FontName, font.FontFlags, font.FileName, font.FaceIndex);
+        new ExternalFontFT2(this, Lib, font.FontName, font.FontFlags, font.FontData, font.FontDataSize, font.FaceIndex, &FontLock):
+        new ExternalFontFT2(this, Lib, font.FontName, font.FontFlags, font.FileName, font.FaceIndex, &FontLock);
 
     if (newFont && !newFont->IsValid())
     {
@@ -463,9 +475,7 @@ Font* FontProviderFT2::CreateFont(const char* name, unsigned fontFlags)
     if (Lib == 0)
         return 0;
 
-#ifdef SF_ENABLE_THREADS
-    Mutex::Locker lock(&LockMutex);
-#endif
+    Lock::Locker lock(&FontLock);
 
     // Mask flags to be safe.
     fontFlags &= Font::FF_CreateFont_Mask;

@@ -31,7 +31,7 @@
 #include "jpeglib.h"
 #include "jmemsys.h"		/* import the system-dependent declarations */
 
-#if defined(__PPU__) || defined(__psp2__)
+#if defined(__PPU__) || defined(__psp2__) || defined(__ORBIS__)
 #define NO_GETENV
 #endif
 #ifndef HAVE_STDLIB_H		/* <stdlib.h> should declare getenv() */

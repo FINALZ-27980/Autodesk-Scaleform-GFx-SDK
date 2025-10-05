@@ -52,7 +52,7 @@ namespace Classes { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class NativeWindowResize : public Traits
+    class NativeWindowResize : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_display
 #endif
     public:
         typedef Classes::fl_display::NativeWindowResize ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeWindowResize(VM& vm);
+        NativeWindowResize(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 9 };
         static const MemberInfo mi[MemberInfoNum];

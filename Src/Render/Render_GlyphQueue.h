@@ -153,6 +153,8 @@ public:
 //------------------------------------------------------------------------
 struct GlyphParamHash
 {
+    // Make sure the member variables stay with no padding
+    // Padding breaks the hash function that uses this struct as a key
     const GlyphParam* Param;
 
     GlyphParamHash() : Param(0) {}

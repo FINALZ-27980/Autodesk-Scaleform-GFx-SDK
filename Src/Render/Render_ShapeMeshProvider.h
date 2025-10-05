@@ -49,7 +49,7 @@ public:
 
 
 //------------------------------------------------------------------------
-struct MorphShapeData : public RefCountBase<MorphShapeData, Stat_Default_Mem>
+struct MorphShapeData : public RefCountBase<MorphShapeData, StatRender_TreeCache_Mem>
 {
     typedef ArrayLH_POD<UByte> ContainerType;
 
@@ -94,12 +94,7 @@ public:
     {}
 
     ShapeMeshProvider(ShapeDataInterface* shape, ShapeDataInterface* shapeMorph = 0);
-
-
-    ~ShapeMeshProvider()
-    {
-        SF_AMP_CODE(clearStrokeCount();)
-    }
+    virtual ~ShapeMeshProvider();
 
     void AttachShape(ShapeDataInterface* shape, ShapeDataInterface* shapeMorph = 0);
 

@@ -129,7 +129,7 @@ public:
     MaskPrimitive Prim;
 
     // Insertions & removals should manipulate the Primitive and Matrices
-    MaskBundle(HAL* hal, MaskPrimitive::MaskAreaType maskType);
+    MaskBundle();
 
     void    Draw(HAL* hal)
     {
@@ -150,13 +150,34 @@ public:
     FilterPrimitive Prim;
 
     // Insertions & removals should manipulate the Primitive and Matrices
-    FilterBundle(HAL* hal, FilterSet* filters, bool maskPresent);
+    FilterBundle(FilterSet* filters, bool maskPresent);
 
     void    Draw(HAL* hal)
     {
         hal->Draw(&Prim);
     }
     
+    virtual void    InsertEntry(UPInt index, BundleEntry* shape);
+    virtual void    RemoveEntries(UPInt index, UPInt count);
+};
+
+// ***** BlendModeBundle
+
+// BlendModeBundle maintains BlendPrimitive and updates it by pulling blend data from nodes.
+
+class BlendModeBundle : public Bundle
+{
+public:    
+    BlendPrimitive Prim;
+
+    // Insertions & removals should manipulate the Primitive and Matrices
+    BlendModeBundle(BlendMode mode, bool maskPresent);
+
+    void    Draw(HAL* hal)
+    {
+        hal->Draw(&Prim);
+    }
+
     virtual void    InsertEntry(UPInt index, BundleEntry* shape);
     virtual void    RemoveEntries(UPInt index, UPInt count);
 };
@@ -170,7 +191,7 @@ class ViewMatrix3DBundle : public Bundle
 public:    
     ViewMatrix3DPrimitive Prim;
 
-    ViewMatrix3DBundle(HAL* hal, Matrix3FRef* pvm);
+    ViewMatrix3DBundle(Matrix3FRef* pvm);
 
     void    Draw(HAL* hal)   {        hal->Draw(&Prim);    }
 };
@@ -184,7 +205,7 @@ class ProjectionMatrix3DBundle : public Bundle
 public:    
     ProjectionMatrix3DPrimitive Prim;
 
-    ProjectionMatrix3DBundle(HAL* hal, Matrix4FRef *projMat);
+    ProjectionMatrix3DBundle(Matrix4FRef *projMat);
 
     void    Draw(HAL* hal)   {        hal->Draw(&Prim);    }
 };
@@ -196,7 +217,7 @@ class UserDataBundle : public Bundle
 {
 public:    
     UserDataPrimitive Prim;
-    UserDataBundle(HAL* hal, UserDataState::Data* data );
+    UserDataBundle(UserDataState::Data* data );
     void    Draw(HAL* hal)   { hal->Draw(&Prim); }
 };
 

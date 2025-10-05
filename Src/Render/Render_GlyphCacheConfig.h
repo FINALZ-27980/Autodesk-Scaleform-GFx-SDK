@@ -69,7 +69,7 @@ struct GlyphCacheParams
         OutlineRatio(0.01f),
         ShadowQuality(1.0f),
         UseAutoFit(true),
-        UseVectorOnFullCache(false),
+        UseVectorOnFullCache(true),
         FenceWaitOnFullCache(true)
     {}
 

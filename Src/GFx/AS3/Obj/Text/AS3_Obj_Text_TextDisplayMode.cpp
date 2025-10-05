@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_text
         {"LCD", NULL, OFFSETOF(Classes::fl_text::TextDisplayMode, LCD), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    TextDisplayMode::TextDisplayMode(VM& vm)
-    : Traits(vm, AS3::fl_text::TextDisplayModeCI)
+
+    TextDisplayMode::TextDisplayMode(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::TextDisplayMode::TextDisplayMode()"
 //##protect##"ClassTraits::TextDisplayMode::TextDisplayMode()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_text::TextDisplayModeCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_text::TextDisplayMode(*this));
 
     }
 
     Pickable<Traits> TextDisplayMode::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) TextDisplayMode(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) TextDisplayMode(vm, AS3::fl_text::TextDisplayModeCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_text::TextDisplayModeCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_text
 {
     const TypeInfo TextDisplayModeTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_text::TextDisplayMode::InstanceType),
+        0,
+        ClassTraits::fl_text::TextDisplayMode::MemberInfoNum,
+        0,
+        0,
         "TextDisplayMode", "flash.text", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_text
     const ClassInfo TextDisplayModeCI = {
         &TextDisplayModeTI,
         ClassTraits::fl_text::TextDisplayMode::MakeClassTraits,
-        0,
-        ClassTraits::fl_text::TextDisplayMode::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_text::TextDisplayMode::mi,
         NULL,

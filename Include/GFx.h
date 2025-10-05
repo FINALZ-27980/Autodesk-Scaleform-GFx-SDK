@@ -66,7 +66,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "../Src/GFx/GFx_TextField.h" 		
 #include "../Src/GFx/GFx_TextFieldDef.h" 		
 #include "../Src/GFx/GFx_VideoBase.h" 		
-#include "../Src/GFx/GFx_WWHelper.h" 		
 #include "../Src/GFx/AS2/AS2_Action.h" 		
 #include "../Src/GFx/AS2/AS2_ActionTypes.h" 		
 #include "../Src/GFx/AS2/AS2_FunctionRef.h" 		

@@ -17,11 +17,18 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef INCLUDE_GFX_AMP_INTERFACES_H
 #define INCLUDE_GFX_AMP_INTERFACES_H
 
-#include "Amp_Message.h"
+#include "GFxConfig.h"
+#ifdef SF_ENABLE_STATS
+
+#include "Kernel/SF_RefCount.h"
+#include "GFx/GFx_PlayerStats.h"
 
 namespace Scaleform {
 namespace GFx {
 namespace AMP {
+
+class Message;
+class MessageAppControl;
 
 // 
 // Custom AMP behavior is achieved by overriding the classes in this file
@@ -76,5 +83,7 @@ public:
 } // namespace AMP
 } // namespace GFx
 } // namespace Scaleform
+
+#endif
 
 #endif

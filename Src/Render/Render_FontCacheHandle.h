@@ -31,7 +31,7 @@ namespace Scaleform { namespace Render {
 // associated GlyphCache (synchronization exchange protocol
 // in FontHandle allows FontCacheHandleManager to be released on any thread).
 class GlyphCache;
-class FontCacheHandleManager : public RefCountBase<FontCacheHandleManager, Stat_Default_Mem> // TO DO: Stat
+class FontCacheHandleManager : public RefCountBase<FontCacheHandleManager, StatRender_Font_Mem>
 {
     friend class Font;
     friend class FontCacheHandle;
@@ -79,7 +79,7 @@ private:
 
 
 //------------------------------------------------------------------------
-class FontCacheHandle : public ListNode<FontCacheHandle>, public NewOverrideBase<StatRender_Font_Mem> // TO DO: StatID
+class FontCacheHandle : public ListNode<FontCacheHandle>, public NewOverrideBase<StatRender_Font_Mem>
 {
     friend class Font;
 public:

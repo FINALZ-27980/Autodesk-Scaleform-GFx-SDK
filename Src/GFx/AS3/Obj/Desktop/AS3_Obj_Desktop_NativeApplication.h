@@ -54,7 +54,14 @@ namespace fl
     extern const ClassInfo ArrayCI;
     extern const TypeInfo uintTI;
     extern const ClassInfo uintCI;
+    extern const TypeInfo FunctionTI;
+    extern const ClassInfo FunctionCI;
 } // namespace fl
+namespace fl_events
+{
+    extern const TypeInfo EventTI;
+    extern const ClassInfo EventCI;
+} // namespace fl_events
 
 namespace ClassTraits { namespace fl_desktop
 {
@@ -81,17 +88,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_desktop
 {
-    class NativeApplication : public Traits
+    class NativeApplication : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::NativeApplication"; }
 #endif
     public:
-        typedef Classes::fl_desktop::NativeApplication ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeApplication(VM& vm);
+        NativeApplication(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

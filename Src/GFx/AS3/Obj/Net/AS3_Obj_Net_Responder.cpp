@@ -31,24 +31,27 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace ClassTraits { namespace fl_net
 {
-    Responder::Responder(VM& vm)
-    : Traits(vm, AS3::fl_net::ResponderCI)
+
+    Responder::Responder(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::Responder::Responder()"
 //##protect##"ClassTraits::Responder::Responder()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_net::ResponderCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Class(*this));
 
     }
 
     Pickable<Traits> Responder::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Responder(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) Responder(vm, AS3::fl_net::ResponderCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_net::ResponderCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -59,6 +62,11 @@ namespace fl_net
 {
     const TypeInfo ResponderTI = {
         TypeInfo::CompileTime | TypeInfo::NotImplemented,
+        sizeof(ClassTraits::fl_net::Responder::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "Responder", "flash.net", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -66,10 +74,6 @@ namespace fl_net
     const ClassInfo ResponderCI = {
         &ResponderTI,
         ClassTraits::fl_net::Responder::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

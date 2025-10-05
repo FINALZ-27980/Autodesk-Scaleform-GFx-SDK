@@ -136,8 +136,9 @@ public:
             Reserved *= 2;
             Data = (T*)(pHeap ? SF_HEAP_ALLOC(pHeap, Reserved * sizeof(T), SID): 
                 SF_HEAP_AUTO_ALLOC_ID(this, Reserved * sizeof(T), SID));
-            memcpy(Data, Static, sizeof(Static));
-            ConstructArray(Data + Size, Reserved - Size, T());
+            ConstructArray(Data, Reserved, T());
+            for (UPInt i = 0; i < Size; ++i)
+                Data[i] = Static[i];
         }
         else if (Size >= Reserved)
         {

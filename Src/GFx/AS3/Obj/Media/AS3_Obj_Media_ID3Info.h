@@ -97,7 +97,7 @@ namespace Instances { namespace fl_media
 
 namespace InstanceTraits { namespace fl_media
 {
-    class ID3Info : public CTraits
+    class ID3Info : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -135,17 +135,19 @@ namespace InstanceTraits { namespace fl_media
     
 namespace ClassTraits { namespace fl_media
 {
-    class ID3Info : public Traits
+    class ID3Info : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ID3Info"; }
 #endif
     public:
-        typedef Classes::fl_media::ID3Info ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_media::ID3Info InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ID3Info(VM& vm);
+        ID3Info(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

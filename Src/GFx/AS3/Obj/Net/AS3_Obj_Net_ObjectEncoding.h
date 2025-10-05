@@ -30,6 +30,8 @@ namespace fl_net
 {
     extern const TypeInfo ObjectEncodingTI;
     extern const ClassInfo ObjectEncodingCI;
+    extern const TypeInfo IDynamicPropertyWriterTI;
+    extern const ClassInfo IDynamicPropertyWriterCI;
 } // namespace fl_net
 
 namespace ClassTraits { namespace fl_net
@@ -56,7 +58,7 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class ObjectEncoding : public Traits
+    class ObjectEncoding : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -64,9 +66,11 @@ namespace ClassTraits { namespace fl_net
 #endif
     public:
         typedef Classes::fl_net::ObjectEncoding ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ObjectEncoding(VM& vm);
+        ObjectEncoding(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 3 };
         static const MemberInfo mi[MemberInfoNum];

@@ -140,6 +140,15 @@ struct DDSHeaderInfo
 
 };
 
+struct DDSDXT10Info
+{
+    SInt32      DXGIFormat;
+    UInt32      ResourceDimension;
+    UInt32      MiscFlag; // see D3D11_RESOURCE_MISC_FLAG
+    UInt32      ArraySize;
+    UInt32      Reserved;
+};
+
 // Temporary DDS image class used as a data source, allowing
 // direct initialization of RawImage or Texture with image data.
 
@@ -247,6 +256,10 @@ static bool Image_ParseDDSHeader(DDSHeaderInfo* pinfo, const UByte* buf, const U
                 pinfo->Format = Image_ATCICI;
             }
 #endif
+            else if ( v == MAKEFOURCC('D','X','1','0'))
+            {
+                pinfo->Format = Image_BC7;
+            }
             else
             {
                 SF_DEBUG_WARNING4(1, "Unrecognized DDS FourCC code: %c%c%c%c\n", 
@@ -408,6 +421,8 @@ bool DDSFileImageSource::ReadHeader()
 
     if (!Image_ParseDDSHeader(&HeaderInfo, buf, 0))
         return false;
+    if (HeaderInfo.Format == Image_BC7)
+        pFile->Seek(sizeof(DDSDXT10Info), File::Seek_Cur);
     HeaderInfo.OppositeEndian = oppEndian;
     HeaderInfo.DDSFmt.CalcShifts();
 

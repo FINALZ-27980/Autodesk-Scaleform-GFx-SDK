@@ -45,22 +45,33 @@ bool ImageFileWriter::writeImage(File* file, const ImageFileWriter* writer,
     ImageData     idata;
     bool          needUnmap = false;
 
+    bool dataObtained = false;
     if (image->GetImageType() == Image::Type_RawImage)
-    {        
-        ((RawImage*)image->GetAsImage())->GetImageData(&idata);
+    {
+        RawImage* rawImage = (RawImage*)image->GetAsImage();
+        if (rawImage->hasData())
+        {
+            rawImage->GetImageData(&idata);
+            dataObtained = true;
+        }
     }
-
     else if (image->GetUse() & ImageUse_MapSimThread)
     {
         if (!image->Map(&idata))
+        {
             return false;
+        }
         needUnmap = true;
+        dataObtained = true;
     }
 
-    else
+    if (!dataObtained)
     {
         tempImage = *RawImage::Create(image->GetFormat(), 1, image->GetSize(), 0);
-        if (!tempImage) return false;
+        if (!tempImage) 
+        {
+            return false;
+        }
 
         tempImage->GetImageData(&idata);
         if (!image->Decode(&idata))

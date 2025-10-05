@@ -37,8 +37,8 @@ namespace fl
     extern const ClassInfo BooleanCI;
     extern const TypeInfo StringTI;
     extern const ClassInfo StringCI;
-    extern const TypeInfo ObjectTI;
-    extern const ClassInfo ObjectCI;
+    extern const TypeInfo anyTI;
+    extern const ClassInfo anyCI;
     extern const TypeInfo ArrayTI;
     extern const ClassInfo ArrayCI;
 } // namespace fl
@@ -129,7 +129,7 @@ namespace Instances { namespace fl_net
         void cacheResponseSet(const Value& result, bool value);
         void contentTypeGet(ASString& result);
         void contentTypeSet(const Value& result, const ASString& value);
-        void dataGet(SPtr<Instances::fl::Object>& result);
+        void dataGet(Value& result);
         void dataSet(const Value& result, const Value& value);
         void digestGet(ASString& result);
         void digestSet(const Value& result, const ASString& value);
@@ -179,9 +179,9 @@ namespace Instances { namespace fl_net
         {
             contentTypeSet(Value::GetUndefined(), value);
         }
-        SPtr<Instances::fl::Object> dataGet()
+        Value dataGet()
         {
-            SPtr<Instances::fl::Object> result;
+            Value result;
             dataGet(result);
             return result;
         }
@@ -267,8 +267,11 @@ namespace Instances { namespace fl_net
 
 //##protect##"instance$data"
     protected:
-        ASString                Url;
-        SPtr<Instances::fl::Object> DataObj;
+        ASString                    Url;
+        Value                       DataObj;
+        ASString                    Method;
+        ASString                    ContentType;
+        SPtr<Instances::fl::Array>  Headers;
 //##protect##"instance$data"
 
     };
@@ -276,7 +279,7 @@ namespace Instances { namespace fl_net
 
 namespace InstanceTraits { namespace fl_net
 {
-    class URLRequest : public CTraits
+    class URLRequest : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -302,6 +305,8 @@ namespace InstanceTraits { namespace fl_net
 
         enum { ThunkInfoNum = 24 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[36];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -314,17 +319,19 @@ namespace InstanceTraits { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class URLRequest : public Traits
+    class URLRequest : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::URLRequest"; }
 #endif
     public:
-        typedef Classes::fl_net::URLRequest ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_net::URLRequest InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        URLRequest(VM& vm);
+        URLRequest(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

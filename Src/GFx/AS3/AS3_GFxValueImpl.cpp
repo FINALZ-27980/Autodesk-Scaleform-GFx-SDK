@@ -155,12 +155,17 @@ class AS3ValueObjectInterface : public MovieImpl::ValueObjectInterface
     bool    PopBack(void* pdata, Value* pval);
     bool    RemoveElements(void* pdata, unsigned idx, int count);
 
+	bool	IsInstanceOf(void* pdata, const char* className) const;
+
     bool    IsByteArray(void* pdata) const;
     unsigned GetByteArraySize(void* pdata) const;
+	void	SetByteArraySize(void* pdata, UPInt setSize);
     bool    ReadFromByteArray(void* pdata, UByte *destBuff, UPInt destBuffSz) const;
     bool    WriteToByteArray(void* pdata, const UByte *srcBuff, UPInt writeSize);
+	void*   GetRawDataPtr(void* pdata);
 
     bool    IsDisplayObjectActive(void* pdata) const;
+    bool    GetParent(void* pdata, Value* pparent) const;
     bool    GetDisplayInfo(void* pdata, DisplayInfo* pinfo) const;
     bool    SetDisplayInfo(void* pdata, const DisplayInfo& info);
     bool    GetWorldMatrix(void* pdata, Render::Matrix2F* pmat) const;
@@ -193,7 +198,7 @@ class AS3ValueObjectInterface : public MovieImpl::ValueObjectInterface
 
 #endif  // GFX_AS_ENABLE_USERDATA
 
-    AMP::ViewStats* GetAdvanceStats() const;
+    AmpStats* GetAdvanceStats() const;
 
 public:
     AS3ValueObjectInterface(MovieImpl* pmovieRoot)
@@ -212,11 +217,10 @@ public:
 // ***** GFxValue::ObjectInterface or AS3ValueObjectInterface definitions
 
 
-AMP::ViewStats* GFX_Value_ObjectInterface_CLASS::GetAdvanceStats() const
+AmpStats* GFX_Value_ObjectInterface_CLASS::GetAdvanceStats() const
 {
     return GetMovieImpl()->pASMovieRoot->GetMovieImpl()->AdvanceStats; 
 }
-
 
 void GFX_Value_ObjectInterface_CLASS::ObjectAddRef(Value* val, void* pobj)
 {
@@ -394,7 +398,13 @@ bool GFX_Value_ObjectInterface_CLASS::GetMember(void* pdata, const char* name,
     }
 
     root->ASValue2GFxValue(asval, pval);
-    SF_ASSERT(!vm->IsException());
+
+    if (vm->IsException())
+    {
+        vm->OutputAndIgnoreException();
+        return false;
+    }
+
     return true;
 }
 
@@ -492,8 +502,14 @@ bool GFX_Value_ObjectInterface_CLASS::Invoke(void* pdata, GFx::Value* presult, c
 
     if (presult)
         root->ASValue2GFxValue(asresult, presult);
-    SF_ASSERT(!vm->IsException());
-    return true;
+
+	if (vm->IsException())
+	{
+		vm->OutputAndIgnoreException();
+		return false;
+	}
+
+	return true;
 }
 
 
@@ -645,6 +661,24 @@ void GFX_Value_ObjectInterface_CLASS::VisitMembers(void* pdata, Value::ObjectVis
     SF_ASSERT(!root->GetAVM()->IsException());
 }
 
+bool GFX_Value_ObjectInterface_CLASS::IsInstanceOf(void* pdata, const char* className) const
+{
+	SF_AMP_SCOPE_TIMER_ID(GetAdvanceStats(), "ObjectInterface::IsInstanceOf", Amp_Native_Function_Id_ObjectInterface_IsInstanceOf);
+
+	AS3::MovieRoot* root = static_cast<AS3::MovieRoot*>(GetMovieImpl()->pASMovieRoot.GetPtr());        
+    AS3::Object*    obj  = (AS3::Object*)pdata;
+    AS3::VM*        vm   = root->GetAVM();
+
+    const AS3::Multiname mn(*vm, className);
+    const AS3::ClassTraits::Traits* ctr = vm->Resolve2ClassTraits(mn, vm->GetCurrentAppDomain());
+    if (!ctr || !obj->GetTraits().GetClass().GetClassTraits().IsOfType(*ctr))
+	{
+		SF_DEBUG_MESSAGE1(1, "IsInstanceOf returned false. %p\n", ctr);
+        return false;
+	}
+
+    return true;
+}
 
 bool GFX_Value_ObjectInterface_CLASS::IsByteArray(void* pdata) const
 {
@@ -656,8 +690,11 @@ bool GFX_Value_ObjectInterface_CLASS::IsByteArray(void* pdata) const
 
     const AS3::Multiname mn(*vm, "flash.utils.ByteArray");
     const AS3::ClassTraits::Traits* ctr = vm->Resolve2ClassTraits(mn, vm->GetCurrentAppDomain());
-    if (!ctr || !obj->GetTraits().GetClass().GetClassTraits().IsOfType(*ctr)) 
+    if (!ctr || !obj->GetTraits().GetClass().GetClassTraits().IsOfType(*ctr))
+	{
+		SF_DEBUG_MESSAGE1(1, "IsByteArray returned false. %p\n", ctr);
         return false;
+	}
 
     //AS3::Instances::fl_utils::ByteArray *arr = (AS3::Instances::fl_utils::ByteArray*) (AS3::Object*) pdata;
     return true;
@@ -678,6 +715,23 @@ unsigned GFX_Value_ObjectInterface_CLASS::GetByteArraySize(void* pdata) const
 
     AS3::Instances::fl_utils::ByteArray *arr = (AS3::Instances::fl_utils::ByteArray*) (AS3::Object*) pdata;
     return arr->GetLength();
+}
+
+void GFX_Value_ObjectInterface_CLASS::SetByteArraySize(void* pdata, UPInt setSize)
+{
+    SF_AMP_SCOPE_TIMER_ID(GetAdvanceStats(), "ObjectInterface::SetByteArraySize", Amp_Native_Function_Id_ObjectInterface_SetByteArraySize);
+
+    AS3::MovieRoot* root = static_cast<AS3::MovieRoot*>(GetMovieImpl()->pASMovieRoot.GetPtr());        
+    AS3::Object*    obj  = (AS3::Object*)pdata;
+    AS3::VM*        vm   = root->GetAVM();
+
+    const AS3::Multiname mn(*vm, "flash.utils.ByteArray");
+    const AS3::ClassTraits::Traits* ctr = vm->Resolve2ClassTraits(mn, vm->GetCurrentAppDomain());
+    if (!ctr || !obj->GetTraits().GetClass().GetClassTraits().IsOfType(*ctr)) 
+        return;
+
+    AS3::Instances::fl_utils::ByteArray *arr = (AS3::Instances::fl_utils::ByteArray*) (AS3::Object*) pdata;
+    arr->lengthSet(static_cast<Scaleform::UInt32>(setSize));
 }
 
 bool GFX_Value_ObjectInterface_CLASS::ReadFromByteArray(void* pdata, UByte *destBuff, UPInt destBuffSz) const
@@ -716,6 +770,22 @@ bool GFX_Value_ObjectInterface_CLASS::WriteToByteArray(void* pdata, const UByte 
     return true;
 }
 
+void* GFX_Value_ObjectInterface_CLASS::GetRawDataPtr(void* pdata)
+{
+   SF_AMP_SCOPE_TIMER_ID(GetAdvanceStats(), "ObjectInterface::GetRawDataPtr", Amp_Native_Function_Id_ObjectInterface_GetRawDataPtr);
+
+    AS3::MovieRoot* root = static_cast<AS3::MovieRoot*>(GetMovieImpl()->pASMovieRoot.GetPtr());        
+    AS3::Object*    obj  = (AS3::Object*)pdata;
+    AS3::VM*        vm   = root->GetAVM();
+
+    const AS3::Multiname mn(*vm, "flash.utils.ByteArray");
+    const AS3::ClassTraits::Traits* ctr = vm->Resolve2ClassTraits(mn, vm->GetCurrentAppDomain());
+    if (!ctr || !obj->GetTraits().GetClass().GetClassTraits().IsOfType(*ctr)) 
+        return NULL;
+
+    AS3::Instances::fl_utils::ByteArray *arr = (AS3::Instances::fl_utils::ByteArray*) (AS3::Object*) pdata;
+    return arr->GetDataPtr();
+}
 
 unsigned GFX_Value_ObjectInterface_CLASS::GetArraySize(void* pdata) const
 {
@@ -964,6 +1034,30 @@ bool    GFX_Value_ObjectInterface_CLASS::IsDisplayObjectActive(void* pdata) cons
     return pd != NULL;
 }
 
+bool    GFX_Value_ObjectInterface_CLASS::GetParent(void* pdata, Value* pparent) const
+{
+    SF_AMP_SCOPE_TIMER_ID(GetAdvanceStats(), "ObjectInterface::GetParent", Amp_Native_Function_Id_ObjectInterface_GetParent);
+
+    AS3::Object* obj = (AS3::Object*)pdata;
+    if (!AreDisplayObjectTraits(obj)) return false;
+    DisplayObject* pd = static_cast<AS3::Instances::fl_display::DisplayObject*>(obj)->pDispObj;    
+    if(pd == NULL) return false;
+
+    DisplayObject* pdp = pd->GetParent();
+    if(pdp != NULL)
+    {
+        AS3::MovieRoot* proot = static_cast<AS3::MovieRoot*>(GetMovieImpl()->pASMovieRoot.GetPtr());
+        AS3::Object*    pas3obj = AS3::ToAvmDisplayObj(pdp)->GetAS3Obj();
+        return proot->CreateObjectValue(pparent, proot->GetMovieImpl()->pObjectInterface, pas3obj, true);
+    }
+    else
+    {
+        pparent->SetNull();
+        return true;
+    }
+
+}
+
 bool GFX_Value_ObjectInterface_CLASS::GetDisplayInfo(void* pdata, Value::DisplayInfo* pinfo) const
 {
     SF_AMP_SCOPE_TIMER_ID(GetAdvanceStats(), "ObjectInterface::GetDisplayInfo", Amp_Native_Function_Id_ObjectInterface_GetDisplayInfo);
@@ -1035,9 +1129,14 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
         {
             // Set alpha modulate, in percent.
             InteractiveObject::Cxform  cx = pd->GetCxform();
-            cx.M[0][3] = float(cinfo.GetAlpha() / 100.);
-            pd->SetCxform(cx);
-            pd->SetAcceptAnimMoves(0);
+
+			float alpha = static_cast<float>(cinfo.GetAlpha() / 100.);
+			if( cx.M[0][3] != alpha )
+			{
+				cx.M[0][3] = alpha;
+				pd->SetCxform(cx);
+				pd->SetAcceptAnimMoves(0);
+			}
         }
     }
 
@@ -1055,7 +1154,7 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
         if (NumberUtil::IsNEGATIVE_INFINITY(zval) || NumberUtil::IsPOSITIVE_INFINITY(zval))
             zval = 0;
 
-        // pd->EnsureGeomDataCreated(); // let timeline anim continue
+        pd->EnsureGeomDataCreated(); // let timeline anim continue
         DisplayObjectBase::GeomDataType* tfgeomData = pd->GetGeomDataPtr();
         SF_ASSERT(tfgeomData);
 
@@ -1075,7 +1174,7 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
             newZScale = 100.;
         }
 
-        // pd->EnsureGeomDataCreated(); // let timeline anim continue
+        pd->EnsureGeomDataCreated(); // let timeline anim continue
         DisplayObjectBase::GeomDataType* tfgeomData = pd->GetGeomDataPtr();
         SF_ASSERT(tfgeomData);
 
@@ -1090,18 +1189,17 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
     {
         Double rval = cinfo.GetXRotation();
 
-        // pd->EnsureGeomDataCreated(); // let timeline anim continue
+        pd->EnsureGeomDataCreated(); // let timeline anim continue
         DisplayObjectBase::GeomDataType* tfgeomData = pd->GetGeomDataPtr();
         SF_ASSERT(tfgeomData);
 
-        if (rval != tfgeomData->XRotation)
-        {       
-            Double r = fmod((Double)rval, (Double)360.);
-            if (r > 180)
-                r -= 360;
-            else if (r < -180)
-                r += 360;
-
+		Double r = fmod((Double)rval, (Double)360.);
+		if (r > 180)
+			r -= 360;
+		else if (r < -180)
+			r += 360;
+		if (r != tfgeomData->XRotation)
+		{       
             tfgeomData->XRotation = r;
             Update3DTransforms = true;
         }
@@ -1111,18 +1209,17 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
     {
         Double rval = cinfo.GetYRotation();
 
-        // pd->EnsureGeomDataCreated(); // let timeline anim continue
+        pd->EnsureGeomDataCreated(); // let timeline anim continue
         DisplayObjectBase::GeomDataType* tfgeomData = pd->GetGeomDataPtr();
         SF_ASSERT(tfgeomData);
 
-        if (rval != tfgeomData->YRotation)
-        {      
-            Double r = fmod((Double)rval, (Double)360.);
-            if (r > 180)
-                r -= 360;
-            else if (r < -180)
-                r += 360;
-
+		Double r = fmod((Double)rval, (Double)360.);
+		if (r > 180)
+			r -= 360;
+		else if (r < -180)
+			r += 360;
+		if (r != tfgeomData->YRotation)
+		{      
             tfgeomData->YRotation= r;
             Update3DTransforms = true;
         }
@@ -1134,9 +1231,9 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
     if (cinfo.IsFlagSet(DisplayInfo::V_FOV))
     {
         Double rval = cinfo.GetFOV();
-        if (rval != pd->GetFOV())
-        {       
-            Double r = fmod((Double)rval, (Double)180.);
+		Double r = fmod((Double)rval, (Double)180.);
+		if (r != pd->GetFOV())
+		{       
             pd->SetFOV(r);
         }
     }
@@ -1164,6 +1261,8 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
         pd->SetAcceptAnimMoves(0);
         DisplayObjectBase::GeomDataType* tfgeomData = pd->GetGeomDataPtr();
         SF_ASSERT(tfgeomData);
+
+		bool updateMatrix = false;
 
         InteractiveObject::Matrix m = pd->GetMatrix();
 
@@ -1209,7 +1308,11 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
                     newRotation -= 360;
                 else if (newRotation < -180)
                     newRotation += 360;
-                tfgeomData->Rotation = newRotation;
+				if (tfgeomData->Rotation != newRotation)
+				{
+					tfgeomData->Rotation = newRotation;
+					updateMatrix = true;
+				}
                 newRotation = SF_DEGTORAD(newRotation); // Convert to rads
             }
             // _xscale
@@ -1223,6 +1326,7 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
                     origXScale = 1;
                 }
                 newXScale = nx;
+				updateMatrix = true;
             }
             // _yscale
             Double ny = cinfo.IsFlagSet(DisplayInfo::V_yscale) ? (cinfo.GetYScale()/100) : NumberUtil::NaN();
@@ -1235,6 +1339,7 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
                     origYScale = 1;
                 }
                 newYScale = ny;
+				updateMatrix = true;
             }              
 
             // remove old rotation by rotate back and add new one
@@ -1248,25 +1353,35 @@ bool GFX_Value_ObjectInterface_CLASS::SetDisplayInfo(void *pdata, const Value::D
         }
 
         // _x
-        Double xval = cinfo.IsFlagSet(DisplayInfo::V_x) ? pt.x : NumberUtil::NaN();
+        Double xval = cinfo.IsFlagSet(DisplayInfo::V_x) ? Double(pt.x) : NumberUtil::NaN();
         if (!NumberUtil::IsNaN(xval))
         {
             if (NumberUtil::IsNEGATIVE_INFINITY(xval) || NumberUtil::IsPOSITIVE_INFINITY(xval))
                 xval = 0;
             tfgeomData->X = int(floor(PixelsToTwips(xval)));
-            m.Tx() = (float) tfgeomData->X;
+			float x = (float) tfgeomData->X;
+			if (m.Tx() != x)
+			{
+				m.Tx() = x;
+				updateMatrix = true;
+			}
         }
         // _y
-        Double yval = cinfo.IsFlagSet(DisplayInfo::V_y) ? pt.y : NumberUtil::NaN();
+        Double yval = cinfo.IsFlagSet(DisplayInfo::V_y) ? Double(pt.y) : NumberUtil::NaN();
         if (!NumberUtil::IsNaN(yval))
         {
             if (NumberUtil::IsNEGATIVE_INFINITY(yval) || NumberUtil::IsPOSITIVE_INFINITY(yval))
                 yval = 0;
             tfgeomData->Y = int(floor(PixelsToTwips(yval)));
-            m.Ty() = (float) tfgeomData->Y;
+			float y = (float) tfgeomData->Y;
+			if (m.Ty() != y)
+			{
+				m.Ty() = y;
+				updateMatrix = true;
+			}
         }
 
-        if (m.IsValid())
+        if (updateMatrix && m.IsValid())
         {
             if (pd->Is3D())     // update the 3D transform so we don't change the object into a 2D object
                 pd->UpdateTransform3D();
@@ -1579,8 +1694,6 @@ bool    GFX_Value_ObjectInterface_CLASS::CreateObjectValue(Value* pval, void* pd
 
 namespace AS3 {
 
-#ifdef GFX_AS_ENABLE_USERDATA
-
 bool    MovieRoot::CreateObjectValue(GFx::Value* pval, GFx::Value::ObjectInterface* pobjifc, void* pdata, bool isdobj)
 {
     SF_UNUSED(isdobj);
@@ -1603,9 +1716,6 @@ bool    MovieRoot::CreateObjectValue(GFx::Value* pval, GFx::Value::ObjectInterfa
 
     return true;
 }
-
-#endif
-
 
 // Value conversion for external communication
 void MovieRoot::GFxValue2ASValue(const GFx::Value& gfxVal, Value* pdestVal)
@@ -1785,12 +1895,15 @@ void MovieRoot::ASValue2GFxValue(const Value& value, GFx::Value* pdestVal) const
         break;
     case GFx::Value::VT_Number:
         {
-            pdestVal->Type = GFx::Value::ValueType(toType);            
-            if (!value.Convert2Number(pdestVal->mValue.NValue))
+            pdestVal->Type = GFx::Value::ValueType(toType);
+            Value::Number v;
+            if (!value.Convert2Number(v))
             {
 				pAVM->OutputAndIgnoreException();
                 pdestVal->mValue.NValue = NumberUtil::NaN();
-            } 
+            }
+            else
+                pdestVal->mValue.NValue = v;
         }
         break;
         
@@ -1819,7 +1932,7 @@ void MovieRoot::ASValue2GFxValue(const Value& value, GFx::Value* pdestVal) const
             unsigned len = str.GetLength() + 1;
             void* pdata = SF_HEAP_ALLOC(GetMovieHeap(), sizeof(MovieImpl::WideStringStorage) - sizeof(UByte) + (sizeof(wchar_t) * len), StatMV_Other_Mem);
             pdestVal->Type = GFx::Value::ValueType(GFx::Value::VT_StringW | GFx::Value::VTC_ManagedBit);
-            Ptr<MovieImpl::WideStringStorage> wstr = *::new(pdata) MovieImpl::WideStringStorage(strNode);
+            Ptr<MovieImpl::WideStringStorage> wstr = *::new(pdata) MovieImpl::WideStringStorage(strNode, len);
             pdestVal->mValue.pStringW = (const wchar_t*)(((UByte*)wstr.GetPtr()) + memberOffset);
             pdestVal->pObjectInterface = pMovieImpl->pObjectInterface;
 			pMovieImpl->pObjectInterface->ObjectAddRef(pdestVal, pdestVal->mValue.pData);

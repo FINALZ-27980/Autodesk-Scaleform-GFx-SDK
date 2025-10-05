@@ -32,6 +32,8 @@ namespace fl_display
     extern const ClassInfo NativeMenuCI;
     extern const TypeInfo NativeMenuItemTI;
     extern const ClassInfo NativeMenuItemCI;
+    extern const TypeInfo StageTI;
+    extern const ClassInfo StageCI;
 } // namespace fl_display
 namespace fl
 {
@@ -39,8 +41,12 @@ namespace fl
     extern const ClassInfo ArrayCI;
     extern const TypeInfo int_TI;
     extern const ClassInfo int_CI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo NumberTI;
+    extern const ClassInfo NumberCI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl_display
@@ -68,17 +74,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_display
 {
-    class NativeMenu : public Traits
+    class NativeMenu : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::NativeMenu"; }
 #endif
     public:
-        typedef Classes::fl_display::NativeMenu ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeMenu(VM& vm);
+        NativeMenu(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

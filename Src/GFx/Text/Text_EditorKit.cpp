@@ -88,13 +88,11 @@ void EditorKit::SetCursorPos(UPInt pos, bool selectionAllowed)
             // handle selection here
             if (IsShiftPressed() || IsMouseCaptured())
             {
-                if (pDocView->GetEndSelection() != CursorPos)
-                    pDocView->SetEndSelection(CursorPos);            
+                pDocView->SetEndSelection(CursorPos);            
             }
             else
             {
-                if (pDocView->GetBeginSelection() != CursorPos || pDocView->GetEndSelection() != CursorPos)
-                    pDocView->SetSelection(CursorPos, CursorPos);
+                pDocView->SetSelection(CursorPos, CursorPos);
             }
         }
         else
@@ -612,11 +610,7 @@ void    EditorKit::OnMouseUp(float x, float y, int buttons)
     SF_UNUSED2(x, y);
     if (!(buttons & 1)) // left mouse button is up
     {
-        if (IsSelectable() && IsMouseCaptured())
-        {
-            ClearMouseCaptured();
-            //ClearShiftPressed();
-        }
+        ClearMouseCaptured();
     }
 }
 
@@ -1206,7 +1200,14 @@ void EditorKit::CutToClipboard(UPInt startPos, UPInt endPos, bool useRichClipboa
         }
         CopyToClipboard(startPos, endPos, useRichClipboard);
         if (!IsReadOnly())
+        {
+            if (pDocView->GetDocumentListener())
+            {
+                if (!pDocView->GetDocumentListener()->Editor_OnRemovingText(*this, startPos, endPos - startPos))
+                    return;
+            }
             pDocView->RemoveText(startPos, endPos);
+        }
     }
 }
 
@@ -1232,12 +1233,28 @@ UPInt EditorKit::PasteFromClipboard(UPInt startPos, UPInt endPos, bool useRichCl
                 ClearShiftPressed();
                 if (startPos == endPos)
                 {
+                    if (pDocView->GetDocumentListener())
+                    {
+                        WStringBuffer buf;
+                        pstr->GetText(&buf);
+                        if (!pDocView->GetDocumentListener()->Editor_OnInsertingText(*this, startPos, buf.GetLength(), buf.ToWStr()))
+                            return newPos;
+                    }
                     DocView::InsertStyledTextCommand cmd(startPos, pstr);
                     UPInt len = pDocView->EditCommand(DocView::Cmd_InsertStyledText, &cmd);
                     newPos = startPos + len;
                 }
                 else
                 {
+                    if (pDocView->GetDocumentListener())
+                    {
+                        WStringBuffer buf;
+                        pstr->GetText(&buf);
+                        if (!pDocView->GetDocumentListener()->Editor_OnRemovingText(*this, startPos, endPos - startPos))
+                            return newPos;
+                        if (!pDocView->GetDocumentListener()->Editor_OnInsertingText(*this, startPos, buf.GetLength(), buf.ToWStr()))
+                            return newPos;
+                    }
                     // replace the selection by the input
                     DocView::ReplaceTextByStyledTextCommand cmd(startPos, endPos, pstr);
                     UPInt len = pDocView->EditCommand(DocView::Cmd_ReplaceTextByStyledText, &cmd);
@@ -1254,12 +1271,24 @@ UPInt EditorKit::PasteFromClipboard(UPInt startPos, UPInt endPos, bool useRichCl
                 ClearShiftPressed();
                 if (startPos == endPos)
                 {
+                    if (pDocView->GetDocumentListener())
+                    {
+                        if (!pDocView->GetDocumentListener()->Editor_OnInsertingText(*this, startPos, str.GetLength(), str.ToWStr()))
+                            return newPos;
+                    }
                     DocView::InsertPlainTextCommand cmd(startPos, str.ToWStr(), str.GetLength());
                     UPInt len = pDocView->EditCommand(DocView::Cmd_InsertPlainText, &cmd);
                     newPos = startPos + len;
                 }
                 else
                 {
+                    if (pDocView->GetDocumentListener())
+                    {
+                        if (!pDocView->GetDocumentListener()->Editor_OnRemovingText(*this, startPos, endPos - startPos))
+                            return newPos;
+                        if (!pDocView->GetDocumentListener()->Editor_OnInsertingText(*this, startPos, str.GetLength(), str.ToWStr()))
+                            return newPos;
+                    }
                     // replace the selection by the input
                     DocView::ReplaceTextByPlainTextCommand cmd
                         (startPos, endPos, str.ToWStr(), str.GetLength());

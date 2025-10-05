@@ -29,6 +29,7 @@ namespace Scaleform { namespace GFx { namespace AS3
 //##protect##"methods"
 //##protect##"methods"
 
+#ifndef SF_AS3_EMIT_DEF_ARGS
 // Values of default arguments.
 namespace Impl
 {
@@ -37,45 +38,47 @@ namespace Impl
     SF_INLINE
     Value::Number GetMethodDefArg<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createBox, 2, Value::Number>(AS3::StringManager&)
     {
-        return 0;
+        return 0.0;
     }
 
     template <>
     SF_INLINE
     Value::Number GetMethodDefArg<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createBox, 3, Value::Number>(AS3::StringManager&)
     {
-        return 0;
+        return 0.0;
     }
 
     template <>
     SF_INLINE
     Value::Number GetMethodDefArg<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createBox, 4, Value::Number>(AS3::StringManager&)
     {
-        return 0;
+        return 0.0;
     }
 
     template <>
     SF_INLINE
     Value::Number GetMethodDefArg<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createGradientBox, 2, Value::Number>(AS3::StringManager&)
     {
-        return 0;
+        return 0.0;
     }
 
     template <>
     SF_INLINE
     Value::Number GetMethodDefArg<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createGradientBox, 3, Value::Number>(AS3::StringManager&)
     {
-        return 0;
+        return 0.0;
     }
 
     template <>
     SF_INLINE
     Value::Number GetMethodDefArg<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createGradientBox, 4, Value::Number>(AS3::StringManager&)
     {
-        return 0;
+        return 0.0;
     }
 
 } // namespace Impl
+#endif // SF_AS3_EMIT_DEF_ARGS
+
 typedef ThunkFunc0<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_clone, SPtr<Instances::fl_geom::Matrix> > TFunc_Instances_Matrix_clone;
 typedef ThunkFunc1<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_concat, const Value, Instances::fl_geom::Matrix*> TFunc_Instances_Matrix_concat;
 typedef ThunkFunc5<Instances::fl_geom::Matrix, Instances::fl_geom::Matrix::mid_createBox, const Value, Value::Number, Value::Number, Value::Number, Value::Number, Value::Number> TFunc_Instances_Matrix_createBox;
@@ -377,19 +380,40 @@ namespace Instances { namespace fl_geom
 
 namespace InstanceTraits { namespace fl_geom
 {
+    // const UInt16 Matrix::tito[Matrix::ThunkInfoNum] = {
+    //    0, 1, 3, 9, 15, 17, 18, 19, 21, 24, 25, 27, 
+    // };
+    const TypeInfo* Matrix::tit[30] = {
+        &AS3::fl_geom::MatrixTI, 
+        NULL, &AS3::fl_geom::MatrixTI, 
+        NULL, &AS3::fl::NumberTI, &AS3::fl::NumberTI, &AS3::fl::NumberTI, &AS3::fl::NumberTI, &AS3::fl::NumberTI, 
+        NULL, &AS3::fl::NumberTI, &AS3::fl::NumberTI, &AS3::fl::NumberTI, &AS3::fl::NumberTI, &AS3::fl::NumberTI, 
+        &AS3::fl_geom::PointTI, &AS3::fl_geom::PointTI, 
+        NULL, 
+        NULL, 
+        NULL, &AS3::fl::NumberTI, 
+        NULL, &AS3::fl::NumberTI, &AS3::fl::NumberTI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl_geom::PointTI, &AS3::fl_geom::PointTI, 
+        NULL, &AS3::fl::NumberTI, &AS3::fl::NumberTI, 
+    };
+    const Abc::ConstValue Matrix::dva[6] = {
+        {Abc::CONSTANT_Double, 0}, {Abc::CONSTANT_Double, 0}, {Abc::CONSTANT_Double, 0}, 
+        {Abc::CONSTANT_Double, 0}, {Abc::CONSTANT_Double, 0}, {Abc::CONSTANT_Double, 0}, 
+    };
     const ThunkInfo Matrix::ti[Matrix::ThunkInfoNum] = {
-        {TFunc_Instances_Matrix_clone::Func, &AS3::fl_geom::MatrixTI, "clone", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Matrix_concat::Func, NULL, "concat", NULL, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Instances_Matrix_createBox::Func, NULL, "createBox", NULL, Abc::NS_Public, CT_Method, 2, 5},
-        {TFunc_Instances_Matrix_createGradientBox::Func, NULL, "createGradientBox", NULL, Abc::NS_Public, CT_Method, 2, 5},
-        {TFunc_Instances_Matrix_deltaTransformPoint::Func, &AS3::fl_geom::PointTI, "deltaTransformPoint", NULL, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Instances_Matrix_identity::Func, NULL, "identity", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Matrix_invert::Func, NULL, "invert", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Matrix_rotate::Func, NULL, "rotate", NULL, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Instances_Matrix_scale::Func, NULL, "scale", NULL, Abc::NS_Public, CT_Method, 2, 2},
-        {TFunc_Instances_Matrix_toString::Func, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Matrix_transformPoint::Func, &AS3::fl_geom::PointTI, "transformPoint", NULL, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Instances_Matrix_translate::Func, NULL, "translate", NULL, Abc::NS_Public, CT_Method, 2, 2},
+        {TFunc_Instances_Matrix_clone::Func, &Matrix::tit[0], "clone", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Matrix_concat::Func, &Matrix::tit[1], "concat", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_Matrix_createBox::Func, &Matrix::tit[3], "createBox", NULL, Abc::NS_Public, CT_Method, 2, 5, 0, 3, &Matrix::dva[0]},
+        {TFunc_Instances_Matrix_createGradientBox::Func, &Matrix::tit[9], "createGradientBox", NULL, Abc::NS_Public, CT_Method, 2, 5, 0, 3, &Matrix::dva[3]},
+        {TFunc_Instances_Matrix_deltaTransformPoint::Func, &Matrix::tit[15], "deltaTransformPoint", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_Matrix_identity::Func, &Matrix::tit[17], "identity", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Matrix_invert::Func, &Matrix::tit[18], "invert", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Matrix_rotate::Func, &Matrix::tit[19], "rotate", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_Matrix_scale::Func, &Matrix::tit[21], "scale", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
+        {TFunc_Instances_Matrix_toString::Func, &Matrix::tit[24], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Matrix_transformPoint::Func, &Matrix::tit[25], "transformPoint", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_Matrix_translate::Func, &Matrix::tit[27], "translate", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
     };
     const MemberInfo Matrix::mi[Matrix::MemberInfoNum] = {
         {"a", NULL, OFFSETOF(Instances::fl_geom::Matrix, a), Abc::NS_Public, SlotInfo::BT_Number, 0},
@@ -402,11 +426,10 @@ namespace InstanceTraits { namespace fl_geom
 
 
     Matrix::Matrix(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::Matrix::Matrix()"
 //##protect##"InstanceTraits::Matrix::Matrix()"
-        SetMemSize(sizeof(Instances::fl_geom::Matrix));
 
     }
 
@@ -423,24 +446,27 @@ namespace InstanceTraits { namespace fl_geom
 
 namespace ClassTraits { namespace fl_geom
 {
-    Matrix::Matrix(VM& vm)
-    : Traits(vm, AS3::fl_geom::MatrixCI)
+
+    Matrix::Matrix(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::Matrix::Matrix()"
 //##protect##"ClassTraits::Matrix::Matrix()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl_geom::Matrix(vm, AS3::fl_geom::MatrixCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Class(*this));
 
     }
 
     Pickable<Traits> Matrix::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Matrix(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) Matrix(vm, AS3::fl_geom::MatrixCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_geom::MatrixCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -451,6 +477,11 @@ namespace fl_geom
 {
     const TypeInfo MatrixTI = {
         TypeInfo::CompileTime,
+        sizeof(ClassTraits::fl_geom::Matrix::InstanceType),
+        0,
+        0,
+        InstanceTraits::fl_geom::Matrix::ThunkInfoNum,
+        InstanceTraits::fl_geom::Matrix::MemberInfoNum,
         "Matrix", "flash.geom", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -458,10 +489,6 @@ namespace fl_geom
     const ClassInfo MatrixCI = {
         &MatrixTI,
         ClassTraits::fl_geom::Matrix::MakeClassTraits,
-        0,
-        0,
-        InstanceTraits::fl_geom::Matrix::ThunkInfoNum,
-        InstanceTraits::fl_geom::Matrix::MemberInfoNum,
         NULL,
         NULL,
         InstanceTraits::fl_geom::Matrix::ti,

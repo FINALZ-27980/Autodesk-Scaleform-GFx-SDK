@@ -32,17 +32,32 @@ extern UPInt SF_ECMA_dtostr(char* buffer, int bufflen, Double val);
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 Number::tito[Number::ThunkInfoNum] = {
+    //    0, 2, 4, 6, 8, 10, 
+    // };
+    const TypeInfo* Number::tit[11] = {
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::NumberTI, 
+        &AS3::fl::StringTI, &AS3::fl::NumberTI, 
+        &AS3::fl::NumberTI, 
+    };
+    const Abc::ConstValue Number::dva[2] = {
+        {Abc::CONSTANT_Double, 1}, 
+        {Abc::CONSTANT_Double, 1}, 
+    };
     const ThunkInfo Number::ti[Number::ThunkInfoNum] = {
-        {&InstanceTraits::fl::Number::AS3toExponential, &AS3::fl::StringTI, "toExponential", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::AS3toFixed, &AS3::fl::StringTI, "toFixed", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::AS3toPrecision, &AS3::fl::StringTI, "toPrecision", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::AS3toString, &AS3::fl::StringTI, "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::AS3toLocaleString, &AS3::fl::StringTI, "toLocaleString", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::AS3valueOf, &AS3::fl::NumberTI, "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::Number::AS3toExponential, &Number::tit[0], "toExponential", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::Number::AS3toFixed, &Number::tit[2], "toFixed", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::Number::AS3toPrecision, &Number::tit[4], "toPrecision", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::Number::AS3toString, &Number::tit[6], "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &Number::dva[0]},
+        {&InstanceTraits::fl::Number::AS3toLocaleString, &Number::tit[8], "toLocaleString", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &Number::dva[1]},
+        {&InstanceTraits::fl::Number::AS3valueOf, &Number::tit[10], "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     Number::Number(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::Number::Number()"
         SetTraitsType(Traits_Number);
@@ -70,7 +85,7 @@ namespace InstanceTraits { namespace fl
         if (fractionDigits > 20)
             return vm.ThrowRangeError(VM::Error(VM::eInvalidPrecisionError, vm));
 
-        DoubleFormatter f(_this);
+        DoubleFormatter f(static_cast<double>(_this));
         f.SetType(DoubleFormatter::FmtScientific).SetPrecision(fractionDigits).Convert();
         result = vm.GetStringManager().CreateString(f.GetResult().ToCStr(), f.GetSize());
 //##protect##"InstanceTraits::AS3toExponential()"
@@ -90,7 +105,7 @@ namespace InstanceTraits { namespace fl
         if (fractionDigits > 20)
             return vm.ThrowRangeError(VM::Error(VM::eInvalidPrecisionError, vm));
 
-        DoubleFormatter f(_this);
+        DoubleFormatter f(static_cast<double>(_this));
         f.SetType(DoubleFormatter::FmtDecimal).SetPrecision(fractionDigits).Convert();
         result = vm.GetStringManager().CreateString(f.GetResult().ToCStr(), f.GetSize());
 //##protect##"InstanceTraits::AS3toFixed()"
@@ -110,7 +125,7 @@ namespace InstanceTraits { namespace fl
         if (precision == 0 || precision > 21)
             return vm.ThrowRangeError(VM::Error(VM::eInvalidPrecisionError, vm));
 
-        DoubleFormatter f(_this);
+        DoubleFormatter f(static_cast<Double>(_this));
         f.SetType(DoubleFormatter::FmtSignificant).SetPrecision(precision).Convert();
         result = vm.GetStringManager().CreateString(f.GetResult().ToCStr(), f.GetSize());
 //##protect##"InstanceTraits::AS3toPrecision()"
@@ -259,13 +274,28 @@ namespace InstanceTraits { namespace fl
 
 namespace Classes { namespace fl
 {
+    // const UInt16 Number::tito[Number::ThunkInfoNum] = {
+    //    0, 2, 4, 5, 7, 9, 
+    // };
+    const TypeInfo* Number::tit[11] = {
+        &AS3::fl::StringTI, &AS3::fl::NumberTI, 
+        &AS3::fl::StringTI, &AS3::fl::NumberTI, 
+        &AS3::fl::NumberTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, &AS3::fl::uintTI, 
+    };
+    const Abc::ConstValue Number::dva[2] = {
+        {Abc::CONSTANT_Double, 1}, 
+        {Abc::CONSTANT_Double, 1}, 
+    };
     const ThunkInfo Number::ti[Number::ThunkInfoNum] = {
-        {&InstanceTraits::fl::Number::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::toLocaleStringProto, &AS3::fl::StringTI, "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::valueOfProto, &AS3::fl::NumberTI, "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::Number::toExponentialProto, &AS3::fl::StringTI, "toExponential", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::toFixedProto, &AS3::fl::StringTI, "toFixed", NULL, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::Number::toPrecisionProto, &AS3::fl::StringTI, "toPrecision", NULL, Abc::NS_Public, CT_Method, 0, 1},
+        {&InstanceTraits::fl::Number::toStringProto, &Number::tit[0], "toString", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &Number::dva[0]},
+        {&InstanceTraits::fl::Number::toLocaleStringProto, &Number::tit[2], "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 1, &Number::dva[1]},
+        {&InstanceTraits::fl::Number::valueOfProto, &Number::tit[4], "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Number::toExponentialProto, &Number::tit[5], "toExponential", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::Number::toFixedProto, &Number::tit[7], "toFixed", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::Number::toPrecisionProto, &Number::tit[9], "toPrecision", NULL, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
     };
 
     Number::Number(ClassTraits::Traits& t)
@@ -324,25 +354,28 @@ namespace ClassTraits { namespace fl
         {"MAX_VALUE", NULL, OFFSETOF(Classes::fl::Number, MAX_VALUE), Abc::NS_Public, SlotInfo::BT_Number, 1},
     };
 
-    Number::Number(VM& vm)
-    : Traits(vm, AS3::fl::NumberCI)
+
+    Number::Number(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::Number::Number()"
         SetTraitsType(Traits_Number);
 //##protect##"ClassTraits::Number::Number()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Number(vm, AS3::fl::NumberCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::Number(*this));
 
     }
 
     Pickable<Traits> Number::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Number(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) Number(vm, AS3::fl::NumberCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::NumberCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
     bool Number::Coerce(const Value& value, Value& result) const
@@ -370,6 +403,11 @@ namespace fl
 {
     const TypeInfo NumberTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl::Number::InstanceType),
+        0,
+        ClassTraits::fl::Number::MemberInfoNum,
+        InstanceTraits::fl::Number::ThunkInfoNum,
+        0,
         "Number", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -377,10 +415,6 @@ namespace fl
     const ClassInfo NumberCI = {
         &NumberTI,
         ClassTraits::fl::Number::MakeClassTraits,
-        0,
-        ClassTraits::fl::Number::MemberInfoNum,
-        InstanceTraits::fl::Number::ThunkInfoNum,
-        0,
         NULL,
         ClassTraits::fl::Number::mi,
         InstanceTraits::fl::Number::ti,

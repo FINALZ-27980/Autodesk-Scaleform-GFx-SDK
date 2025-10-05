@@ -52,7 +52,7 @@ namespace Classes { namespace fl_ui
     
 namespace ClassTraits { namespace fl_ui
 {
-    class KeyLocation : public Traits
+    class KeyLocation : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_ui
 #endif
     public:
         typedef Classes::fl_ui::KeyLocation ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        KeyLocation(VM& vm);
+        KeyLocation(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

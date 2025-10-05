@@ -92,8 +92,7 @@ unsigned AvmBitmap::CreateASInstance(bool execute)
             {
                 ASVM& vm = *GetAS3Root()->GetAVM();
                 Value v;
-                bool need2execute = vm.Construct(*pclassName, vm.GetCurrentAppDomain(), v, 2, params);
-
+                bool need2execute = vm.Construct(*pclassName, *AppDomain, v, 2, params);
                 if (need2execute)
                 {
                     if (execute)
@@ -110,7 +109,7 @@ unsigned AvmBitmap::CreateASInstance(bool execute)
                 {
                     bmpData = 0;
                     if (GetAS3Root()->GetAVM()->IsException())
-                    {
+            {
                         GetAS3Root()->GetAVM()->OutputAndIgnoreException();
                     }
                 }
@@ -144,6 +143,13 @@ DisplayObjectBase::TopMostResult AvmBitmap::GetTopMostMouseEntity(
         Render::ImageRect rect = pImage->GetImage()->GetRect();
         RectF r(0, 0, 
             SizeF(PixelsToTwips((float)rect.Width()), PixelsToTwips((float)rect.Height())));
+        Render::Image* img = pImage->GetImage()->GetAsImage();
+        if (img)
+        {
+            Matrix2F m;
+            img->GetMatrix(&m);
+            m.EncloseTransform(&r, RectF(r));
+        }
         if (r.Contains(p))
         {
             // need to return parent (since it is an InteractiveObject)
@@ -208,6 +214,10 @@ Instances::fl_display::Bitmap* AvmBitmap::GetAS3Bitmap() const
 Instances::fl_display::BitmapData* AvmBitmap::GetBitmapData() const
 {
     Instances::fl_display::Bitmap* bmp = GetAS3Bitmap();
+    if (bmp == NULL)
+    {
+        return NULL;
+    }
     return bmp->GetBitmapData();
 }
 
@@ -281,11 +291,12 @@ bool AvmBitmap::CreateBitmapShape() const
 {
     SF_ASSERT(pRenNode);
     Render::TreeShape* tshp = static_cast<Render::TreeShape*>(pRenNode.GetPtr());
-    Ptr<Render::ShapeDataFloat> shapeData = *SF_HEAP_AUTO_NEW(this) Render::ShapeDataFloat();
+    MemoryHeap* renderHeap = Memory::GetHeapByAddress(tshp);
+    Ptr<Render::ShapeDataFloat> shapeData = *SF_HEAP_NEW(renderHeap) Render::ShapeDataFloat();
     Render::FillStyleType fill;
     fill.Color = 0; // just to avoid warning on Mac
     //fill.Color = 0xFF0394AA; //@DBG; comment all accesses to fill.pFill to enable solid color fill
-    fill.pFill = *SF_HEAP_AUTO_NEW(this) Render::ComplexFill();
+    fill.pFill = *SF_HEAP_NEW(renderHeap) Render::ComplexFill();
     if (pImage)
     {
         Ptr<Render::Image> img;
@@ -338,7 +349,7 @@ bool AvmBitmap::CreateBitmapShape() const
         shapeData->ClosePath();
         shapeData->EndPath();
         shapeData->EndShape();
-        Ptr<ShapeMeshProvider> pr = *SF_HEAP_AUTO_NEW(this) Render::ShapeMeshProvider(shapeData);
+        Ptr<ShapeMeshProvider> pr = *SF_HEAP_NEW(renderHeap) Render::ShapeMeshProvider(shapeData);
         tshp->SetShape(pr);
     }
     else
@@ -350,7 +361,7 @@ bool AvmBitmap::CreateBitmapShape() const
         shapeData->ClosePath();
         shapeData->EndPath();
         shapeData->EndShape();
-        Ptr<ShapeMeshProvider> pr = *SF_HEAP_AUTO_NEW(this) Render::ShapeMeshProvider(shapeData);
+        Ptr<ShapeMeshProvider> pr = *SF_HEAP_NEW(renderHeap) Render::ShapeMeshProvider(shapeData);
         tshp->SetShape(pr);
     }
     return true;

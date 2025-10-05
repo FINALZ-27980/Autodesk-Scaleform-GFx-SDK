@@ -190,7 +190,7 @@ namespace Instances { namespace fl_media
 
 namespace InstanceTraits { namespace fl_media
 {
-    class SoundTransform : public CTraits
+    class SoundTransform : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -216,6 +216,8 @@ namespace InstanceTraits { namespace fl_media
 
         enum { ThunkInfoNum = 12 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[18];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -228,17 +230,19 @@ namespace InstanceTraits { namespace fl_media
     
 namespace ClassTraits { namespace fl_media
 {
-    class SoundTransform : public Traits
+    class SoundTransform : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::SoundTransform"; }
 #endif
     public:
-        typedef Classes::fl_media::SoundTransform ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_media::SoundTransform InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SoundTransform(VM& vm);
+        SoundTransform(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Durango">
+      <Configuration>Debug</Configuration>
+      <Platform>Durango</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Durango">
+      <Configuration>Release</Configuration>
+      <Platform>Durango</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\lib\xmlparse.c" />
+    <ClCompile Include="..\..\..\..\lib\xmlrole.c" />
+    <ClCompile Include="..\..\..\..\lib\xmltok.c" />
+    <ClCompile Include="..\..\..\..\lib\xmltok_impl.c" />
+    <ClCompile Include="..\..\..\..\lib\xmltok_ns.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\lib\ascii.h" />
+    <ClInclude Include="..\..\..\..\lib\expat.h" />
+    <ClInclude Include="..\..\..\..\lib\expat_external.h" />
+    <ClInclude Include="..\..\..\..\lib\internal.h" />
+    <ClInclude Include="..\..\..\..\lib\winconfig.h" />
+    <ClInclude Include="..\..\..\..\lib\xmlrole.h" />
+    <ClInclude Include="..\..\..\..\lib\xmltok.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ApplicationEnvironment>title</ApplicationEnvironment>
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>expat</ProjectName>
+    <RootNamespace>expat</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{92991842-C13D-C3FB-864B-B313ED90AD13}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>..\..\..\..\Lib\XboxOne\XDK\Msvc11\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\..\Obj\XboxOne\XDK\Msvc11\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>expat</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>..\..\..\..\Lib\XboxOne\XDK\Msvc11\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\..\Obj\XboxOne\XDK\Msvc11\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>expat</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>__WRL_NO_DEFAULT_LIB__;COMPILED_FROM_DSP;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\Include;..\..\..\..\..\..\Src;..\..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\..\3rdParty\libpng;..\..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\..\3rdParty\glext;..\..\..\..\..\..\3rdParty\PlatformSDK;..\..\..\..\..\..\3rdParty\cri\pc\include;..\..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+    <Lib>
+      <Verbose>true</Verbose>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>__WRL_NO_DEFAULT_LIB__;COMPILED_FROM_DSP;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\Include;..\..\..\..\..\..\Src;..\..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\..\3rdParty\libpng;..\..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\..\3rdParty\glext;..\..\..\..\..\..\3rdParty\PlatformSDK;..\..\..\..\..\..\3rdParty\cri\pc\include;..\..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

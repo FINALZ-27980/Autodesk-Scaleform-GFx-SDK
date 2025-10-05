@@ -30,6 +30,8 @@ namespace fl_utils
 {
     extern const TypeInfo IDataInputTI;
     extern const ClassInfo IDataInputCI;
+    extern const TypeInfo ByteArrayTI;
+    extern const ClassInfo ByteArrayCI;
 } // namespace fl_utils
 namespace fl
 {
@@ -69,17 +71,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_utils
 {
-    class IDataInput : public Traits
+    class IDataInput : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::IDataInput"; }
 #endif
     public:
-        typedef Classes::fl_utils::IDataInput ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::Interface InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IDataInput(VM& vm);
+        IDataInput(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

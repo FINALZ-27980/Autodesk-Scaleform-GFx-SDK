@@ -113,7 +113,7 @@ namespace Instances { namespace fl_text
 
 namespace InstanceTraits { namespace fl_text
 {
-    class StaticText : public CTraits
+    class StaticText : public fl_display::DisplayObject
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -139,6 +139,8 @@ namespace InstanceTraits { namespace fl_text
 
         enum { ThunkInfoNum = 1 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[1];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -151,17 +153,19 @@ namespace InstanceTraits { namespace fl_text
     
 namespace ClassTraits { namespace fl_text
 {
-    class StaticText : public Traits
+    class StaticText : public fl_display::DisplayObject
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::StaticText"; }
 #endif
     public:
-        typedef Classes::fl_text::StaticText ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_text::StaticText InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        StaticText(VM& vm);
+        StaticText(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

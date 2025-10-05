@@ -33,6 +33,8 @@ namespace fl
     extern const ClassInfo DateCI;
     extern const TypeInfo NumberTI;
     extern const ClassInfo NumberCI;
+    extern const TypeInfo anyTI;
+    extern const ClassInfo anyCI;
     extern const TypeInfo StringTI;
     extern const ClassInfo StringCI;
 } // namespace fl
@@ -88,10 +90,10 @@ namespace Instances { namespace fl
 
         void UpdateLocal();
         void UpdateGMT();
-        void SetDate(SInt64 val);
 
     public:
         Double  LocalTime() const { return TimeValue + GetLocalTZA(); }
+        void SetDate(Double val) { TimeValue = val; }
 
 //##protect##"instance$methods"
 
@@ -605,11 +607,11 @@ namespace Instances { namespace fl
             MsPerMinute     = MsPerSecond * SecondsPerMinute,
             MsPerHour       = MsPerMinute * MinutesPerHour
         };
-        static Double   DayOfTime(Double time)     { return floor(time / (Double)MsPerDay); }
+        static Double   DayOfTime(Double time) { return floor(time / Double(MsPerDay)); }
         static Double   TimeWithinDay(Double time) 
         { 
-            Double result = fmod(time, (Double)MsPerDay);
-            return result < 0 ? result + (Double)MsPerDay : result;
+            Double result = fmod(time, double(MsPerDay));
+            return result < 0 ? result + Double(MsPerDay) : result;
         }
         static int      WeekDay(Double time);
 
@@ -765,7 +767,7 @@ namespace Instances { namespace fl
 
 namespace InstanceTraits { namespace fl
 {
-    class Date : public CTraits
+    class Date : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -791,6 +793,8 @@ namespace InstanceTraits { namespace fl
 
         enum { ThunkInfoNum = 74 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[90];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -803,7 +807,7 @@ namespace InstanceTraits { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class Date : public Traits
+    class Date : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -811,12 +815,17 @@ namespace ClassTraits { namespace fl
 #endif
     public:
         typedef Classes::fl::Date ClassType;
+        typedef InstanceTraits::fl::Date InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Date(VM& vm);
+        Date(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 2 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[10];
+        static const Abc::ConstValue dva[6];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

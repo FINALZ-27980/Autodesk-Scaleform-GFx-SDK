@@ -111,8 +111,14 @@ Object* ObjectInterface::FindOwner(ASStringContext *psc, const ASString& name)
 
 void    ObjectInterface::SetUserData(Movie* pmovieView, ASUserData* puserData, bool isdobj)
 {
-    if (pUserDataHolder) { delete pUserDataHolder; }
+    if (pUserDataHolder)
+    {
+        pUserDataHolder->NotifyDestroy(this);
+        delete pUserDataHolder;
+    }
+
     pUserDataHolder = SF_HEAP_AUTO_NEW(this) UserDataHolder(pmovieView, puserData);
+
     if (puserData)
     {
         MovieImpl* pmovieImpl = static_cast<MovieImpl*>(pmovieView);
@@ -468,7 +474,7 @@ bool Object::SetMemberRaw(ASStringContext *psc, const ASString& name, const Valu
                     const ActionBufferData* bufData = asfo->GetActionBuffer()->GetBufferData();
 
                     MovieImpl* pRoot = psc->pContext->GetAS2Root()->GetMovieImpl();
-                    pRoot->AdvanceStats->RegisterScriptFunction(bufData->GetSwdHandle(), 
+                    pRoot->GetAdvanceStats().RegisterScriptFunction(bufData->GetSwdHandle(), 
                         bufData->GetSWFFileOffset() + asfo->GetStartPC(), 
                         name.ToCStr(), asfo->GetLength(), 2, false);
                 }

@@ -319,7 +319,7 @@ void    FontData::Read(LoadProcess* p, const TagInfo& tagInfo)
         UByte   langCode = pin->ReadU8(); // Language code
 
         // Inhibit warning.
-        langCode = langCode;
+        SF_UNUSED(langCode);
 
         Name = pin->ReadStringWithLength(p->GetLoadHeap());
 
@@ -598,7 +598,7 @@ void    FontData::ReadFontInfo(Stream* in, TagType tagType)
     if (tagType == Tag_DefineFontInfo2)
     {
         langCode = in->ReadU8(); // Language code
-        langCode = langCode; // suppress warning
+        SF_UNUSED(langCode); // suppress warning
     }
 
     bool pixelAlignedChars  =  ((flags & 0x20) != 0);
@@ -942,7 +942,7 @@ struct Normalizer
 template<class FontType>
 static bool GetGlyphShape(const FontType& font, unsigned glyphIndex, GlyphShape* shape)
 {
-    typedef typename FontType::ContainerType ContainerType;
+    // typedef typename FontType::ContainerType ContainerType;
     typedef typename FontType::CompactedFontType CompactedFontType;
 
     if (glyphIndex >= font.GetCompactedFont().GetNumGlyphs())
@@ -1119,7 +1119,7 @@ void FontDataCompactedSwf::Read(LoadProcess* p, const TagInfo& tagInfo)
         UByte   langCode = pin->ReadU8(); // Language code
 
         // Inhibit warning.
-        langCode = langCode;
+        SF_UNUSED(langCode);
 
         String name;
         pin->ReadStringWithLength(&name);        

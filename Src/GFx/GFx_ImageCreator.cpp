@@ -19,20 +19,38 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "Kernel/SF_Types.h"
 #include "Kernel/SF_RefCount.h"
 #include "Kernel/SF_SysFile.h"
+#include "Kernel/SF_HeapNew.h"
 
 #include "Render/Render_Image.h"
 #include "Render/Render_ImageFiles.h"
 #include "GFx_ImageCreator.h"
 
-#include "Render/ImageFiles/DDS_ImageFile.h"
-#include "Render/ImageFiles/GTX_ImageFile.h"
-#include "Render/ImageFiles/GXT_ImageFile.h"
-#include "Render/ImageFiles/JPEG_ImageFile.h"
-#include "Render/ImageFiles/KTX_ImageFile.h"
-#include "Render/ImageFiles/PNG_ImageFile.h"
-#include "Render/ImageFiles/PVR_ImageFile.h"
 #include "Render/ImageFiles/SIF_ImageFile.h"
 #include "Render/ImageFiles/TGA_ImageFile.h"
+#ifdef SF_ENABLE_LIBJPEG
+#include "Render/ImageFiles/PNG_ImageFile.h"
+#endif
+#ifdef SF_ENABLE_LIBPNG
+#include "Render/ImageFiles/JPEG_ImageFile.h"
+#endif
+#if !defined(SF_OS_IPHONE)
+#include "Render/ImageFiles/DDS_ImageFile.h"
+#endif
+#if defined(SF_OS_3DS) || defined(SF_OS_ANDROID) || defined(SF_OS_PSVITA) || defined(SF_OS_IPHONE)
+#include "Render/ImageFiles/PVR_ImageFile.h"
+#endif
+#ifdef SF_OS_ANDROID
+#include "Render/ImageFiles/KTX_ImageFile.h"
+#endif
+#ifdef SF_OS_PSVITA
+#include "Render/ImageFiles/GXT_ImageFile.h"
+#endif
+#ifdef SF_OS_WIIU
+#include "Render/ImageFiles/GTX_ImageFile.h"
+#endif
+#ifdef SF_OS_ORBIS
+#include "Render/ImageFiles/GNF_ImageFile.h"
+#endif
 
 namespace Scaleform { namespace GFx {
 
@@ -86,7 +104,21 @@ Image* ImageCreator::LoadImageFile(const ImageCreateInfo& info, const String& ur
         path = url + ".tga";
     }
 file_detected:
-    Ptr<File> file = *info.GetFileOpener()->OpenFile(path);
+    Ptr<File> file;
+    Array<UByte> bytes;
+    if (URLBuilder::IsProtocol(path))
+    {
+#ifdef SF_ENABLE_HTTP_LOADING
+        if (URLBuilder::SendURLRequest(&bytes, path) && !bytes.IsEmpty())
+        {
+            file = *SF_NEW MemoryFile(path, bytes.GetDataPtr(), (int)bytes.GetSize());
+        }
+#endif
+    }
+    else
+    {
+        file = *info.GetFileOpener()->OpenFile(path);
+    }
 
     ImageFileReader* reader;
     ImageCreateArgs args;
@@ -181,6 +213,9 @@ ImageFileHandlerRegistry::ImageFileHandlerRegistry(InitType init)
 #endif
 #ifdef SF_OS_WIIU
             AddHandler(&Render::GTX::FileReader::Instance);
+#endif
+#ifdef SF_OS_ORBIS
+            AddHandler(&Render::GNF::FileReader::Instance);
 #endif
             break;
         }

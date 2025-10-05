@@ -165,9 +165,9 @@ public:
 #endif        
         union
         {
-            SInt32          Int32Value;
-            UInt32          UInt32Value;
-            GASNumberValue  NumberValue;
+            SInt32  Int32Value;
+            UInt32  UInt32Value;
+            double  NumberValue;
         };
     };
     
@@ -224,18 +224,16 @@ public:
         //NV.NumberValue = val;
     }   
     // Floating - point constructor.
-    Value(Number val)
+    Value(Double val)
     {
         T.Type = NUMBER;
         NV.NumberValue = val;
     }
-#ifndef SF_NO_DOUBLE
     Value(float val)
     {
         T.Type = NUMBER;
         NV.NumberValue = double(val);
     }
-#endif
     
     Value(Object* obj);
     Value(InteractiveObject* pcharacter);
@@ -345,11 +343,11 @@ public:
     // more likely to get a warning/error if misused.
     void    SetUndefined()                      { DropRefs(); T.Type = UNDEFINED; }
     void    SetNull()                           { DropRefs(); T.Type = NULLTYPE; }
-    void    SetString(const ASString& str)     { if (T.Type >= STRING) DropRefs(); T.Type = STRING; V.pStringNode = str.GetNode(); V.pStringNode->AddRef(); }    
-    void    SetNumber(Number val)            { if (T.Type >= STRING) DropRefs(); T.Type = NUMBER; NV.NumberValue = val; }
+    void    SetString(const ASString& str)      { if (T.Type >= STRING) DropRefs(); T.Type = STRING; V.pStringNode = str.GetNode(); V.pStringNode->AddRef(); }    
+    void    SetNumber(double val)               { if (T.Type >= STRING) DropRefs(); T.Type = NUMBER; NV.NumberValue = val; }
     void    SetBool(bool val)                   { DropRefs(); T.Type = BOOLEAN; V.BooleanValue = val; }
     void    SetInt(int val)                     { if (T.Type >= STRING) DropRefs(); T.Type = INTEGER; NV.Int32Value = val; }
-    void    SetUInt(unsigned val)                   { if (T.Type >= STRING) DropRefs(); T.Type = INTEGER; NV.UInt32Value = val; }
+    void    SetUInt(unsigned val)               { if (T.Type >= STRING) DropRefs(); T.Type = INTEGER; NV.UInt32Value = val; }
     void    SetAsObject(Object* pobj);   
     void    SetAsCharacterHandle(CharacterHandle* pchar);
     //void    SetAsCharacter(InteractiveObject* pchar);
@@ -397,9 +395,9 @@ protected:
 // This class stores addrefed InteractiveObject* if the character is stored in Value.
 class ValueGuard
 {
-    const Environment*   pEnv;
-    Value                mValue;
-    InteractiveObject* pChar;
+    const Environment*  pEnv;
+    Value               mValue;
+    InteractiveObject*  pChar;
 public:
     explicit ValueGuard(const Environment* penv) : pEnv(penv), pChar(NULL) { SF_ASSERT(pEnv); }
     ValueGuard(const Environment* penv, const Value& val);

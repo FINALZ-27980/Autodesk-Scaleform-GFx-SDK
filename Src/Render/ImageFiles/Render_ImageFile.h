@@ -44,6 +44,7 @@ enum ImageFileFormat
     ImageFile_KTX,
     ImageFile_GXT,
     ImageFile_GTX,
+    ImageFile_GNF,
 
     ImageFile_SIF,
 

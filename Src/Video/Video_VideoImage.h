@@ -46,14 +46,13 @@ public:
     {
         // Do not release the backing texture. Will be restored after loss.
     }
-    void NotifyVideoPlayerRemoved();
+    void NotifyVideoPlayerRemoved() { pVideoPlayer = NULL; }
 
 protected:
     void clearImageData(ImageData* pdest) const;
     void checkAndRequestSkipDecoding() const;
 
     VideoPlayerImpl* pVideoPlayer;
-    mutable Lock     VideoPlayerLock;
 };
 
 }}} // namespace Scaleform::GFx::Video

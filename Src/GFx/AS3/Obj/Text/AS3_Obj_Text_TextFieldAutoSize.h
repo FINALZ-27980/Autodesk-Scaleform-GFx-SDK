@@ -52,7 +52,7 @@ namespace Classes { namespace fl_text
     
 namespace ClassTraits { namespace fl_text
 {
-    class TextFieldAutoSize : public Traits
+    class TextFieldAutoSize : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_text
 #endif
     public:
         typedef Classes::fl_text::TextFieldAutoSize ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        TextFieldAutoSize(VM& vm);
+        TextFieldAutoSize(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

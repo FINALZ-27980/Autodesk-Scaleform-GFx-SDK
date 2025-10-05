@@ -17,10 +17,10 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef INC_GFX_AMP_THREAD_MGR_H
 #define INC_GFX_AMP_THREAD_MGR_H
 
-#include "Amp_Socket.h"
+#include "GFxConfig.h"
+#if defined(SF_AMP_SERVER) || defined(SF_AMP_CLIENT)
 
-#ifdef SF_ENABLE_SOCKETS
-
+#include "GFx/Net/GFx_Socket.h"
 #include "Kernel/SF_RefCount.h"
 #include "Kernel/SF_String.h"
 #include "Amp_Interfaces.h"
@@ -57,6 +57,9 @@ public:
     void                UninitAmp();
     // Has AMP been initialized?
     bool                IsRunning() const;
+    // Net socket implementation override - call before starting the threads
+    void                SetSocketImplFactory(SocketImplFactory* socketFactory);
+
 
     // Initialize the broadcast receive thread
     void                StartBroadcastRecv(UInt32 port);
@@ -64,6 +67,9 @@ public:
     void                SetBroadcastInfo(const char* connectedApp, const char* connectedFile);
     // Heartbeat interval
     void                SetHeartbeatInterval(UInt32 heartbeatInterval);
+    // Zlib compression for network messages
+    void                SetCompressedMessages(bool on);
+    bool                IsCompressedMessages() const;
 
     // Accessors
     const StringLH&                         GetAddress() const  { return IpAddress; }
@@ -148,6 +154,7 @@ private:
     Lock                SocketLock;
     Socket              Sock;
     UInt32              HeartbeatIntervalMillisecs;
+    AtomicInt<int>      CompressMessages;
     bool                InitSocketLib;
 
     // Status is checked from send and received threads

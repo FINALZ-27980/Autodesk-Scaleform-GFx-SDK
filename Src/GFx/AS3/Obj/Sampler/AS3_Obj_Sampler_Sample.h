@@ -93,7 +93,7 @@ namespace Instances { namespace fl_sampler
 
 namespace InstanceTraits { namespace fl_sampler
 {
-    class Sample : public CTraits
+    class Sample : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -131,17 +131,19 @@ namespace InstanceTraits { namespace fl_sampler
     
 namespace ClassTraits { namespace fl_sampler
 {
-    class Sample : public Traits
+    class Sample : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::Sample"; }
 #endif
     public:
-        typedef Classes::fl_sampler::Sample ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_sampler::Sample InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Sample(VM& vm);
+        Sample(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

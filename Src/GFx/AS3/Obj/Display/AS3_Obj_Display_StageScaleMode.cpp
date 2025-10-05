@@ -55,24 +55,27 @@ namespace ClassTraits { namespace fl_display
         {"SHOW_ALL", NULL, OFFSETOF(Classes::fl_display::StageScaleMode, SHOW_ALL), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    StageScaleMode::StageScaleMode(VM& vm)
-    : Traits(vm, AS3::fl_display::StageScaleModeCI)
+
+    StageScaleMode::StageScaleMode(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::StageScaleMode::StageScaleMode()"
 //##protect##"ClassTraits::StageScaleMode::StageScaleMode()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_display::StageScaleModeCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_display::StageScaleMode(*this));
 
     }
 
     Pickable<Traits> StageScaleMode::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) StageScaleMode(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) StageScaleMode(vm, AS3::fl_display::StageScaleModeCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::StageScaleModeCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -83,6 +86,11 @@ namespace fl_display
 {
     const TypeInfo StageScaleModeTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::StageScaleMode::InstanceType),
+        0,
+        ClassTraits::fl_display::StageScaleMode::MemberInfoNum,
+        0,
+        0,
         "StageScaleMode", "flash.display", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -90,10 +98,6 @@ namespace fl_display
     const ClassInfo StageScaleModeCI = {
         &StageScaleModeTI,
         ClassTraits::fl_display::StageScaleMode::MakeClassTraits,
-        0,
-        ClassTraits::fl_display::StageScaleMode::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_display::StageScaleMode::mi,
         NULL,

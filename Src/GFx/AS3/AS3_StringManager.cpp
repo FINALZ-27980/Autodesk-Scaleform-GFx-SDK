@@ -108,6 +108,9 @@ static const char* AS3BuiltinTable[] =
     "gamePadAnalogChange",
 #endif
 
+    "update",
+	"status",
+
     "textInput",
     "change",
     "scroll"

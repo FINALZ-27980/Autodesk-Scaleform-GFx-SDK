@@ -171,7 +171,7 @@ namespace Instances { namespace fl_geom
 
 namespace InstanceTraits { namespace fl_geom
 {
-    class PerspectiveProjection : public CTraits
+    class PerspectiveProjection : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -197,6 +197,8 @@ namespace InstanceTraits { namespace fl_geom
 
         enum { ThunkInfoNum = 7 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[10];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -209,17 +211,19 @@ namespace InstanceTraits { namespace fl_geom
     
 namespace ClassTraits { namespace fl_geom
 {
-    class PerspectiveProjection : public Traits
+    class PerspectiveProjection : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::PerspectiveProjection"; }
 #endif
     public:
-        typedef Classes::fl_geom::PerspectiveProjection ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_geom::PerspectiveProjection InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        PerspectiveProjection(VM& vm);
+        PerspectiveProjection(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

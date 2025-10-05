@@ -24,8 +24,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 // ***** Disable template-unfriendly MS VC++ warnings
 #if defined(SF_CC_MSVC)
-// Pragma to prevent long name warnings in in VC++
-#pragma warning(disable : 4503)
 #pragma warning(disable : 4786)
 // In MSVC 7.1, warning about placement new POD default initializer
 #pragma warning(disable : 4345)

@@ -65,24 +65,27 @@ namespace ClassTraits { namespace fl_display
         {"FLASH9", NULL, OFFSETOF(Classes::fl_display::SWFVersion, FLASH9), Abc::NS_Public, SlotInfo::BT_UInt, 1},
     };
 
-    SWFVersion::SWFVersion(VM& vm)
-    : Traits(vm, AS3::fl_display::SWFVersionCI)
+
+    SWFVersion::SWFVersion(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::SWFVersion::SWFVersion()"
 //##protect##"ClassTraits::SWFVersion::SWFVersion()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_display::SWFVersionCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_display::SWFVersion(*this));
 
     }
 
     Pickable<Traits> SWFVersion::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) SWFVersion(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) SWFVersion(vm, AS3::fl_display::SWFVersionCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::SWFVersionCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -93,6 +96,11 @@ namespace fl_display
 {
     const TypeInfo SWFVersionTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::SWFVersion::InstanceType),
+        0,
+        ClassTraits::fl_display::SWFVersion::MemberInfoNum,
+        0,
+        0,
         "SWFVersion", "flash.display", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -100,10 +108,6 @@ namespace fl_display
     const ClassInfo SWFVersionCI = {
         &SWFVersionTI,
         ClassTraits::fl_display::SWFVersion::MakeClassTraits,
-        0,
-        ClassTraits::fl_display::SWFVersion::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_display::SWFVersion::mi,
         NULL,

@@ -253,7 +253,7 @@ void String::AppendChar(UInt32 ch)
     SPInt       encodeSize = 0;
 
     // Converts ch into UTF8 string and fills it into buff.   
-    UTF8Util::EncodeChar(buff, &encodeSize, ch);
+    UTF8Util::EncodeCharSafe(buff, 8, &encodeSize, ch);
     SF_ASSERT(encodeSize >= 0);
 
     SetData(AllocDataCopy2(GetHeap(), size + (UPInt)encodeSize, 0,
@@ -268,12 +268,13 @@ void String::AppendString(const wchar_t* pstr, SPInt len)
         return;
 
     DataDesc*   pdata = GetData();
-    UPInt       oldSize = pdata->GetSize();    
-    UPInt       encodeSize = (UPInt)UTF8Util::GetEncodeStringSize(pstr, len);
+    const UPInt       oldSize = pdata->GetSize();    
+    const UPInt       encodeSize = (UPInt)UTF8Util::GetEncodeStringSize(pstr, len);
 
     DataDesc*   pnewData = AllocDataCopy1(GetHeap(), oldSize + (UPInt)encodeSize, 0,
                                           pdata->Data, oldSize);
-    UTF8Util::EncodeString(pnewData->Data + oldSize,  pstr, len);
+    // DataDesc includes data for NULL termination. Pass full size to UTF8Util
+    UTF8Util::EncodeStringSafe(pnewData->Data + oldSize,  oldSize + (UPInt)encodeSize + 1, pstr, len);
 
     SetData(pnewData);
     pdata->Release();
@@ -319,10 +320,11 @@ void    String::operator = (const char* pstr)
 void    String::operator = (const wchar_t* pwstr)
 {
     DataDesc*   poldData = GetData();
-    UPInt       size = pwstr ? (UPInt)UTF8Util::GetEncodeStringSize(pwstr) : 0;
+    const UPInt size = pwstr ? (UPInt)UTF8Util::GetEncodeStringSize(pwstr) : 0;
 
     DataDesc*   pnewData = AllocData(GetHeap(), size, 0);
-    UTF8Util::EncodeString(pnewData->Data, pwstr);
+    // DataDesc includes data for NULL termination. Pass full size to UTF8Util
+    UTF8Util::EncodeStringSafe(pnewData->Data, size + 1, pwstr);
     SetData(pnewData);
     poldData->Release();
 }
@@ -448,7 +450,7 @@ String   String::ToUpper() const
     {
         do {            
             c = UTF8Util::DecodeNextChar_Advance0(&psource);
-            UTF8Util::EncodeChar(buffer, &bufferOffset, SFtowupper(wchar_t(c)));
+            UTF8Util::EncodeCharSafe(buffer, 512, &bufferOffset, SFtowupper(wchar_t(c)));
         } while ((psource < pend) && (bufferOffset < SPInt(sizeof(buffer)-8)));
 
         // Append string a piece at a time.
@@ -472,7 +474,7 @@ String   String::ToLower() const
     {
         do {
             c = UTF8Util::DecodeNextChar_Advance0(&psource);
-            UTF8Util::EncodeChar(buffer, &bufferOffset, SFtowlower(wchar_t(c)));
+            UTF8Util::EncodeCharSafe(buffer, 512, &bufferOffset, SFtowlower(wchar_t(c)));
         } while ((psource < pend) && (bufferOffset < SPInt(sizeof(buffer)-8)));
 
         // Append string a piece at a time.
@@ -520,7 +522,7 @@ UPInt String::InsertCharAt(UInt32 c, UPInt posAt)
 {
     char    buf[8];
     SPInt   index = 0;
-    UTF8Util::EncodeChar(buf, &index, c);
+    UTF8Util::EncodeCharSafe(buf, 8, &index, c);
     SF_ASSERT(index >= 0 && index < 8);
     buf[(UPInt)index] = 0;
 
@@ -944,7 +946,7 @@ void     StringBuffer::AppendChar(UInt32 ch)
     // Converts ch into UTF8 string and fills it into buff. Also increments index according to the number of bytes
     // in the UTF8 string.
     SPInt   srcSize = 0;
-    UTF8Util::EncodeChar(buff, &srcSize, ch);
+    UTF8Util::EncodeCharSafe(buff, 8, &srcSize, ch);
     SF_ASSERT(srcSize >= 0);
     
     UPInt size = origSize + srcSize;
@@ -963,7 +965,7 @@ void     StringBuffer::AppendString(const wchar_t* pstr, SPInt len)
     UPInt   size        = srcSize + origSize;
 
     Resize(size);
-    UTF8Util::EncodeString(pData + origSize,  pstr, len);
+    UTF8Util::EncodeStringSafe(pData + origSize, srcSize + 1, pstr, len);
 }
 
 void      StringBuffer::AppendString(const char* putf8str, SPInt utf8StrSz)
@@ -994,7 +996,7 @@ void      StringBuffer::operator = (const wchar_t* pstr)
     pstr = pstr ? pstr : L"";
     UPInt size = (UPInt)UTF8Util::GetEncodeStringSize(pstr);
     Resize(size);
-    UTF8Util::EncodeString(pData, pstr);
+    UTF8Util::EncodeStringSafe(pData, size + 1, pstr);
 }
 
 void      StringBuffer::operator = (const String& src)
@@ -1036,7 +1038,7 @@ UPInt     StringBuffer::InsertCharAt(UInt32 c, UPInt posAt)
 {
     char    buf[8];
     SPInt   len = 0;
-    UTF8Util::EncodeChar(buf, &len, c);
+    UTF8Util::EncodeCharSafe(buf, 8, &len, c);
     SF_ASSERT(len >= 0);
     buf[(UPInt)len] = 0;
 
@@ -1084,18 +1086,7 @@ StringDataPtr StringDataPtr::GetTruncateWhitespace() const
     {
         UInt32 c = UTF8Util::DecodeNextChar_Advance0(&l);
 
-        if (IsWhiteSpace(c))
-        {
-            // Skip whitespace.
-            while (l < e)
-            {
-                UInt32 c = UTF8Util::DecodeNextChar_Advance0(&l);
-
-                if (!IsWhiteSpace(c))
-                    break;
-            }
-        }
-        else
+        if (!IsWhiteSpace(c))
             enw = l;
     }
 

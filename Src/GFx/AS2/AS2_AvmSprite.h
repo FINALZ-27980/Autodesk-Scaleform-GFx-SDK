@@ -105,6 +105,9 @@ public:
     virtual void            AdvanceFrame(bool nextFrame, float framePos);
     virtual bool            MustBeInPlaylist() const;
 
+    virtual TopMostResult   GetTopMostEntity(const Render::PointF &localPt, TopMostDescr* pdescr,
+                                             const ArrayPOD<UByte>& hitTest);
+
     ASStringContext*        GetSC() const { return ASEnvironment.GetSC(); }
     Environment*            GetASEnvironment()          { return &ASEnvironment; }
     const Environment*      GetASEnvironment() const    { return &ASEnvironment; }

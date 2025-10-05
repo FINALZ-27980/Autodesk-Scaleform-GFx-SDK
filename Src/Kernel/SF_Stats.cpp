@@ -13,16 +13,14 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 **************************************************************************/
 
+#include "GFxConfig.h"
+
+#ifdef SF_ENABLE_STATS
+
 #include "SF_Stats.h"
 #include "SF_Atomic.h"
 #include "SF_Memory.h"
 #include "SF_Debug.h"
-
-#ifndef SF_ENABLE_STATS
-
-namespace { char dummySF_StatsVar; }; // to disable warning LNK4221 on PC/Xbox
-
-#else
 
 namespace Scaleform {
 

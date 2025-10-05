@@ -156,6 +156,9 @@ public:
     // Sets font size to whole text or to the part of text in interval [startPos..endPos].
     // Both "startPos" and "endPos" parameters are optional.
     void    SetFontSize(float fontSize, UPInt startPos = 0, UPInt endPos = UPInt(-1));
+    // Sets letter spacing to whole text or to the part of text in interval [startPos..endPos].
+    // Both "startPos" and "endPos" parameters are optional.
+    void    SetLetterSpacing(float letterSpacing, UPInt startPos = 0, UPInt endPos = UPInt(-1));
 
     enum FontStyle
     {

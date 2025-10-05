@@ -29,6 +29,14 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "GFx/GFx_Loader.h"
 #include "GFx/GFx_VideoBase.h"
 
+#if defined(SF_OS_WIN32)
+#pragma comment(lib, "libgfxvideo")
+#elif defined(SF_OS_XBOX360)
+#pragma comment(lib, "libgfxvideo_x360")
+#elif defined(SF_OS_PS3) || defined(SF_OS_ORBIS)
+//#pragma comment(lib, "gfxvideo")
+#endif
+
 namespace Scaleform {
 
 #ifdef GFX_ENABLE_SOUND
@@ -207,9 +215,6 @@ public:
     // sound effects along with a movie.
     virtual void      SetSubAudioTrack(int trackIndex) = 0;
 
-    // Extra audio track, similar to SubAudio track
-    virtual void      SetExtraAudioTrack(int trackIndex) = 0;
-
     // Replaces the center track of 5.1ch audio.
     // This function sets the center channel for replacement.
     // Use this only to change the voice track of 5.1ch music.
@@ -241,8 +246,7 @@ public:
     enum SoundTrack
     {
         MainTrack,  // Main sound track
-        SubAudio,   // A secondary, or SubAudio, track
-        ExtraAudio  // Extra audio track
+        SubAudio    // A secondary, or SubAudio, track
     };
     virtual Sound::SoundChannel*
                       GetSoundChannel(SoundTrack track = MainTrack) = 0;
@@ -295,7 +299,7 @@ public:
     // Start, Stop and other methods to it when it can start polling for data.    
     virtual class VideoSound* Create() = 0;
 
-    virtual void Update() {}
+	virtual void Update() {}
 
     // Get a pointer to the memory heap used for video sound system allocations.
     MemoryHeap* GetHeap() const { return pHeap; }

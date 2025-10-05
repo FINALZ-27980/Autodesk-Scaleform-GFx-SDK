@@ -20,7 +20,9 @@ namespace Scaleform { namespace GFx { namespace AS3
     ///////////////////////////////////////////////////////////////////////////
     void StackReader::Read(Multiname& obj)
     {
-        switch (obj.GetKind())
+        const Abc::MultinameKind k = obj.GetKind();
+
+        switch (k)
         {
         case Abc::MN_QName:
         case Abc::MN_QNameA:

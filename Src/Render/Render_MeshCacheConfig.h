@@ -52,7 +52,7 @@ struct MeshCacheParams
     // to avoid unnecessary thrashing that reduces MRU effectiveness.
     UPInt    VBLockEvictSizeLimit;
 
-    // Maximum number of instances in a batch; set based on HW capabilities.
+    // Maximum number of instances in a batch; 
     unsigned MaxBatchInstances;
 
     // The number of consecutive meshes that forces the use of instancing.

@@ -117,7 +117,7 @@ namespace Instances { namespace fl_filters
 
 namespace InstanceTraits { namespace fl_filters
 {
-    class ColorMatrixFilter : public CTraits
+    class ColorMatrixFilter : public fl_filters::BitmapFilter
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -143,6 +143,8 @@ namespace InstanceTraits { namespace fl_filters
 
         enum { ThunkInfoNum = 3 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[4];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -155,17 +157,19 @@ namespace InstanceTraits { namespace fl_filters
     
 namespace ClassTraits { namespace fl_filters
 {
-    class ColorMatrixFilter : public Traits
+    class ColorMatrixFilter : public fl_filters::BitmapFilter
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ColorMatrixFilter"; }
 #endif
     public:
-        typedef Classes::fl_filters::ColorMatrixFilter ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_filters::ColorMatrixFilter InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ColorMatrixFilter(VM& vm);
+        ColorMatrixFilter(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

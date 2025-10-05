@@ -31,6 +31,15 @@ namespace fl_text
     extern const TypeInfo TextRendererTI;
     extern const ClassInfo TextRendererCI;
 } // namespace fl_text
+namespace fl
+{
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+    extern const TypeInfo int_TI;
+    extern const ClassInfo int_CI;
+    extern const TypeInfo ArrayTI;
+    extern const ClassInfo ArrayCI;
+} // namespace fl
 
 namespace ClassTraits { namespace fl_text
 {
@@ -52,7 +61,7 @@ namespace Classes { namespace fl_text
     
 namespace ClassTraits { namespace fl_text
 {
-    class TextRenderer : public Traits
+    class TextRenderer : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +69,11 @@ namespace ClassTraits { namespace fl_text
 #endif
     public:
         typedef Classes::fl_text::TextRenderer ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        TextRenderer(VM& vm);
+        TextRenderer(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

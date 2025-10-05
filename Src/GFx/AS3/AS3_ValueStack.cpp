@@ -107,8 +107,11 @@ void ValueStack::Reserve(UInt16 n)
         --pCurrent;
     }
 
-    SF_DEBUG_CODE(NumOfReservedElem = n;)
+#ifdef SF_BUILD_DEBUG
+    NumOfReservedElem = n;
     SF_ASSERT((pStack - pCurrentPage->Values) + NumOfReservedElem <= pCurrentPage->PageSize);
+#endif
+
     ++pCurrentPage->ReservationNum;
 }
 
@@ -145,13 +148,35 @@ void ValueStack::ReleaseReserved(ValueType* first SF_DEBUG_ARG(UInt16 prevReserv
     }
 }
 
-void ValueStack::PopReserved(ValueType* current)
+void ValueStack::PopReserved(ValueType* current, bool retVal)
 {
-    // Pop values in case of exception.
-    // "current" can be in a previous page, so, we want to limit PopBack() to the
+    // "current" can be on a different page, so we want to limit PopBack() to the
     // current page.
-    while (pCurrent > current && pCurrent >= &pCurrentPage->Values[0])
-        PopBack();
+
+    ValueType* firstOnPage = pCurrentPage->Values;
+    ValueType* pageEnd = pCurrentPage->Values + pCurrentPage->PageSize;
+    const bool onCurrPage = current >= firstOnPage && current < pageEnd;
+
+    if (onCurrPage)
+    {
+        if (retVal && (pCurrent > current + retVal))
+            Alg::Swap(*pCurrent, *current);
+
+        // Pop all values except of return value.
+        current += retVal;
+        while (pCurrent > current)
+            PopBack();
+    }
+    else
+    {
+        if (retVal && (pCurrent >= firstOnPage + retVal))
+            Alg::Swap(*pCurrent, *firstOnPage);
+
+        // Pop all values on current page (except of return value).
+        firstOnPage += retVal;
+        while (pCurrent >= firstOnPage)
+            PopBack();
+    }
 }
 
 ValueStack::Page* ValueStack::AllocPage(UInt16 pageSize)

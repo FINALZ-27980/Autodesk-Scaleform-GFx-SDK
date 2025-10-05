@@ -16,6 +16,9 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef INCLUDE_GFX_AMP_STREAM_H
 #define INCLUDE_GFX_AMP_STREAM_H
 
+#include "GFxConfig.h"
+#ifdef SF_ENABLE_STATS
+
 #include "Kernel/SF_File.h"
 
 namespace Scaleform {
@@ -92,5 +95,7 @@ private:
 } // namespace GFx
 } // namespace Scaleform
 
+
+#endif
 
 #endif

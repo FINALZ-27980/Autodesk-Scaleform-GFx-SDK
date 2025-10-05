@@ -287,7 +287,7 @@ namespace Instances { namespace fl_geom
 
 namespace InstanceTraits { namespace fl_geom
 {
-    class Vector3D : public CTraits
+    class Vector3D : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -313,6 +313,8 @@ namespace InstanceTraits { namespace fl_geom
 
         enum { ThunkInfoNum = 24 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[40];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -325,7 +327,7 @@ namespace InstanceTraits { namespace fl_geom
     
 namespace ClassTraits { namespace fl_geom
 {
-    class Vector3D : public Traits
+    class Vector3D : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -333,14 +335,18 @@ namespace ClassTraits { namespace fl_geom
 #endif
     public:
         typedef Classes::fl_geom::Vector3D ClassType;
+        typedef InstanceTraits::fl_geom::Vector3D InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Vector3D(VM& vm);
+        Vector3D(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 3 };
         static const MemberInfo mi[MemberInfoNum];
         enum { ThunkInfoNum = 2 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[6];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

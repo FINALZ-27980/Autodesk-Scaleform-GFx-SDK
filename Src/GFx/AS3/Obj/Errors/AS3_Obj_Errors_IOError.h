@@ -52,17 +52,19 @@ namespace Classes { namespace fl_errors
     
 namespace ClassTraits { namespace fl_errors
 {
-    class IOError : public Traits
+    class IOError : public fl::Error
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::IOError"; }
 #endif
     public:
-        typedef Classes::fl_errors::IOError ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IOError(VM& vm);
+        IOError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

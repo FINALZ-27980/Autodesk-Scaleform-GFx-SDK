@@ -59,7 +59,7 @@ namespace Classes { namespace fl_utils
     
 namespace ClassTraits { namespace fl_utils
 {
-    class Endian : public Traits
+    class Endian : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -67,9 +67,11 @@ namespace ClassTraits { namespace fl_utils
 #endif
     public:
         typedef Classes::fl_utils::Endian ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Endian(VM& vm);
+        Endian(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

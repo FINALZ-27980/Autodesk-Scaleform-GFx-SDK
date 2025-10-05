@@ -47,10 +47,16 @@ void RectPacker::Pack()
     Packs.Clear();
     PackTree.Clear();
     if (SrcRects.GetSize() == 0) return;
-    Alg::QuickSort(SrcRects, cmpRects);
+    Alg::QuickSort(SrcRects, cmpRectsY);
 
     MinWidth  = SrcRects[SrcRects.GetSize() - 1].x;
     MinHeight = SrcRects[SrcRects.GetSize() - 1].y;
+    for (UPInt i = 0; i < SrcRects.GetSize(); ++i)
+    {
+        if (SrcRects[i].x < MinWidth)
+            MinWidth = SrcRects[i].x;
+    }
+
     NumPacked = 0;
 
     do

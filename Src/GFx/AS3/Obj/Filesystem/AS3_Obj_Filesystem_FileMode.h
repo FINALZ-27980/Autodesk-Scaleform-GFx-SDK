@@ -52,7 +52,7 @@ namespace Classes { namespace fl_filesystem
     
 namespace ClassTraits { namespace fl_filesystem
 {
-    class FileMode : public Traits
+    class FileMode : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_filesystem
 #endif
     public:
         typedef Classes::fl_filesystem::FileMode ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FileMode(VM& vm);
+        FileMode(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

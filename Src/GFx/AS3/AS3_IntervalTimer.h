@@ -32,13 +32,13 @@ class IntervalTimer : public ASIntervalTimerIntf
     ArrayLH<Value>          Params;
     unsigned                CurrentCount;
     unsigned                RepeatCount;
-    UInt64                  Interval; // in microseconds
+    UInt32                  Interval; // in microseconds
     UInt64                  InvokeTime; // in microseconds
     int                     Id;
     bool                    Active;
     bool                    Timeout; // indicates to invoke timer only once
 
-    UInt64                  GetNextInterval(UInt64 currentTime, UInt64 frameTime) const;
+    UInt32                  GetNextInterval(UInt64 currentTime, UInt64 frameTime) const;
 public:
     // delay is specified in ms
     IntervalTimer(const Value& function, unsigned delay, bool timeOut = false);

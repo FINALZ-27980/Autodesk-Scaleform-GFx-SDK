@@ -28,12 +28,6 @@ namespace Scaleform { namespace GFx { namespace AS3
 //##protect##"methods"
 //##protect##"methods"
 
-// Values of default arguments.
-namespace Impl
-{
-
-} // namespace Impl
-
 namespace Instances { namespace fl_display
 {
     MorphShape::MorphShape(InstanceTraits::Traits& t)
@@ -55,12 +49,11 @@ namespace InstanceTraits { namespace fl_display
 {
 
     MorphShape::MorphShape(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl_display::DisplayObject(vm, ci)
     {
 //##protect##"InstanceTraits::MorphShape::MorphShape()"
         SetTraitsType(Traits_MorphShape);
 //##protect##"InstanceTraits::MorphShape::MorphShape()"
-        SetMemSize(sizeof(Instances::fl_display::MorphShape));
 
     }
 
@@ -77,25 +70,28 @@ namespace InstanceTraits { namespace fl_display
 
 namespace ClassTraits { namespace fl_display
 {
-    MorphShape::MorphShape(VM& vm)
-    : Traits(vm, AS3::fl_display::MorphShapeCI)
+
+    MorphShape::MorphShape(VM& vm, const ClassInfo& ci)
+    : fl_display::DisplayObject(vm, ci)
     {
 //##protect##"ClassTraits::MorphShape::MorphShape()"
         SetTraitsType(Traits_MorphShape);
 //##protect##"ClassTraits::MorphShape::MorphShape()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl_display::MorphShape(vm, AS3::fl_display::MorphShapeCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Class(*this));
 
     }
 
     Pickable<Traits> MorphShape::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) MorphShape(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) MorphShape(vm, AS3::fl_display::MorphShapeCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::MorphShapeCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -106,6 +102,11 @@ namespace fl_display
 {
     const TypeInfo MorphShapeTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::MorphShape::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "MorphShape", "flash.display", &fl_display::DisplayObjectTI,
         TypeInfo::None
     };
@@ -113,10 +114,6 @@ namespace fl_display
     const ClassInfo MorphShapeCI = {
         &MorphShapeTI,
         ClassTraits::fl_display::MorphShape::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

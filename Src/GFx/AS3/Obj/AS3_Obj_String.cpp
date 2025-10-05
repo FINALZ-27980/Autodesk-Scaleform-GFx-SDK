@@ -32,31 +32,61 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 String::tito[String::ThunkInfoNum] = {
+    //    0, 1, 2, 5, 7, 9, 10, 12, 14, 17, 19, 20, 21, 24, 27, 28, 29, 30, 31, 32, 
+    // };
+    const TypeInfo* String::tit[33] = {
+        &AS3::fl::int_TI, 
+        &AS3::fl::int_TI, 
+        &AS3::fl::int_TI, &AS3::fl::StringTI, &AS3::fl::NumberTI, 
+        &AS3::fl::StringTI, &AS3::fl::int_TI, 
+        &AS3::fl::NumberTI, &AS3::fl::int_TI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::int_TI, &AS3::fl::StringTI, 
+        &AS3::fl::ArrayTI, NULL, 
+        &AS3::fl::StringTI, NULL, &AS3::fl::ObjectTI, 
+        &AS3::fl::int_TI, NULL, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::ArrayTI, 
+        &AS3::fl::StringTI, &AS3::fl::int_TI, &AS3::fl::int_TI, 
+        &AS3::fl::StringTI, &AS3::fl::int_TI, &AS3::fl::int_TI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+    };
+    const Abc::ConstValue String::dva[6] = {
+        {Abc::CONSTANT_Double, 2}, {}, 
+        {Abc::CONSTANT_Int, 1}, {}, 
+        {Abc::CONSTANT_Int, 1}, {}, 
+    };
     const ThunkInfo String::ti[String::ThunkInfoNum] = {
-        {&InstanceTraits::fl::String::lengthGet, &AS3::fl::int_TI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {&InstanceTraits::fl::String::AS3indexOf, &AS3::fl::int_TI, "indexOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&InstanceTraits::fl::String::AS3lastIndexOf, &AS3::fl::int_TI, "lastIndexOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&InstanceTraits::fl::String::AS3charAt, &AS3::fl::StringTI, "charAt", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::String::AS3charCodeAt, &AS3::fl::NumberTI, "charCodeAt", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {&InstanceTraits::fl::String::AS3concat, &AS3::fl::StringTI, "concat", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {&InstanceTraits::fl::String::AS3localeCompare, &AS3::fl::int_TI, "localeCompare", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {&InstanceTraits::fl::String::AS3match, &AS3::fl::ArrayTI, "match", NS_AS3, Abc::NS_Public, CT_Method, 1, 1},
-        {&InstanceTraits::fl::String::AS3replace, &AS3::fl::StringTI, "replace", NS_AS3, Abc::NS_Public, CT_Method, 2, 2},
-        {&InstanceTraits::fl::String::AS3search, &AS3::fl::int_TI, "search", NS_AS3, Abc::NS_Public, CT_Method, 1, 1},
-        {&InstanceTraits::fl::String::AS3slice, &AS3::fl::StringTI, "slice", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&InstanceTraits::fl::String::AS3split, &AS3::fl::ArrayTI, "split", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&InstanceTraits::fl::String::AS3substr, &AS3::fl::StringTI, "substr", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&InstanceTraits::fl::String::AS3substring, &AS3::fl::StringTI, "substring", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {&InstanceTraits::fl::String::AS3toLocaleLowerCase, &AS3::fl::StringTI, "toLocaleLowerCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::String::AS3toLocaleUpperCase, &AS3::fl::StringTI, "toLocaleUpperCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::String::AS3toLowerCase, &AS3::fl::StringTI, "toLowerCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::String::AS3toUpperCase, &AS3::fl::StringTI, "toUpperCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::String::AS3toString, &AS3::fl::StringTI, "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::String::AS3valueOf, &AS3::fl::StringTI, "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::String::lengthGet, &String::tit[0], "length", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3indexOf, &String::tit[1], "indexOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1, 0, NULL},
+        {&InstanceTraits::fl::String::AS3lastIndexOf, &String::tit[2], "lastIndexOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1, 2, &String::dva[0]},
+        {&InstanceTraits::fl::String::AS3charAt, &String::tit[5], "charAt", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3charCodeAt, &String::tit[7], "charCodeAt", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3concat, &String::tit[9], "concat", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {&InstanceTraits::fl::String::AS3localeCompare, &String::tit[10], "localeCompare", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {&InstanceTraits::fl::String::AS3match, &String::tit[12], "match", NS_AS3, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3replace, &String::tit[14], "replace", NS_AS3, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3search, &String::tit[17], "search", NS_AS3, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3slice, &String::tit[19], "slice", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1, 0, NULL},
+        {&InstanceTraits::fl::String::AS3split, &String::tit[20], "split", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1, 0, NULL},
+        {&InstanceTraits::fl::String::AS3substr, &String::tit[21], "substr", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1, 2, &String::dva[2]},
+        {&InstanceTraits::fl::String::AS3substring, &String::tit[24], "substring", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 1, 2, &String::dva[4]},
+        {&InstanceTraits::fl::String::AS3toLocaleLowerCase, &String::tit[27], "toLocaleLowerCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3toLocaleUpperCase, &String::tit[28], "toLocaleUpperCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3toLowerCase, &String::tit[29], "toLowerCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3toUpperCase, &String::tit[30], "toUpperCase", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3toString, &String::tit[31], "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::String::AS3valueOf, &String::tit[32], "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     String::String(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::String::String()"
         SetTraitsType(Traits_String);
@@ -449,39 +479,56 @@ namespace InstanceTraits { namespace fl
         if (argc >= 1 && !argv[0].IsNullOrUndefined())
         {
             SPtr<Instances::fl::RegExp> pre;
+            ASString orig = sm.CreateEmptyString();
             // RegExp class object
             if (argv[0].IsObject() && vm.IsOfType(argv[0], "RegExp", vm.GetCurrentAppDomain()))
             {
                 pre = static_cast<Instances::fl::RegExp*>(argv[0].GetObject());
             }
-            // Regular expression pattern
             else {
-                ASString pattern = sm.CreateEmptyString();
-                if (!argv[0].Convert2String(pattern))
-                    return;
-
-                Value args[] = { Value(pattern) };
-                if (!vm.ConstructBuiltinObject(pre, "RegExp", 1, args))
+                if (!argv[0].Convert2String(orig))
                     return;
             }
 
             // Replacement object
-            // TBD: special $ replacement codes in the repl string
+            // TBD: function as a parameter, special $ replacement codes in the repl string
+            ASString repl = sm.CreateEmptyString();
             if (argc >= 2 && !argv[1].IsNullOrUndefined())
             {
-                ASString repl = sm.CreateEmptyString();
                 if (!argv[1].Convert2String(repl))
                     return;
+            }
 
+            if (pre)
+            {
+                bool global = pre->globalGet();
+                pre->SetGlobal(false);  // Handle global mode in the loop below
                 while (pre->AS3exec(str))
                 {
-                    int offset = pre->GetMatchOffset();
-                    int length = pre->GetMatchLength();
-                    str = str.Substring(0, offset) + repl + 
-                          str.Substring(offset + length, str.GetLength());
-                    if(!pre->globalGet())
+                    int matchOffset = pre->GetMatchOffset();
+                    int matchLength = pre->GetMatchLength();
+                    int matchEnd = matchOffset + matchLength;
+                    Scaleform::String head(str.ToCStr(), matchOffset);
+                    Scaleform::String tail(str.ToCStr() + matchEnd, str.GetSize() - matchEnd);
+                    str = sm.CreateString(head) + repl + sm.CreateString(tail);
+
+                    if(!global)
                         break;
                 };
+                result = str;
+            }
+            else
+            {
+                const char *ptr = strstr(str.ToCStr(), orig.ToCStr());
+                if (!ptr) {
+                    result = str;
+                    return;
+                }
+                UPInt matchOffset = ptr - str.ToCStr();
+                UPInt matchEnd = matchOffset + orig.GetLength();
+                Scaleform::String head(str.ToCStr(), matchOffset);
+                Scaleform::String tail(str.ToCStr() + matchEnd, str.GetSize() - matchEnd);
+                str = sm.CreateString(head) + repl + sm.CreateString(tail);
                 result = str;
             }
         }
@@ -522,7 +569,10 @@ namespace InstanceTraits { namespace fl
                     return;
             }
             if (pre->AS3exec(str))
-                result.SetSInt32(pre->GetMatchOffset());
+            {
+                Scaleform::String substr(str.ToCStr(), pre->GetMatchOffset());
+                result.SetSInt32((SInt32)substr.GetLength());
+            }
         }
 //##protect##"InstanceTraits::AS3search()"
     }
@@ -627,14 +677,17 @@ namespace InstanceTraits { namespace fl
                 unsigned cnt = 0;
                 while (pre->AS3exec(str) && cnt++ < limit)
                 {
-                    int offset = pre->GetMatchOffset();
-                    int length = pre->GetMatchLength();
-                    parr->PushBack(str.Substring(next, offset));
-                    next = offset + length;
+                    int matchOffset = pre->GetMatchOffset();
+                    int matchLength = pre->GetMatchLength();
+                    Scaleform::String substr(str.ToCStr() + next, matchOffset - next);
+                    parr->PushBack(sm.CreateString(substr));
+                    next = matchOffset + matchLength;
                 };
                 if(cnt < limit)
-                    parr->PushBack(str.Substring(next, str.GetLength()));
-
+                {
+                    Scaleform::String substr(str.ToCStr() + next, str.GetSize() - next);
+                    parr->PushBack(sm.CreateString(substr));
+                }
                 result = parr;
                 return;
             }
@@ -1127,9 +1180,14 @@ namespace Classes { namespace fl
     }
 
     // Created manually.
+    const TypeInfo* String::tit[2] = {
+        &AS3::fl::StringTI,
+        &AS3::fl::StringTI,
+    };
+
     const ThunkInfo String::f[2] = {
-        {&InstanceTraits::fl::String::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::String::valueOfProto, &AS3::fl::StringTI, "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::String::toStringProto, &String::tit[0], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::String::valueOfProto, &String::tit[1], "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0},
     };
 
     void String::InitPrototype(AS3::Object& obj) const
@@ -1157,29 +1215,39 @@ template <> const TFunc_Classes_String_fromCharCode::TMethod TFunc_Classes_Strin
 
 namespace ClassTraits { namespace fl
 {
-    const ThunkInfo String::ti[String::ThunkInfoNum] = {
-        {TFunc_Classes_String_AS3fromCharCode::Func, &AS3::fl::StringTI, "fromCharCode", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_Classes_String_fromCharCode::Func, &AS3::fl::StringTI, "fromCharCode", NULL, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
+    // const UInt16 String::tito[String::ThunkInfoNum] = {
+    //    0, 1, 
+    // };
+    const TypeInfo* String::tit[2] = {
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
     };
-    String::String(VM& vm)
-    : Traits(vm, AS3::fl::StringCI)
+    const ThunkInfo String::ti[String::ThunkInfoNum] = {
+        {TFunc_Classes_String_AS3fromCharCode::Func, &String::tit[0], "fromCharCode", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {TFunc_Classes_String_fromCharCode::Func, &String::tit[1], "fromCharCode", NULL, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+    };
+
+    String::String(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::String::String()"
         SetTraitsType(Traits_String);
 //##protect##"ClassTraits::String::String()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::String(vm, AS3::fl::StringCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::String(*this));
 
     }
 
     Pickable<Traits> String::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) String(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) String(vm, AS3::fl::StringCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::StringCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
     bool String::Coerce(const Value& value, Value& result) const
@@ -1207,6 +1275,11 @@ namespace fl
 {
     const TypeInfo StringTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl::String::InstanceType),
+        ClassTraits::fl::String::ThunkInfoNum,
+        0,
+        InstanceTraits::fl::String::ThunkInfoNum,
+        0,
         "String", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -1214,10 +1287,6 @@ namespace fl
     const ClassInfo StringCI = {
         &StringTI,
         ClassTraits::fl::String::MakeClassTraits,
-        ClassTraits::fl::String::ThunkInfoNum,
-        0,
-        InstanceTraits::fl::String::ThunkInfoNum,
-        0,
         ClassTraits::fl::String::ti,
         NULL,
         InstanceTraits::fl::String::ti,

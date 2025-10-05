@@ -45,14 +45,31 @@ namespace fl
     extern const ClassInfo BooleanCI;
     extern const TypeInfo uintTI;
     extern const ClassInfo uintCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
     extern const TypeInfo ObjectTI;
     extern const ClassInfo ObjectCI;
+    extern const TypeInfo ArrayTI;
+    extern const ClassInfo ArrayCI;
+    extern const TypeInfo NumberTI;
+    extern const ClassInfo NumberCI;
 } // namespace fl
 namespace fl_geom
 {
     extern const TypeInfo RectangleTI;
     extern const ClassInfo RectangleCI;
+    extern const TypeInfo PointTI;
+    extern const ClassInfo PointCI;
+    extern const TypeInfo ColorTransformTI;
+    extern const ClassInfo ColorTransformCI;
+    extern const TypeInfo MatrixTI;
+    extern const ClassInfo MatrixCI;
 } // namespace fl_geom
+namespace fl_filters
+{
+    extern const TypeInfo BitmapFilterTI;
+    extern const ClassInfo BitmapFilterCI;
+} // namespace fl_filters
 namespace fl_utils
 {
     extern const TypeInfo ByteArrayTI;
@@ -141,9 +158,8 @@ namespace Instances { namespace fl_display
         virtual void AS3Constructor(unsigned argc, const Value* argv);
         Render::Rect<SInt32> RectangleToRect(const Instances::fl_geom::Rectangle& rectangle);
         Render::Point<SInt32> PointToPoint(const Instances::fl_geom::Point& point);
-        Render::DrawableImage* getDrawableImageFromBitmapData( Instances::fl_display::BitmapData* sourceBitmapData );
     public:
-        bool            IsDirty() { return (Dirty) ? Dirty = false, true : false; }
+        Render::DrawableImage* getDrawableImageFromBitmapData( Instances::fl_display::BitmapData* sourceBitmapData );
         ImageResource*  GetImageResource();
         bool            CreateLibraryObject(ImageResource* imgRes, MovieDefImpl* defImpl);
 //##protect##"instance$methods"
@@ -360,7 +376,9 @@ namespace Instances { namespace fl_display
         Ptr<MovieDefImpl>       pDefImpl;
         unsigned                Width, Height;
         bool                    Transparent;
-        bool                    Dirty;
+        Color                   ClearColor;
+        static const int        MaximumArea = 16777215;
+        static const int        MaximumDimension = 8191;
 
 //##protect##"instance$data"
 
@@ -369,7 +387,7 @@ namespace Instances { namespace fl_display
 
 namespace InstanceTraits { namespace fl_display
 {
-    class BitmapData : public CTraits
+    class BitmapData : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -395,6 +413,9 @@ namespace InstanceTraits { namespace fl_display
 
         enum { ThunkInfoNum = 35 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[136];
+        static const Abc::ConstValue dva[15];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -407,17 +428,19 @@ namespace InstanceTraits { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class BitmapData : public Traits
+    class BitmapData : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::BitmapData"; }
 #endif
     public:
-        typedef Classes::fl_display::BitmapData ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_display::BitmapData InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        BitmapData(VM& vm);
+        BitmapData(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -173,7 +173,9 @@ public:
 
     void    Acquire1()
     {
+#ifdef SF_BUILD_DEBUG
         SF_ASSERT(GetSize() < NumOfReservedElem);
+#endif
         ++pCurrent;
         *(UPInt*)pCurrent = 0;
     }
@@ -237,8 +239,8 @@ public:
 public:
     void Reserve(UInt16 n);
     void ReleaseReserved(ValueType* first SF_DEBUG_ARG(UInt16 prevReservNum));
-    // Pop values in case of exception.
-    void PopReserved(ValueType* current);
+    // Preserve return value in case of retVal == true.
+    void PopReserved(ValueType* current, bool retVal);
 
     // ***** High-performance Stack Access
 

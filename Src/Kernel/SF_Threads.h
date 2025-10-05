@@ -88,7 +88,7 @@ public:
     {
     public:
         Mutex *pMutex;
-        Locker(Mutex *pmutex) { SF_UNUSED(pmutex); }
+        Locker(Mutex *pmutex) : pMutex(0) { SF_UNUSED(pmutex); }
     };
 };
 
@@ -862,7 +862,7 @@ public:
     //SF_EXPORT   virtual bool    TryAcquireCancel();
 
     // *** Debugging functionality
-#if (defined(SF_OS_WIN32) || defined(SF_OS_XBOX360)) && !defined(SF_OS_WINMETRO)
+#if ((defined(SF_OS_WIN32) || defined(SF_OS_XBOX360)) && !defined(SF_OS_WINMETRO)) || defined(SF_OS_ORBIS)
     virtual void    SetThreadName( const char* name );
 #else
     virtual void    SetThreadName( const char* name ) { SF_UNUSED(name); }

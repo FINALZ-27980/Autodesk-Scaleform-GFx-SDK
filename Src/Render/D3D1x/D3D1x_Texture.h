@@ -38,6 +38,7 @@ struct TextureFormat : public Render::TextureFormat
         ImageFormat              Format;
         DXGI_FORMAT              D3DFormat;
         UByte                    BytesPerPixel;
+        D3D_FEATURE_LEVEL        MinFeatureLevel;
         Image::CopyScanlineFunc  CopyFunc;
         Image::CopyScanlineFunc  UncopyFunc;
     };
@@ -183,7 +184,7 @@ public:
     TextureManager(ID3D1x(Device)* pdevice,
                    ID3D1x(DeviceContext) * pcontext,
                    ThreadId renderThreadId, 
-                   ThreadCommandQueue* commandQueue = 0,
+                   ThreadCommandQueue* commandQueue,
                    TextureCache* texCache = 0);
     ~TextureManager();
 

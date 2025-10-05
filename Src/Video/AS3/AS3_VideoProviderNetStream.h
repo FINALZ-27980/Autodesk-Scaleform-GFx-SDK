@@ -88,7 +88,6 @@ public:
     void   SetSwfSync(bool flag, Sprite* ptarget);
     void   SetAudioTrack(int track);
     void   SetSubAudioTrack(int track);
-    void   SetExtraAudioTrack(int track);
     void   ReplaceCenterVoice(int track);
     void   SetSubtitleChannel(int channel);
     int    GetSubtitleChannel();
@@ -100,7 +99,7 @@ public:
 
 #ifdef GFX_ENABLE_SOUND
     void   SetAudioTarget(Sprite* psprite);
-    void   SetSoundVolume(int volume, int subVolume = 100, int extraVolume = 100);
+    void   SetSoundVolume(int volume, int subVolume = 100);
 #endif
 
     void   SendNotification(NetStreamInterface::Notification n, bool error = false);

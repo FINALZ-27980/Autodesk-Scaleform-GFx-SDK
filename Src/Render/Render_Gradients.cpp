@@ -54,7 +54,7 @@ bool GradientData::SetRecordCount(UInt16 count, bool tmpHeap)
     if (count == RecordCount)
         return 1;
 
-    GradientRecord* newRecs = tmpHeap ? (GradientRecord*)SF_ALLOC(sizeof(GradientRecord)*count, Stat_Default_Mem) :
+    GradientRecord* newRecs = tmpHeap ? (GradientRecord*)SF_ALLOC(sizeof(GradientRecord)*count, StatRender_TreeCache_Mem) :
                                         (GradientRecord*)SF_HEAP_AUTO_ALLOC(this, sizeof(GradientRecord)*count);
     if (newRecs == 0)
         return 0;
@@ -248,7 +248,7 @@ private:
 
     static void blendColors(UByte* c, const ColorType& c1, const ColorType& c2, int ratio, int maxRatio)
     {
-        maxRatio = (maxRatio << 8) | maxRatio;
+        maxRatio = Alg::Max(1, (maxRatio << 8) | maxRatio);
         c[R] = UByte(c1.r + int(c2.r - c1.r) * ratio / maxRatio);
         c[G] = UByte(c1.g + int(c2.g - c1.g) * ratio / maxRatio);
         c[B] = UByte(c1.b + int(c2.b - c1.b) * ratio / maxRatio);
@@ -301,7 +301,7 @@ GradientRamp::GradientRamp(const GradientRecord* records, unsigned recordCount, 
             {
                 while(start < end)
                 {
-                    blendColors(c, c1, c2, start-x0+1, dx);
+                    blendColors(c, c1, c2, start-x0, dx-1);
                     memcpy(Ramp + start*4, c, 4); 
                     ++start;
                 }
@@ -310,7 +310,7 @@ GradientRamp::GradientRamp(const GradientRecord* records, unsigned recordCount, 
             {
                 while(start < end)
                 {
-                    blendColors(c, c1, c2, start-x0+1, dx, gammaInv);
+                    blendColors(c, c1, c2, start-x0, dx-1, gammaInv);
                     memcpy(Ramp + start*4, c, 4); 
                     ++start;
                 }

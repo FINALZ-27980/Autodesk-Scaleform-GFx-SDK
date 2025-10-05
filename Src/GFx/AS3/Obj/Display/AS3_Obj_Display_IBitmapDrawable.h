@@ -52,17 +52,19 @@ namespace Classes { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class IBitmapDrawable : public Traits
+    class IBitmapDrawable : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::IBitmapDrawable"; }
 #endif
     public:
-        typedef Classes::fl_display::IBitmapDrawable ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::Interface InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IBitmapDrawable(VM& vm);
+        IBitmapDrawable(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

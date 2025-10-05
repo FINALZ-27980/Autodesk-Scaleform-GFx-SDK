@@ -31,24 +31,27 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace ClassTraits { namespace fl_errors
 {
-    EOFError::EOFError(VM& vm)
-    : Traits(vm, AS3::fl_errors::EOFErrorCI)
+
+    EOFError::EOFError(VM& vm, const ClassInfo& ci)
+    : fl_errors::IOError(vm, ci)
     {
 //##protect##"ClassTraits::EOFError::EOFError()"
 //##protect##"ClassTraits::EOFError::EOFError()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Error(vm, AS3::fl_errors::EOFErrorCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Class(*this));
 
     }
 
     Pickable<Traits> EOFError::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) EOFError(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) EOFError(vm, AS3::fl_errors::EOFErrorCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_errors::EOFErrorCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -59,6 +62,11 @@ namespace fl_errors
 {
     const TypeInfo EOFErrorTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl_errors::EOFError::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "EOFError", "flash.errors", &fl_errors::IOErrorTI,
         TypeInfo::None
     };
@@ -66,10 +74,6 @@ namespace fl_errors
     const ClassInfo EOFErrorCI = {
         &EOFErrorTI,
         ClassTraits::fl_errors::EOFError::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

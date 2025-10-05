@@ -26,6 +26,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 #include "Kernel/SF_Alg.h"
 #include "Kernel/SF_SIMD.h"
+#include "Kernel/SF_RefCount.h"
 
 namespace Scaleform { namespace Render {
 
@@ -789,6 +790,25 @@ inline const Rect<T>& Rect<T>::operator &= (const Rect<T> &r)
                                                                                            
 // ** End Inline Implementation
 
+// Ref-coutanble Rect
+template <class T>
+class RectRef : public Rect<T>, public RefCountBase<Rect<T>, Stat_Default_Mem>
+{
+public:
+    using RectData<T>::x1;  // GCC 3.4 compatibility.
+    using RectData<T>::y1;  // GCC 3.4 compatibility.
+    using RectData<T>::x2;  // GCC 3.4 compatibility.
+    using RectData<T>::y2;  // GCC 3.4 compatibility.
+
+    inline void operator = (const Rect<T> &r)
+    {
+        x1 = r.x1;
+        y1 = r.y1;
+        x2 = r.x2;
+        y2 = r.y2;
+    }
+};
+
 // ****************************************************************************
 // Backwards compatible typedefs 
 // 
@@ -797,6 +817,7 @@ inline const Rect<T>& Rect<T>::operator &= (const Rect<T> &r)
 typedef Point<float> PointF;
 typedef Size<float>  SizeF;
 typedef Rect<float>  RectF;
+typedef RectRef<float>  RectFRef;
 
 // Double structures
 typedef Point<Double> PointD;

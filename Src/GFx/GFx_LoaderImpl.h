@@ -393,6 +393,15 @@ private:
     // that created state heaps have Heap_UserDebug flag).
     bool                    DebugHeap;
 
+    // Cache of files received by HTTP requests
+    // Often a file is read more than once, to get the header information
+    class HttpFileCache : public RefCountBase<HttpFileCache, Stat_Default_Mem>
+    {
+    public:
+        Array<UByte> HttpFileBytes;
+    };
+    StringHashLH<Ptr<HttpFileCache> > HttpFilesOpened;
+
     // Implement GFxStateBag through delegation.
     virtual StateBag* GetStateBagImpl() const { return pStateBag; }
 
@@ -419,11 +428,13 @@ public:
 
     // *** Movie Loading
 
-    bool         GetMovieInfo(const char *pfilename, MovieInfo *pinfo,
-        bool getTagCount, unsigned loadLibConstants);    
-    bool         IsMovieLoaded(const char *pfilename, unsigned loadConstants);
-    MovieDef*    CreateMovie(const char* filename, unsigned loadConstants, UPInt memoryArena = 0);    
-
+    bool GetMovieInfo(const char *pfilename, MovieInfo *pinfo, bool getTagCount, unsigned loadLibConstants);
+    bool IsMovieLoaded(const char *pfilename, unsigned loadConstants);
+    MovieDef* CreateMovie(const char* filename, unsigned loadConstants, UPInt memoryArena = 0);    
+#ifdef SF_ENABLE_HTTP_LOADING
+    Array<UByte>* ReadProtocolFile(const String& filename);
+    void LoadingDone(const char* filename);
+#endif
     // The actual creation function; called from CreateMovie.
     // This function uses an externally captured specified load state.   
     static MovieDefImpl*  CreateMovie_LoadState(LoadStates* pls,
@@ -447,8 +458,6 @@ public:
     static MovieDefImpl* BindMovieAndWait(MovieDefImpl* pm, MovieBindProcess* pbp,
         LoadStates* pls, unsigned loadConstants, 
         LoadStackItem* ploadStack = NULL);
-
-
 
     typedef Loader::FileFormatType FileFormatType;
 
@@ -517,6 +526,8 @@ public:
 private:
     LoaderImpl& operator =(const LoaderImpl&);
     LoaderImpl(const LoaderImpl&);
+
+    static Lock HttpLock;
 
 };
 

@@ -59,7 +59,7 @@ namespace Classes { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class SecurityErrorEvent : public Traits
+    class SecurityErrorEvent : public fl_events::ErrorEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -67,9 +67,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::SecurityErrorEvent ClassType;
+        typedef InstanceTraits::fl_events::ErrorEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SecurityErrorEvent(VM& vm);
+        SecurityErrorEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 1 };
         static const MemberInfo mi[MemberInfoNum];

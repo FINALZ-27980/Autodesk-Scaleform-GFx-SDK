@@ -61,6 +61,8 @@ exported resources.
 // Character Id wrapper class.
 class ResourceId
 {
+    // Make sure the member variables stay with no padding
+    // Padding breaks the hash function that uses this struct as a key
     UInt32    Id;
 
 public:
@@ -185,8 +187,13 @@ public:
         File_SIF    = 23,
         File_GXT    = 24,
         File_GTX    = 25,
+        File_GNF    = 26,
+        File_KTX    = 27,
 
         File_NextAvail,
+
+        //not really file formats, used as formatID in gfxexport
+        File_DDSBC       = 65533,
         File_MultiFormat = 65534,
         File_Original  = 65535
     };

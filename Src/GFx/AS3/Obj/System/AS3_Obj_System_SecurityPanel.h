@@ -52,7 +52,7 @@ namespace Classes { namespace fl_system
     
 namespace ClassTraits { namespace fl_system
 {
-    class SecurityPanel : public Traits
+    class SecurityPanel : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_system
 #endif
     public:
         typedef Classes::fl_system::SecurityPanel ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SecurityPanel(VM& vm);
+        SecurityPanel(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 7 };
         static const MemberInfo mi[MemberInfoNum];

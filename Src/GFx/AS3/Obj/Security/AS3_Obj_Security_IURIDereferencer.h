@@ -36,6 +36,11 @@ namespace fl_utils
     extern const TypeInfo IDataInputTI;
     extern const ClassInfo IDataInputCI;
 } // namespace fl_utils
+namespace fl
+{
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+} // namespace fl
 
 namespace ClassTraits { namespace fl_security
 {
@@ -57,17 +62,19 @@ namespace Classes { namespace fl_security
     
 namespace ClassTraits { namespace fl_security
 {
-    class IURIDereferencer : public Traits
+    class IURIDereferencer : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::IURIDereferencer"; }
 #endif
     public:
-        typedef Classes::fl_security::IURIDereferencer ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::Interface InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IURIDereferencer(VM& vm);
+        IURIDereferencer(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

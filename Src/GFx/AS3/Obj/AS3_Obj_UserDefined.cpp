@@ -274,10 +274,6 @@ namespace ClassTraits
     {
         return File;
     }
-    VMAppDomain& UserDefined::GetAppDomain() const
-    {
-        return GetFile().GetAppDomain();
-    }
 
     void UserDefined::ForEachChild_GC(Collector* prcc, RefCountBaseGC<Mem_Stat>::GcOp op) const
     {
@@ -377,8 +373,6 @@ namespace InstanceTraits
                 *ot.GetParent() // Origination Traits. 
                 SF_DEBUG_ARG(GetName() + " instance constructor")
                 ); 
-
-            SF_ASSERT(GetName() != "MenuManager");
         }
     }
 
@@ -418,11 +412,6 @@ namespace InstanceTraits
     VMAbcFile* UserDefined::GetFilePtr() const
     {
         return &GetFile();
-    }
-
-    VMAppDomain& UserDefined::GetAppDomain() const
-    {
-        return GetFile().GetAppDomain();
     }
 
     CheckResult UserDefined::SetupSlotValues(AS3::Object& for_obj) const

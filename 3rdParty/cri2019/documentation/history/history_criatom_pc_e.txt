@@ -1,0 +1,755 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2017 CRI Middleware Co., Ltd.
+ *
+ * Library : CRI Atom Library for PC
+ * Module  : Revision history
+ * File    : history_criatom_pc_e.txt
+ * Version : 2.19.03
+ *
+ ****************************************************************************/
+
+1. Library Version
+(1) CRI Atom library
+  [cri_atom_pcx86.lib] 2,497,210 bytes
+  ACB High                            Ver.1.32.00  Build:                    
+  ACB Low                             Ver.0.06.00  Build:                    
+  ACF High                            Ver.1.21.00  Build:                    
+  ACF Low                             Ver.0.04.60  Build:                    
+  CRI ASR                      PCx86  Ver.1.06.01  Build:May  8 2019 11:07:59  MSC19.00.24210.0,MT
+  CRI Atom                     PCx86  Ver.2.19.03  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI Atom Music               PCx86  Ver.0.95.03  Build:May  8 2019 11:07:59  MSC19.00.24210.0,MT
+  CRI Atom Sound               PCx86  Ver.1.61.00  Build:May  8 2019 11:07:59  MSC19.00.24210.0,MT
+  CRI AtomEx                   PCx86  Ver.2.14.28  Build:May  8 2019 11:08:00  MSC19.00.24210.0,MT
+  CRI AtomEx Sequencer         PCx86  Ver.1.05.10  Build:May  8 2019 11:07:59  MSC19.00.24210.0,MT
+  CRI Audio Effect             PCx86  Ver.1.01.11  Build:May  8 2019 11:07:57  MSC19.00.24210.0,MT
+  CRI NcVoice PCM Mixer        PCx86  Ver.1.00.00  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI NcVoice PCM Output       PCx86  Ver.1.00.00  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI NcVoice Pseudo           PCx86  Ver.1.02.00  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI NcVoice Raw PCM Float    PCx86  Ver.1.00.00  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI NcVoice Sound Generator  PCx86  Ver.1.00.00  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI NcVoice WASAPI           PCx86  Ver.2.30.00  Build:May  8 2019 11:08:01  MSC19.00.24210.0,MT
+  CRI NcVoice Wave Out         PCx86  Ver.1.00.00  Build:May  8 2019 11:07:58  MSC19.00.24210.0,MT
+  CRI TimeStretch              PCx86  Ver.1.04.00  Build:May  8 2019 11:07:59  MSC19.00.24210.0,MT
+
+  [cri_atom_pcx86D.lib] 16,958,724 bytes
+  ACB High                            Ver.1.32.00  Build:                    
+  ACB Low                             Ver.0.06.00  Build:                    
+  ACF High                            Ver.1.21.00  Build:                    
+  ACF Low                             Ver.0.04.60  Build:                    
+  CRI ASR                      PCx86  Ver.1.06.01  Build:May  8 2019 11:08:05  MSC19.00.24210.0,DEBUG,MT
+  CRI Atom                     PCx86  Ver.2.19.03  Build:May  8 2019 11:08:05  MSC19.00.24210.0,DEBUG,MT
+  CRI Atom Music               PCx86  Ver.0.95.03  Build:May  8 2019 11:08:06  MSC19.00.24210.0,DEBUG,MT
+  CRI Atom Sound               PCx86  Ver.1.61.00  Build:May  8 2019 11:08:06  MSC19.00.24210.0,DEBUG,MT
+  CRI AtomEx                   PCx86  Ver.2.14.28  Build:May  8 2019 11:08:07  MSC19.00.24210.0,DEBUG,MT
+  CRI AtomEx Sequencer         PCx86  Ver.1.05.10  Build:May  8 2019 11:08:06  MSC19.00.24210.0,DEBUG,MT
+  CRI Audio Effect             PCx86  Ver.1.01.11  Build:May  8 2019 11:08:03  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice PCM Mixer        PCx86  Ver.1.00.00  Build:May  8 2019 11:08:04  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice PCM Output       PCx86  Ver.1.00.00  Build:May  8 2019 11:08:04  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice Pseudo           PCx86  Ver.1.02.00  Build:May  8 2019 11:08:04  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice Raw PCM Float    PCx86  Ver.1.00.00  Build:May  8 2019 11:08:04  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice Sound Generator  PCx86  Ver.1.00.00  Build:May  8 2019 11:08:04  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice WASAPI           PCx86  Ver.2.30.00  Build:May  8 2019 11:08:08  MSC19.00.24210.0,DEBUG,MT
+  CRI NcVoice Wave Out         PCx86  Ver.1.00.00  Build:May  8 2019 11:08:04  MSC19.00.24210.0,DEBUG,MT
+  CRI TimeStretch              PCx86  Ver.1.04.00  Build:May  8 2019 11:08:06  MSC19.00.24210.0,DEBUG,MT
+
+2. Library Size
+  [cri_atom_pcx86.lib]
+  Total Code size:	      482070	[BYTE]
+  Total Data size:	      351220	[BYTE]
+  Total Lib  size:	      833290	[BYTE]
+
+  [cri_atom_pcx86D.lib]
+  Total Code size:	      931043	[BYTE]
+  Total Data size:	      498080	[BYTE]
+  Total Lib  size:	     1429123	[BYTE]
+
+3. System requirements/Testing environment
+This release has been developed and tested in the following environment:
+
+3.1 Hardware
+  CPU       : Intel Core i7-3770 (3.4GHz) 
+  Memory    : 8GB
+
+3.2 Development environment
+(1) OS
+  Microsoft Windows 10 Professional
+
+(2) Compiler / Debugger
+  Microsoft Visual Studio 2015 Update 3
+
+4. Revision history
+ [2019-05-17 CRI Atom Ver.2.19.03]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where audio which was muted using the Category mute function or solo function was played back
+      with an amplitude of about -96 dB, which results in audio still being audible depending on the playback device.
+  (b) Fixed a bug where Block end transition processing was performed early if the following conditions were met:
+      - The number of divisions is specified for the Block.
+      - The Block length (in ms) cannot be divided by the number of divisions.
+      - The criAtomExPlayer_SetSequencePrepareTime function is used for the playback player.
+  (c) Fixed a bug where illegal access may have occurred when accessing Selector Label information
+      when using ACF data output according to CRI Atom Craft Ver.3.40.00 to Ver.3.41.03.
+  (d) Fixed a bug where the delay (reverberation) was interrupted when using the following effects:
+      - delay
+      - echo
+      - Multi-tap delay
+  (e) Fixed a bug where the criAtom_GetAudioClient_WASAPI function returned uninitialized AudioClient.
+  (f) Fixed a bug where the load increased when entering denormalized numbers for the following effects:
+      - Biquad filter
+      - Bandpass filter
+      - 3-Band EQ
+      - 32-Band EQ
+  (g) Fixed a bug where an invalid argument error occurred when acquiring waveform information for WebGL ACB data.
+
+(2) Specification changes
+  (a) Removed the warning (W2019021901) when calling a deprecated function (criAtomEx3dListener_SetDistanceFactor).
+
+ [2019-02-28 CRI Atom Ver.2.19.00]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where all but the first AWB were being ignored,
+      when multiple AWB handles were used in stop processing and release confirmation processing
+      with ACB handle specification.
+  (b) Fixed a bug where the error E2017031600 occurred and library ending processing was not completed.
+  (c) Fixed a bug in which unauthorized access occurs within the cue playback processing,
+      when selector information necessary for cue playback does not exist in the ACF data.
+  (d) Fixed a bug where the subsequent action track was not played back
+      when a cue using multiple action tracks was playing,
+      if the search of the cue designated as the target of the action failed.
+  (e) Fixed a bug in which the sound controlled by the voice limit group did not operate
+      when the structure of the cue was not a sequence in playback using an ACB outputted
+      with CRI Atom Craft Ver.1.
+  (f) Fixed a bug where the bussend setting was not applied correctly
+      and there was a possibility of silent playback when using ACB outputted
+      with the CRI Atom Craft Ver.1.
+  (g) Fixed a bug where resume / pause actions for categories were not being applied.
+  (h) Fixed a bug where execution of the following functions failed for compressors
+      that do not use side chains:
+       - criAtomExAsrRack_GetCompressorRms
+       - criAtomExAsrRack_GetCompressorRmsByName
+  (i) Fixed a bug where the upper limit value of compressor attack time was different
+      from the upper limit value can be set by the CRI Atom Craft.
+       - 200[ms] -> 3000[ms]
+  (j) Fixed a bug where the transition (played) completed block processing was not performed properly
+      in block sequence playback using initial playback track during transition,
+      and block transition was occurring at unintended timings.
+  (k) Fixed a bug where the error E2018090601 occurred in the ACF registration process
+      and the work size calculation required for ACF registration failed
+      when the following conditions were satisfied:
+        - Not using category category cue items
+  (l) Fixed a bug where a cue whose playback was canceled
+      by the playback probability setting was counted in the played number
+      and the category cue limit processing was applied.
+  (m) Fixed a bug where the audio after a loop was not being played correctly
+      when seeking ADX audio data with an encrypted loop.
+       * Please apply the CRI Base Ver.2.45.06 or later version.
+  (n) Fixed a bug where reverb output differed between PCx64 environment and PCx86 environment.
+
+(2) Specification changes
+  (a) Changed the specification so that an error callback is returned when executing the following function,
+      if the coordinate value of the vector contains a nonnumeric (NaN):
+      - criAtomEx3dSource_SetPosition
+      - criAtomEx3dListener_SetPosition
+  (b) The following function has been deprecated:
+       - criAtomEx3dListener_SetDistanceFactor
+      Please consider using the following function instead:
+       - criAtomEx3dListener_SetDopplerMultiplier
+  (c) Changed the specification so that sound output by WASAPI is performed,
+      when library is initialized using criAtomEx_Initialize_PC function.
+      In previous versions, XAudio2 was used.
+  (d) The function related to XAudio2 audio output has been deleted.
+      Following this specification change, the following API can not be used:
+      - criAtomEx_CalculateWorkSize_XAUDIO2
+      - criAtomEx_Finalize_XAUDIO2
+      - criAtomEx_Initialize_XAUDIO2
+      - criAtom_CalculateWorkSize_XAUDIO2
+      - criAtom_Finalize_XAUDIO2
+      - criAtom_Initialize_XAUDIO2
+      - criAtom_IsCriticalErrorOccurred_XAUDIO2
+      - criAtom_SetOutputDeviceIndex_XAUDIO2
+      - criAtom_SetOutputVoice_XAUDIO2
+      - criAtom_SetSoundBufferSize_XAUDIO2
+      - criAtom_SetXAudio2Object_XAUDIO2
+
+      Note:
+      As this specification changes, applications using the criAtomEx_Initialize_XAUDIO2 function
+      need to correct the following code:
+      (1) Include cri_atom_wasapi.h instead of cri_atom_xaudio2.h
+      (2) Use criAtomEx_Initialize_WASAPI function instead of criAtomEx_Initialize_XAUDIO2.
+      (3) Use criAtomEx_Finalize_WASAPI function instead of criAtomEx_Finalize_XAUDIO2.
+      (4) Modify the code so that it does not call the deleted API.
+
+(3) New features
+  (a) Added a function to use different decryption keys for each ACB handle:
+      - criAtomExAcb_Decrypt
+      After loading the ACB file with the criAtomExAcb_LoadAcbFile function etc.,
+      it is possible to specify a different decryption key for each ACB handle
+      using criAtomExAcb_Decrypt function.
+  (b) Added an API that switches whether or not to apply the calculation results of
+      distance AISAC and angle AISAC when playing Pan3D type applied as pan type
+      by a player capable of 3D positioning calculation using CriAtomEx3dSourceHn or CriAtomEx3dListenerHn.
+
+      Note:
+      This function was added for compatibility with CRI Atom Ver.2.17.19 or earlier.
+      Behavioral differences by version are as follows:
+       - Ver.2.17.19 or earlier
+      Regardless of pan type, the calculation result of distance AISAC, angle AISAC was applied.
+       - Ver.2.17.20 or later
+      The calculation result of distance AISAC and angle AISAC is applied only
+      when pan type is 3D positioning.
+  (c) Added a function to register the playback event callback.
+      - criAtomExPlayer_SetPlaybackEventCallback
+      By registering the playback event callback, it becomes possible for applications to
+      grasp the timing of securing / releasing playback resources, assigning voices, and virtualization.
+  (d) Added a function to acquire setting of drive parameter of REACT.
+        - criAtomExCategory_SetReactParameter
+        - criAtomExCategory_GetReactParameter
+  (e) Added the following actions:
+       - Pause action with fade time
+       - Resume action with fade time
+       - Stop action with fade time
+  (f) Added a function to set the magnification of Doppler effect.
+       - criAtomEx3dListener_SetDopplerMultiplier
+  (g) Added functions to acquire the internal values of the compressor and the amplitude analyzer:
+       - criAtomExAsrRack_GetAmplitudeAnalyzerRms
+       - criAtomExAsrRack_GetAmplitudeAnalyzerRmsByName
+       - criAtomExAsrRack_GetCompressorGain
+       - criAtomExAsrRack_GetCompressorGainByName
+       - criAtomExAsrRack_GetCompressorRms
+       - criAtomExAsrRack_GetCompressorRmsByName
+
+(4) Optimisation
+  (a) Reduction of redundant calculation processing for unset parameters.
+  (b) It reduces the CPU load when producing a large number of sounds.
+
+ [2018-12-07 CRI Atom Ver.2.17.22]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the output destination ASR rack ID set
+      by the criAtomExPlayer_SetAsrRackId function etc. is not applied when the following conditions are met.
+      - Use cue link
+      - The output destination ASR rack ID is specified in the parameter link palette of the cue link source
+  (b) Fixed a bug where an exception might occur in the parameter application process.
+  (c) Fixed a bug where the playback time obtained by the criAtomExPlayer_GetTime function
+      does not start from the seek time, but advances from 0, when playing back seek.
+  (d) Fixed a bug where setting the "max_aisacs" of the CriAtomPlayerConfig to an odd number may cause an exception.
+  (e) Fixed a bug where caused an access violation when discarding an ASR rack during audio playback.
+  (f) Fixed a bug where the gain application process was not applied correctly
+      when the compressor or limiter's attack time or release time was set to 0.
+  (g) Fixed a bug where the CriAtomExPlayer did not transition to PLAYEND
+      when playback was performed using the insertion DSP pitch shifter.
+
+ [2018-10-30 CRI Atom Ver.2.17.21]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the error "E2011080599" would occur when releasing the ACB handle
+      and the process would terminate.
+  (b) Fixed a bug where a Cue with PanType set to Auto would forcibly become Pan3d at runtime.
+  (c) Fixed a bug where seeking was performed for one frame at the maximum rate even
+      when the Block's transition division was not enabled.
+  (d) Fixed a bug where the AtomExPlayer status might not transition to PLAYEND
+      when playing back audio at a rate lower than the ASR output sampling rate.
+  (e) Fixed a bug where the output gain would fade-in from the level before silent input
+      when a signal is applied again (using the compressor or limiter effect of the DSP Bus).
+  (f) Fixed a bug where the number of samples obtained by the functions listed below would rewind
+      when the following conditions were satisfied:
+      Conditions:
+        - Sequence end marker or Block is set in the Cue.
+        - The seek time is set by the criAtomExPlayer_SetStartTime function.
+        - Sequence end or Block transition occurs.
+      Corresponding functions:
+        - criAtomExPlayback_GetNumPlayedSamples()
+        - criAtomPlayer_GetNumPlayedSample()
+
+ [2018-09-26 CRI Atom Ver.2.17.20]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where transition timing correction by server interval was not included
+      at block transition in block sequence playback.
+  (b) Fixed a bug where the following functions, that acquire various parameters
+      by designating the playback ID, would fail if the playback ID status was not set,
+      even during the PREP / PLAYING state.
+      - criAtomExPlayback_GetParameterFloat32
+      - criAtomExPlayback_GetParameterUint32
+      - criAtomExPlayback_GetParameterSint32
+      - criAtomExPlayback_GetAisacById
+      - criAtomExPlayback_GetAisacByName
+  (c) Fixed a bug where inconsistencies in work size calculation may have occured
+      when AISAC count was set to a value other than 8.
+  (d) Fixed a bug where an infinite loop occurred in server process,
+      when the in-game preview was performed without attaching AWB to ACB using stream AWB.
+  (e) Fixed a bug where distance attenuation AISAC could not be applied by voice playback using Cue link.
+  (f) Fixed a bug where the padding area was used as a work area,
+      when initializing the Cue limit work area category in the ACF data.
+  (g) Fixed a bug where pre-delay and attack were started at the same time
+      when pre-delay and envelope attack were used at the same time.
+      The correct behavior is that the attack starts after the pre-delay is completed.
+
+(2) Specification changes
+  (a) The following APIs have been deprecated. Please refrain from using.
+      - criAtomEx_SetDefaultConfigForAcf
+      - CriAtomExAcfConfig
+      - criAtomEx_CalculateWorkSizeForRegisterAcfConfig
+      - criAtomEx_RegisterAcfConfig
+
+(3) New features
+  (a) Added a function to get the start / end information of ACB data and ACF data
+      from the authoring tool update process, when executing in-game preview using the Atom Monitor Library.
+      - criAtomExMonitor_SetDataUpdateNotificationCallback
+  (b) Added a function that can specify multiple ASR rack IDs for player.
+      - criAtomExPlayer_SetAsrRackIdArray
+      Note:
+      The maximum number of ASR racks that can be set for one player is defined in the following macro constant.
+      - CRIATOMEXPLAYER_MAX_ASR_RACKS
+  (c) Added functions to acquire the coordinate value from the CriAtomEx3dSourcHn or the CriAtomEx3dListenerHn.
+      - criAtomEx3dSource_GetPosition
+      - criAtomEx3dListener_GetPosition
+  (d) The maximum number of AISAC that can be associated with one Cue can now be changed.
+      (Previously it was fixed with 8 pieces.)
+      To change the maximum number of AISAC, change the value of "max_aisacs"
+      which is a member variable of the CriAtomExConfig structure.
+      The maximum value that can be specified is less than CRIATOMPARAMETER2_MAX_NUM_AISACS.
+  (e) Added functions to reset all AISAC control values of arbitrary category to default value.
+      - criAtomExCategory_ResetAllAisacControlById
+      - criAtomExCategory_ResetAllAisacControlByName
+  (f) Added functions to acquire the current value of arbitrary category AISAC control.
+      - criAtomExCategory_GetCurrentAisacControlValueById
+      - criAtomExCategory_GetCurrentAisacControlValueByName
+  (g) Added types of AISAC information that can be acquired by the following function.
+      - criAtomExPlayer_GetAttachedAisacInfo
+      - criAtomExCategory_GetAttachedAisacInfoById
+      - criAtomExCategory_GetAttachedAisacInfoByName
+
+      AISAC information list
+      - AISAC Name
+      - Whether the default control value is set (new)
+      - Default AISAC control value (new)
+      - Control ID (new)
+      - Control Name (new)
+  (h) Added an API to set the player's pre-delay time.
+      - criAtomExPlayer_SetPreDelayTime
+  (i) Added an API to acquire beat synchronization information from the playing Cue.
+      - criAtomExPlayback_GetBeatSyncInfo
+  (j) The following member variables were added to the CriAtomExBeatSyncInfo structure:
+      - bpm
+      - beat_progress
+  (k) Added a function to maintain the split position at split transition in block playback.
+  (l) Added Pose and Resume actions.
+  (m) Added the start block number specification to the Start Action.
+  (n) Added the default Selector Label to Cue.
+  (o) Added the following API to add offset value to data set value of MixDownCenter volume and MixDownLFE volume.
+      - criAtomExPlayer_AddMixDownCenterVolumeOffset
+      - criAtomExPlayer_AddMixDownLFEVolumeOffset
+  (p) Added an Effect "Headphone Virtual Surround".
+  (q) Added a function to receive notifications by callback when the sound device is updated.
+      - criAtom_SetDeviceUpdateCallback_WASAPI
+
+ [2018-07-25 CRI Atom Ver.2.16.27]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the playback time that can be acquired 
+      by the criAtomExPlayback_GetTimeSyncedWithAudio would advance even while paused.
+  (b) Fixed a bug where a memory allocator was mandatory for 
+      the criAtomEx_CalculateWorkSizeForRegisterAcfFile work size area calculation.
+  (c) Fixed a bug where an unintentional error sometimes occured 
+      when playing sound with "Ignore AtomExPlayer parameters" set to "true" by CRI Atom Craft.
+  (d) Fixed a bug where playback start processing was not processed correctly
+      when the track transition and playback start synchronization processing was registered
+      by the track transition type: "Cue playback by the Selector".
+  (e) Fixed a bug where the Selector setting switched by an Action of the track transition type:
+      "Cue playback by the Selector", was invalidated by applying parameter update processing to the player.
+  (f) Fixed a bug where ACF data is not registered when the following conditions are satisfied.
+      - Executing the following functions
+        - criAtomEx_RegisterAcfData
+        - criatomEx_RegisterAcfFile
+      - Executing the following functions after executing the above functions
+        - criAtomEx_CalculateWorkSizeForRegisterAcfData
+        - criAtomEx_CalculateWorkSizeForRegisterAcfFile
+      * It occurred from CRI Atom Ver.2.16.18
+  (g) Fixed a bug where the result of the amplitude analyzer was no longer interlocked 
+      if the compressor / limiter effect was driven by the side chain, and a snapshot was applied.
+
+ [2018-06-11 CRI Atom Ver.2.16.26]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the playback sound becomes silent if a reset of the bussend
+      is triggered and the Bus Send is not set for playback data.
+      * Notes
+      A bussend reset is triggered by the following function calls:
+      criAtomEx_AttachDspBusSetting(), criAtomExAsr_AttachDspBusSetting()
+  (b) Fixed a problem where silence occurs while playing under conditions
+      (A), (B), and (C) when using the Atom library.
+  (c) Fixed a problem where silence occurs while playing under conditions
+      "(A), (B), and (C)" or "(A), (B), and (D)" when using the Atom Monitor library.
+        (A) Using ACB data created by one of the following tools
+            - CriAtomEncoder.exe
+            - criatomencd.exe
+        (B) Executing one of the following functions to set a bussend other than "MasterOut"
+            - criAtomExPlayer_SetBusSendLevel
+            - criAtomExPlayer_SetBusSendLevelByName
+        (C) Executing one of the following functions during playback
+            - criAtomEx_AttachDspBusSetting
+            - criAtomEx_DetachDspBusSetting
+        (D) Executing one of the following functions to update the playback parameters
+            - criAtomExPlayer_Update
+            - criAtomExParameter_UpdateAll
+  (d) Fixed a problem where DspBusSetting may not have been automatically attached
+      when the Acf file was registered.
+  (e) Fixed a bug where the name of an AISAC control could not be acquired even when
+      specifying the ID of an AISAC control included in the ACF data when calling
+      the criAtomExAcf_GetAisacControlNameById function.
+  (f) Fixed a bug where the interpretation of the parameters of the surrounder was not 
+      performed correctly for an ACF created with the following versions of CRI AtomCraft:
+       - AtomCraft Ver.2.32.00 - Ver.2.35.00
+       - AtomCraft Ver.3.34.00 - Ver.3.35.01
+  (g) Fixed a bug where errors E2017020301 and E2017041802 occurred
+      when calculating an AdmPlayer's work size.
+  (h) Fixed a bug where the bus output was silent when using a pitch shifter effect
+      on a bus, if the pitch was set to a value larger than half of the sampling rate.
+  (i) Fixed a bug where a triggered REACT object would not return when:
+      - Attaching a fader to a player
+      - and the "Including cue during pause" REACT setting was set to off
+  (j) Fixed a bug where a triggered REACT object would not return when:
+      - Executing the criAtomExPlayer_Prepare function or Pause function and
+        the player or playback object was in preparation state (PREP)
+      - and the Pause release and Stop functions were executed within the same frame
+  (k) Fixed a bug where a lowered voice priority returned to its original value
+      when the parameter update was applied to the voice during the envelope release (while processing a stop).
+  (l) Fixed a bug that could cause an unauthorized access
+      when a cue waiting to be started due to beat synchronization was canceled
+      by cue limiting etc. at the start of playback.
+  (m) Fixed a problem where cue limiting was not applied after canceling prepare.
+  (n) Fixed a problem where the time acquired via the audio synchronization timer
+      greatly shifted from the actual timing of the audio when the output was blocked for a long time
+      due to plugging in / out earphones during playback.
+  (o) Fixed a bug where if switch type cue is set to playlist mode and playback is performed,
+      switch processing is not performed at the second and subsequent list playback, resulting in silence.
+  (p) Fixed a bug where the output destination ASR rack ID specified
+      in the data was not applied when the criAtomExPlayer_ResetParameters function
+      was being executed for the player
+  (q) Fixed a bug where cue playback was performed as many times as the number of ASR rack IDs set
+      in the parameter palette using the ASR rack ID when:
+      - the ASR rack ID was specified for the player by the criAtomExPlayer_SetAsrRackId function
+      - In the parameter palette, a cue specifying many ASR rack IDs was played back by the player
+      * Notes
+      Originally, it was assumed that the cue playback was performed only for
+      the ASR rack ID specified by the criAtomExPlayer_SetAsrRackId function.
+  (r) Fixed a problem where the APIs specifying a bus name triggered an error callback
+      and processing was not completed under the following conditions:
+       - Multiple ASR racks were used
+       - The DSP bus setting was attached to the default ASR rack 
+       - The DSP bus setting was not attached to any other ASR rack
+  (s) Fixed a bug where the output was directly sent to MasterOut, ignoring Bus Send settings, when:
+      - Setting the bussend for a player or data
+      - Specifying an ASR rack ID that does not exist for the player or data
+
+ [2018-03-08 CRI Atom Ver.2.16.22]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where E2010110100 occurs when React number is set more than
+      Category number in ACF data.
+  (b) Fixed a bug where the memory area of ASR and HcaMX was doubly secured
+      when initializing using the user allocator in AtomEx library initialization processing.
+  (c) Fixed a bug where extra memory area was secured by the criAtomEx_RegisterAcfFile function.
+  (d) Fixed a bug where extra memory area was secured by
+      the criAtomEx_CalculateWorkSizeForRegisterAcfData function.
+  (e) Fixed a bug where access exception occurs when executing processing to access
+      ACF data after the criAtomEx_RegisterAcfConfig function execution.
+      Remarks:
+      The criAtomEx_RegisterAcfConfig function will be abolished at SDK Ver.2.18.00.
+  (f) Fixed a bug where the game variable information is initialized
+      when ACF data update processing accompanying editing of ACF data information on
+      the authoring tool is performed during in-game preview.
+  (g) Fixed a bug where ACB data created using the following tools
+      when using the monitor library becomes silent playback.
+      - CriAtomEncoder.exe
+      - criatomencd.exe
+
+(2) Specification changes
+  (a) When executing the following function, the behavior was changed so that
+      dynamic memory allocation by the new operator does not occur in the library.
+      - criAtomEx_CalculateWorkSize_WASAPI
+      - criAtomEx_Initialize_WASAPI
+
+ [2018-01-31 CRI Atom Ver.2.16.20]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the playback rate set 
+      for a block sequence was cleared at when the block was looping.
+  (b) Fixed a bug where the first track was always played first
+      when playing a Cue of type Random No Repeat after loading the ACB data.
+  (c) Fixed a bug where the management of the bus names in the MasterOut bus failed
+      when the following conditions occurred:
+      - The ACF is registered by passing it in the work area.
+      - The DSP bus setting not attached.
+  (d) Fixed a bug where CRI Atom Craft did not update the ACF data during
+      the start-up of a second (and subsequent) in-game preview.
+  (e) Fixed a bug where sounds to be played on a rack ID other than
+      "0" were played without going through the intended bus when the following conditions were met:
+      - Multiple ASR racks are used, and the DSP bus setting is applied to each.
+      - The order of the bus names of the DSP bus settings set for each rack is different.
+      - The API is used to reference a rack ID different from "0".
+      - Playback on another rack ID than "0" is done on multiple buses
+        instead of using a direct output to the MasterOut bus.
+
+(2) Specification changes
+  (a) Changed the specifications so that it is not required anymore to release of all the ACB handles
+      to release the ACF data, allowing for it to be released at any time.
+      Consequently, the following points have been changed:
+      - Allocation of  the work area for a category or a REACT is now done at the time
+        of the ACF registration not at initialization,
+        when initializing the library using a user allocator.
+        If the library is initialized with its own work area,
+        the ACF registration will be performed using the area specified like before.
+      - When the ACF registration functions (criAtomEx_RegisterAcfConfig, criAtomEx_RegisterAcfData,
+        criAtomEx_RegisterAcfFile, criAtomEx_RegisterAcfFileById) are executed,
+        all sounds being played are stopped.
+      - When the ACF unregistration function (criAtomEx_UnregisterAcf) is executed,
+        all the sounds being played are stopped and the parameters set for the players are partially reset.
+        Please reset the playback parameters as necessary.
+      - If an ACF having more than the maximum number of buses allowed is 
+        specified at the time of the ASR initialization
+        while securing a fixed work area and initializing the library, the registration will fail.
+        (Up to now, the registration succeeded but the application of the bus settings failed.)
+      - In order to read the ACF file when using the criAtomEx_CalculateWorkSizeForRegisterAcfFile function,
+        registration of the user allocator has become mandatory.
+  (b) With the addition of a new function to the communication interface between the tool and the library,
+      backward compatibility regarding the connection has been lost.
+      To use the in-game preview and profiler using the CRI Atom Craft version of this SDK,
+      you need CRI Atom Library Ver.2.16.18 or higher.
+  (c) When a "pitch upper limit violation" warning occurs,
+      the behavior has been changed to send the address of the CriAtomPlayerHn
+      on which an issue occurred in the last argument of the callback.
+      - W2010110801
+      - W2015113001
+  (d) Changed the specification so that the sound being played will not stop
+      when the criAtomExSoundObject_AddPlayer function is executed with the following condition being satisfied:
+      - The specified sound object and AtomEx player are already associated.
+
+(3) New features
+  (a) Added a function to acquire which track from a Cue is being played.
+      - criAtomExPlayback_GetPlaybackTrackInfo
+  (b) Added the ability to enumerate audio endpoints.
+      - criAtom_EnumAudioEndpoints_WASAPI
+  (c) Sound devices can now be explicitly assigned to the devices from CRIATOM_SOUND_RENDERER_HW1 to CRIATOM_SOUND_RENDERER_HW4
+       by ID specification.
+      - criAtom_SetDeviceId_WASAPI
+      Please obtain the ID of the sound device by calling IMMDevice::GetId.
+
+ [2017-12-19 CRI Atom Ver.2.15.18]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where error call back occurs
+      when the following conditions are satisfied when using monitor library.
+      - Performing library initialization with the number of buses of the CriAtomExConfig (num_buses) less than 8
+  (b) Fixed a bug where routing to the bus which is not set is performed when the following conditions are satisfied.
+      - Playback in the situation where there is no ASR rack ID set in the cue (or set in the player).
+      - Sending to a bus that does not exist in the DSP bus setting being applied is set with rack ID = 0.
+      - The name of the bus that does not exist is the 2nd to 8th in the bus name list in the ACF.
+  (c) Fixed a bug where the value specified by the following function is not applied to the player.
+      - criAtomExPlayer_SetVoicePoolIdentifier
+      - criAtomExPlayer_SetHcaMxMixerId
+  (d) Fixed a bug when executing "Start" and "Pause canceled" in the same frame,
+      within for REACT control became illegal, and the driven REACT did not return.
+  (e) Fixed a bug that silence occurs during playback when the following conditions
+      are satisfied when using the preview library and monitor library.
+      - The type of the playback source is other than cue playback
+      - Bus routing setting not set as source
+  (f) Fixed a bug where access violation occurred when data specifying
+      "key generated automatically for each cue sheet" and data specifying "encryption key set in project" are mixed.
+  (g) Fixed a bug where applies the parameters at the time of sounding rather than the parameters
+      that were set when executing the criAtomExPlayer_Start function when applying some parameters of the Ex player.
+      The target parameters are as follows:
+      - ASR Rack ID
+      - Voice pool identifier
+      - HCA-MX decode target mixer ID
+  (h) Fixed a bug in which cue playback containing categories of action tracks applied
+      the parameters of the Ex player at the time of sounding when cue playback by action occurred.
+  (i) Fixed a bug where calling a criAtomEx_CalculateWorkSizeForDspBusSettingFromAcfData function
+      before ASR module initialization can not calculate work size correctly.
+  (j) Fixed a bug where failed preview when using a bus containing effect plug-in during in-game preview.
+  (k) Fixed a bug that illegal output to MasterOut would occur in cue playback
+      that matched the following conditions in the preview library and monitor library.
+      - The send destination bus of the cue does not exist in the DSP bus setting being applied.
+      - Output setting to the MasterOut bus of the cue is other than 1.0.
+      - Apply update of parameters during cue playback.
+
+ [2017-10-06 CRI Atom Ver.2.15.14]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a bug where the synchronization position was detected even
+      at the position before the first beat synchronization information set in the cue.
+  (b) Fixed a bug where unauthorized access occurred when executing
+      the action if releasing the ACB handle targeted for the action track in the cue being played back.
+  (c) Fixed a bug where the global reference function of the selector label
+      was not working in cue playback of polyphonic type and track transition type.
+  (d) Fixed a bug where references to global labels would be made in speech control using selector labels,
+      despite selector settings for players being done.
+  (e) Fixed a bug where the global label reference function is not working against
+      the playback of the track transition type cue.
+  (f) Fixed a bug where parameters are not reflected in the effect
+      when detaching the DSP bus setting including the VST plugin
+      during preview and then attaching again.
+  (g) Fixed a bug where user-defined effect interface could not be acquired
+      when ACF including user-defined effect was registered on the actual machine.
+  (h) Fixed a bug where the access exception occurs when the following conditions are satisfied and using WASAPI:
+      - ASR is 5.1ch and the device output channel is 7.1ch
+
+(2) Specification changes
+  (a) The argument of the function to unregister the effect interface has been changed
+      to the pointer to the interface.
+
+(3) New features
+  (a) Added a function to register a callback function to be called
+      at the synchronous position detection timing when playing back a cue
+      for which beat synchronization information is set.
+      - criAtomExBeatSync_SetCallback
+  (b) Added a function to register a callback function to notify playback track information.
+      - criAtomExPlayer_SetPlaybackTrackInfoNotificationCallback
+  (c) Added the functions to register / unregister interface of effect implemented for CriAudioEffect module.
+      - criAtomExAsr_RegisterEffectInterface
+      - criAtomExAsr_UnregisterEffectInterface
+  (d) Added a constant macro that the number of effects that the user can register.
+      - CRIATOMEXASR_MAX_NUM_USER_EFFECT_INTERFACES
+
+ [2017-08-02 CRI Atom Ver.2.14.35]------------------------------------------
+(1) Bug fixes
+  (a) Fixed an infinite loop and AtomEx not being terminated normally
+      when the criAtomEx_Finalize function was called without discarding CriAtomExPlayerHn
+      with CriAtomEx3dSourceHn set.
+  (b) Fixed a bug where CriAtomExPlayback_GetTimeSyncedWithAudio returned 0
+      instead of a negative value when there was no playback.
+  (c) Fixed a bug where the fade-out was not done properly when stopping a Player attached to a Fader.
+  (d) Fixed a bug where no error occurred when discarding CriAtomEx3dSourceHn
+      before CriAtomExPlayerHn if the playback of a Cue link using 3D positioning was performed.
+  (e) Fixed a bug whith ASR bus effects using 7 or 8 channels for input/output, such as the I3DL2 reverb: noise
+      was sent to the 7th and 8th output channels.
+  (f) Fixed a bug where the effect parameters became undefined when applying a snapshot, if the ACF didn't have an effect name,
+      such as a band-pass filter, on an ASR effect bus.
+
+(2) New features
+  (a) Added a function to set a callback to be triggered each time the volume or the pitch of an Atom player is changed.
+      - criAtomPlayer_SetParameterChangeCallback
+  (b) Added a function to obtain the name of the DSP bus snapshot applied to an ASR rack.
+      - criAtomExAsrRack_GetAppliedDspBusSnapshotName
+
+ [2017-06-30 CRI Atom Ver.2.14.29]------------------------------------------
+(1) Bug fixes
+  (a) Fixed an unauthorized access occurring while attaching the DSP bus setting
+      under the following conditions:
+      - There is only one DSP bus setting in the ACF.
+      - There is only one bus in the DSP bus configuration.
+      - There is a snapshot of the DSP bus setting.
+  (b) Fixed a bug where the value of CriAtomExHcaMxConfig::server_frequency was checked even
+       though HCA - MX was not used.
+  (c) Fixed a warning (W2016030701) occuring when initializing the library
+      under the following conditions:
+      - CriAtomAcfConfig is set to CriAtomExConfig.
+      - CriFsConfig is set to CriAtomExConfig.
+      - FileSystem2 is not initialized.
+  (d) Fixed a leak of internal resources used for action control when playing a Cue including TrackMute action.
+  (e) Fixed a bug that failed to generate a time stretch
+      when attaching it to the voice pool by passing a work area.
+  (f) Fixed an unauthorized access that occurred within stop processing
+      if the synchronization source cue was immediately stopped in
+      the presence of the synchronization wait cue during beat synchronization playback.
+  (g) Fixed a problem where a parameter change on a playing sound was being invalidated
+      by the source block during a block transition.
+  (h) Fixed a problem in which a sound was played back using the parameters set immediately after the
+      criAtomExPlayer_Start function was called instead of the initial parameters.    	
+      This applies to the following functions: 		
+      - ASR rack ID (criAtomExPlayer_SetAsrRackId)
+      - HCA decode target mixer ID (criAtomExPlayer_SetHcaMxMixerId)
+      - Voice pool identifier (criAtomExPlayer_SetVoicePoolIdentifier)
+      - Sound renderer type (criAtomExPlayer_SetSoundRendererType)
+  (i) Fixed an issue where the playback time obtained from criAtomExPlayback_GetTimeSyncedWithAudio
+      drifted away from the actual playing time when server processing was not executed for a long time.
+  (j) Fixed a problem where the playback frequency of the final track may be higher
+      for cues of type random / random no repeat.
+      * If this is the case, rebuild the ACB data in AtomCraft Ver.2.30.00 or later.
+  (k) Fixed a problem where the distance attenuation was not working
+      when the default control value was set for the distance attenuation AISAC.
+  (l) Fixed area corruption and parameters not being saved
+      when backing up DSP parameters acquired from an ACF using previous versions of CriUDsp.
+  (m) Fixed a bug where chained delay effects (delay, echo, multi tap delay) on an ASR bus. 
+      The original sound was played back when the bus send level was changed from a non-zero value to 0.
+  (n) Fixed a problem where the functions to get and set the maximum bus number
+      of the ACF were not implemented in the ASR initialization of the ACF-based library initialization.
+  (o) Fixed a problem where an ACF update request was made to AtomCraft by the monitor library 
+      even when the ACF data registered for in-game preview was not actually built for in-game preview.
+
+(2) Specification changes
+  (a) Changed the type of the third argument of the criAtomEx_GetAcfVersion function
+      from a void pointer to a CriBool pointer.
+  (b) criAtomEx3dSource_SetConeOrientation is now a deprecated function and
+      a new criAtomEx3dSource_SetOrientation function has been added.
+  (c) We have deprecated the functions declared in cri_atom_asr.h,
+      that take an enumeration type for the effect as an argument.
+  (d) cri_atom_asr.h comments were corrected.
+      - "DSP"     -> "effect"
+      - "DSP bus" -> "bus"
+  (e) Functions that specify a bus number have been deprecated.
+      Please use the equivalent function that specifies the bus name (i.e. having "ByName" at the end of the function name).
+      - criAtomExAsr_SetBusVolume
+      - criAtomExAsr_GetBusVolume
+      - criAtomExAsr_SetBusPan3d
+      - criAtomExAsr_GetBusPan3d
+      - criAtomExAsr_SetBusMatrix
+      - criAtomExAsr_SetBusSendLevel
+      - criAtomExAsr_AttachBusAnalyzer
+      - criAtomExAsr_DetachBusAnalyzer
+      - criAtomExAsr_GetBusAnalyzerInfo
+      - criAtomExAsr_SetBusFilterCallback
+      - criAtomExAsrRack_SetBusVolume
+      - criAtomExAsrRack_GetBusVolume
+      - criAtomExAsrRack_SetBusPan3d
+      - criAtomExAsrRack_GetBusPan3d
+      - criAtomExAsrRack_SetBusMatrix
+      - criAtomExAsrRack_SetBusSendLevel
+      - criAtomExAsrRack_AttachBusAnalyzer
+      - criAtomExAsrRack_DetachBusAnalyzer
+      - criAtomExAsrRack_GetBusAnalyzerInfo
+      - criAtomExAsrRack_SetBusFilterCallback
+  (f) The following macro definition has been deprecated. Please use CRIATOMEXASR_DEFAULT_NUM_BUSES instead.
+      - CRIATOMEXASR_DEFAULT_NUM_BASES
+  (g) When using WASAPI for audio output, if the default playback device is changed during the application,
+      the change is now detected and the audio output destination is automatically updated.
+      This fix removes the need to reinitialize the library even if
+      the user removes or inserts the device during the startup of the application.
+
+(3) New features
+  (a) Within the 3D positioning feature, we implemented a "Multi Positioning Play" which takes multiple
+      3D sound source positions and sound cones etc. into consideration.
+      - criAtomExPlayer_Set3dSourceListHn
+      - criAtomEx3dSourceList_CalculateWorkSize
+      - criAtomEx3dSourceList_Create
+      - criAtomEx3dSourceList_Destroy
+      - criAtomEx3dSourceList_Add
+      - criAtomEx3dSourceList_Remove
+      - criAtomEx3dSourceList_RemoveAll
+  (b) Added functions to stop playing cues from a given category.
+      - criAtomExCategory_StopById
+      - criAtomExCategory_StopByName
+      - criAtomExCategory_StopWithReleaseTimeById
+      - criAtomExCategory_StopWithReleaseTimeByName
+  (c) Added a function to get the playback time synchronized with the voice (in microseconds).
+      - criAtomExPlayback_GetTimeSyncedWithAudioMicro
+  (d) Added a function for the playback of link cue in an ACB.
+  (e) Supported playback with multiple RACK specified in an ACB.
+  (f) Added a global label setting function which is referred to when the player has no selector label set.
+      - criAtomExAcf_SetGlobalLabelToSelectorByIndex
+      - criAtomExAcf_SetGlobalLabelToSelectorByName
+  (g) Added an external public function to get the current DSP bus snapshot being applied.
+      - criAtomEx_GetAppliedDspBusSnapshotName
+  (h) Added a function to set the interior pan.
+      - criAtomEx3dSource_SetInteriorPanField
+      - criAtomEx3dSource_ChangeDefaultInteriorPanField
+  (i) Added functions to get and set effect parameters by name.
+      - criAtomExAsr_SetEffectParameter
+      - criAtomExAsrRack_SetEffectParameter
+      - criAtomExAsr_GetEffectParameter
+      - criAtomExAsrRack_GetEffectParameter
+  (j) Added a function to update the effect parameters.
+      - criAtomExAsr_UpdateEffectParameters
+      - criAtomExAsrRack_UpdateEffectParameters
+  (k) Added a function to get a DSP name from an ACF.
+      - criAtomExAcf_GetDspFxName
+
+ [2017-01-10 CRI Atom Ver.2.12.01]------------------------------------------
+The first release of the CRI Atom Library for PC.
+
+-END-
+
+/*--< end of file >---------------------------------------------------------*/

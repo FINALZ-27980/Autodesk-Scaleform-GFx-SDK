@@ -28,12 +28,6 @@ namespace Scaleform { namespace GFx { namespace AS3
 //##protect##"methods"
 //##protect##"methods"
 
-// Values of default arguments.
-namespace Impl
-{
-
-} // namespace Impl
-
 namespace Instances { namespace fl_sampler
 {
     DeleteObjectSample::DeleteObjectSample(InstanceTraits::Traits& t)
@@ -62,11 +56,10 @@ namespace InstanceTraits { namespace fl_sampler
 
 
     DeleteObjectSample::DeleteObjectSample(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl_sampler::Sample(vm, ci)
     {
 //##protect##"InstanceTraits::DeleteObjectSample::DeleteObjectSample()"
 //##protect##"InstanceTraits::DeleteObjectSample::DeleteObjectSample()"
-        SetMemSize(sizeof(Instances::fl_sampler::DeleteObjectSample));
 
     }
 
@@ -83,24 +76,27 @@ namespace InstanceTraits { namespace fl_sampler
 
 namespace ClassTraits { namespace fl_sampler
 {
-    DeleteObjectSample::DeleteObjectSample(VM& vm)
-    : Traits(vm, AS3::fl_sampler::DeleteObjectSampleCI)
+
+    DeleteObjectSample::DeleteObjectSample(VM& vm, const ClassInfo& ci)
+    : fl_sampler::Sample(vm, ci)
     {
 //##protect##"ClassTraits::DeleteObjectSample::DeleteObjectSample()"
 //##protect##"ClassTraits::DeleteObjectSample::DeleteObjectSample()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl_sampler::DeleteObjectSample(vm, AS3::fl_sampler::DeleteObjectSampleCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Class(*this));
 
     }
 
     Pickable<Traits> DeleteObjectSample::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) DeleteObjectSample(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) DeleteObjectSample(vm, AS3::fl_sampler::DeleteObjectSampleCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_sampler::DeleteObjectSampleCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -111,6 +107,11 @@ namespace fl_sampler
 {
     const TypeInfo DeleteObjectSampleTI = {
         TypeInfo::CompileTime | TypeInfo::Final | TypeInfo::NotImplemented,
+        sizeof(ClassTraits::fl_sampler::DeleteObjectSample::InstanceType),
+        0,
+        0,
+        0,
+        InstanceTraits::fl_sampler::DeleteObjectSample::MemberInfoNum,
         "DeleteObjectSample", "flash.sampler", &fl_sampler::SampleTI,
         TypeInfo::None
     };
@@ -118,10 +119,6 @@ namespace fl_sampler
     const ClassInfo DeleteObjectSampleCI = {
         &DeleteObjectSampleTI,
         ClassTraits::fl_sampler::DeleteObjectSample::MakeClassTraits,
-        0,
-        0,
-        0,
-        InstanceTraits::fl_sampler::DeleteObjectSample::MemberInfoNum,
         NULL,
         NULL,
         NULL,

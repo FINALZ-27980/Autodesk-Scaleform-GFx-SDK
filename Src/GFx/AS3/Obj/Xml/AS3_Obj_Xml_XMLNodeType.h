@@ -52,7 +52,7 @@ namespace Classes { namespace fl_xml
     
 namespace ClassTraits { namespace fl_xml
 {
-    class XMLNodeType : public Traits
+    class XMLNodeType : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_xml
 #endif
     public:
         typedef Classes::fl_xml::XMLNodeType ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        XMLNodeType(VM& vm);
+        XMLNodeType(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

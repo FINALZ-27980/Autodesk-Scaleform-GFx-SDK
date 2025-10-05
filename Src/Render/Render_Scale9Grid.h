@@ -32,7 +32,7 @@ namespace Scaleform { namespace Render {
 struct Scale9GridData;
 
 //------------------------------------------------------------------------
-struct Scale9GridRect : public RefCountBase<Scale9GridRect, Stat_Default_Mem>
+struct Scale9GridRect : public RefCountBase<Scale9GridRect, StatRender_TreeCache_Mem>
 {
     RectF Scale9;
 };
@@ -40,7 +40,7 @@ struct Scale9GridRect : public RefCountBase<Scale9GridRect, Stat_Default_Mem>
 
 
 //------------------------------------------------------------------------
-struct Scale9GridInfo : public RefCountBase<Scale9GridInfo, Stat_Default_Mem>
+struct Scale9GridInfo : public RefCountBase<Scale9GridInfo, StatRender_TreeCache_Mem>
 {
     RectF               Scale9;
     Matrix2F            S9gMatrix;

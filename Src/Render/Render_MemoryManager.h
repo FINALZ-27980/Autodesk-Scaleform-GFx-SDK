@@ -52,10 +52,21 @@ enum MemoryType
 
     Memory_Wii_MEM1             = 0x5000,
 
-    // The ORBIS memory regions are only available in non-final hardware.
-    Memory_Orbis_PrivateVideo   = 0x6000,
-    Memory_Orbis_SharedVideo    = 0x6001,
-    Memory_Orbis_SharedSystem   = 0x6002,
+    Memory_Orbis_Start          = 0x6000,
+
+    Memory_Orbis_WB_ONION_VOLATILE = Memory_Orbis_Start,    // Volatile/Nonvolatile are for 0.915 and below.
+    Memory_Orbis_WB_ONION_NONVOLATILE,
+    Memory_Orbis_WC_GARLIC_VOLATILE,
+    Memory_Orbis_WC_GARLIC_NONVOLATILE,
+    Memory_Orbis_WT_ONION_VOLATILE,
+    Memory_Orbis_WT_ONION_NONVOLATILE,
+    Memory_Orbis_WP_ONION_VOLATILE,
+    Memory_Orbis_WP_ONION_NONVOLATILE,
+    Memory_Orbis_UC_GARLIC_VOLATILE,
+    Memory_Orbis_UC_GARLIC_NONVOLATILE,
+
+    Memory_Orbis_WB_ONION,                                     // For 0.920 and above.
+    Memory_Orbis_WC_GARLIC,
 };
 
 // ***** MemoryManager

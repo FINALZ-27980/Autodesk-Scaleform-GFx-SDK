@@ -52,17 +52,19 @@ namespace Classes { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class ShaderData : public Traits
+    class ShaderData : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ShaderData"; }
 #endif
     public:
-        typedef Classes::fl_display::ShaderData ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ShaderData(VM& vm);
+        ShaderData(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

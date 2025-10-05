@@ -111,6 +111,7 @@ class ShaderManager : public StaticShaderManager<ShaderDesc, VertexShaderDesc, U
 public:
     typedef StaticShaderManager<ShaderDesc, VertexShaderDesc, Uniform, ShaderInterface, Texture> Base;
     typedef Uniform UniformType;
+    typedef ShaderDesc ShaderDescType;
 
     ShaderManager(ProfileViews* prof) : 
         StaticShaderManager(prof), pDevice(0), 
@@ -118,8 +119,9 @@ public:
             ShaderModel(ShaderDesc::ShaderVersion_Default) { }
 
     // *** StaticShaderManager
-    bool    HasInstancingSupport() const;
-    bool    HasDynamicLoopingSupport() const;
+    virtual ShaderDesc::ShaderVersion  GetShaderVersion() const { return ShaderModel; }
+    bool                               HasInstancingSupport() const;
+    bool                               HasDynamicLoopingSupport() const;
 
     // D3D9 Specific.
 

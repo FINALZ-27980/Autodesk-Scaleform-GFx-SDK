@@ -346,6 +346,9 @@ public:
     virtual void  GetValueUnsafe(UInt32 ind, Value& v) const { v.AssignUnsafe(ValueA[ind]); }
 
     ///
+    const T& Get(UInt32 ind) const { return ValueA[ind]; }
+
+    ///
     T GetDefaultValue() const
     {
         return T();
@@ -438,6 +441,12 @@ public:
 
         SetUnsafe(ind, r);
         return true;
+    }
+
+    ///
+    void SetUnsafeT(UInt32 ind, const T& v)
+    {
+        ValueA[ind] = v;
     }
 
     //
@@ -642,36 +651,23 @@ public:
     }
 
     template <class I>
-    void Sort(Value& result, unsigned argc, const Value* const argv, I& currObj)
+    void Sort(SPtr<I>& result, const Value& arg, I& currObj)
     {
-        SF_UNUSED4(result, argc, argv, currObj);
+        SF_UNUSED2(result, currObj);
 
         Value compareFunction;
         SInt32 flags = 0;
 
-        if(argc > 0)
+        if(arg.IsCallable()) 
+            compareFunction = arg;
+        else if (!arg.Convert2Int32(flags))
         {
-            if(argv[0].IsCallable()) 
-                compareFunction = argv[0];
-            else if (!argv[0].Convert2Int32(flags))
-            {
-                VM& vm = GetVM();
-                return vm.ThrowTypeError(VM::Error(VM::eCheckTypeFailedError, vm 
-                    SF_DEBUG_ARG(vm.GetValueTraits(argv[0]).GetName().ToCStr())
-                    SF_DEBUG_ARG(currObj.GetEnclosedClassTraits().GetName().ToCStr())
-                    ));
-            }
+            VM& vm = GetVM();
+            return vm.ThrowTypeError(VM::Error(VM::eCheckTypeFailedError, vm 
+                SF_DEBUG_ARG(vm.GetValueTraits(arg).GetName().ToCStr())
+                SF_DEBUG_ARG(currObj.GetEnclosedClassTraits().GetName().ToCStr())
+                ));
         }
-
-        if(argc > 1)
-            if (!argv[1].Convert2Int32(flags))
-            {
-                VM& vm = GetVM();
-                return vm.ThrowTypeError(VM::Error(VM::eCheckTypeFailedError, vm 
-                    SF_DEBUG_ARG(vm.GetValueTraits(argv[1]).GetName().ToCStr())
-                    SF_DEBUG_ARG(currObj.GetEnclosedClassTraits().GetName().ToCStr())
-                    ));
-            }
 
         ArrayDH<T> newSA(GetVM().GetMemoryHeap());
 
@@ -702,7 +698,7 @@ public:
                         if (functor.Equal(pairs[i - 1], pairs[i]))
                         {
                             // two or more elements being sorted have identical sort fields.
-                            result.SetSInt32(0);
+                            result = NULL;
                             return;
                         }
                     }
@@ -742,7 +738,7 @@ public:
                             // two or more elements being sorted have identical sort fields.
                             // Documentation says we should return ZERO.
                             //result.SetSInt32(0);
-                            result.SetNull();
+                            result = NULL;
                             return;
                         }
                     }
@@ -776,7 +772,7 @@ public:
                         // two or more elements being sorted have identical sort fields.
                         // Documentation says we should return ZERO.
                         //result.SetSInt32(0);
-                        result.SetNull();
+                        result = NULL;
                         return;
                     }
                 }
@@ -791,9 +787,8 @@ public:
         if (flags & Instances::fl::Array::SortFlags_ReturnIndexedArray)
         {
             typename I::TraitsType& itr = static_cast<typename I::TraitsType&>(currObj.GetTraits());
-            Pickable<I> newArray = itr.MakeInstance(itr);
-            newArray->Append(newSA);
-            result.Pick(newArray);
+            result = itr.MakeInstance(itr);
+            result->Append(newSA);
         } else
         {
             // Replace current SparseArray.
@@ -1036,7 +1031,7 @@ template <>
 inline
 Ptr<ASStringNode> VectorBase<Ptr<ASStringNode> >::GetDefaultValue() const
 {
-    return GetVM().GetStringManager().GetBuiltin(AS3Builtin_null).GetNode();
+    return GetVM().GetStringManager().GetNullStringNode();
 }
 
 template <>

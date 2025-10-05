@@ -45,6 +45,11 @@ namespace fl_desktop
     extern const TypeInfo IconTI;
     extern const ClassInfo IconCI;
 } // namespace fl_desktop
+namespace fl_net
+{
+    extern const TypeInfo FileReferenceTI;
+    extern const ClassInfo FileReferenceCI;
+} // namespace fl_net
 
 namespace ClassTraits { namespace fl_filesystem
 {
@@ -66,7 +71,7 @@ namespace Classes { namespace fl_filesystem
     
 namespace ClassTraits { namespace fl_filesystem
 {
-    class File : public Traits
+    class File : public fl_net::FileReference
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -74,9 +79,11 @@ namespace ClassTraits { namespace fl_filesystem
 #endif
     public:
         typedef Classes::fl_filesystem::File ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        File(VM& vm);
+        File(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

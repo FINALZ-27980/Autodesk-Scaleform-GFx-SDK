@@ -224,7 +224,7 @@ bool StyledText::ParseHtmlImpl(const Char* phtml,
         {
         case SGMLPS_START_ELEMENT:
             {
-                const Char* elemName;
+                const Char* elemName = NULL;
                 UPInt elemLen;
 
                 parser.ParseStartElement(&elemName, &elemLen);
@@ -367,6 +367,7 @@ bool StyledText::ParseHtmlImpl(const Char* phtml,
                                 ptextFmt->SetImageDesc(NULL);  // make sure IMG is not duplicated for following content
                                 lastFormat.SetImageDesc(NULL); // make sure IMG is not duplicated for <br>
                                 SetDefaultTextFormat(*ptextFmt);
+								defaultTextFmt = *ptextFmt;
                             }
                         }
                         break;
@@ -1033,7 +1034,7 @@ bool StyledText::ParseHtml(const char* phtml, UPInt  htmlSize, HTMLImageTagInfoA
 // of the ParseHtml. However, for best performance the char* version should be used.
 //    return ParseHtmlImpl(phtml, htmlSize, pimgInfoArr, multiline, condenseWhite, pstyleMgr);
     wchar_t* pwbuf = (wchar_t*)SF_ALLOC((htmlSize + 1) * sizeof(wchar_t), StatRender_Text_Mem);
-    htmlSize = UTF8Util::DecodeString(pwbuf, phtml, htmlSize);
+    htmlSize = UTF8Util::DecodeStringSafe(pwbuf, htmlSize + 1, phtml, htmlSize);
     bool rv = ParseHtmlImpl(pwbuf, htmlSize, pimgInfoArr, multiline, condenseWhite, pstyleMgr, txtFmt, paraFmt);
     SF_FREE(pwbuf);
     return rv;

@@ -397,15 +397,24 @@ namespace Instances { namespace fl
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 Namespace::tito[Namespace::ThunkInfoNum] = {
+    //    0, 1, 2, 3, 
+    // };
+    const TypeInfo* Namespace::tit[4] = {
+        NULL, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+    };
     const ThunkInfo Namespace::ti[Namespace::ThunkInfoNum] = {
-        {&InstanceTraits::fl::Namespace::prefixGet, NULL, "prefix", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {&InstanceTraits::fl::Namespace::uriGet, &AS3::fl::StringTI, "uri", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {&InstanceTraits::fl::Namespace::AS3valueOf, &AS3::fl::StringTI, "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::Namespace::AS3toString, &AS3::fl::StringTI, "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::Namespace::prefixGet, &Namespace::tit[0], "prefix", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Namespace::uriGet, &Namespace::tit[1], "uri", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Namespace::AS3valueOf, &Namespace::tit[2], "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Namespace::AS3toString, &Namespace::tit[3], "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     Namespace::Namespace(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::Namespace::Namespace()"
         SetTraitsType(Traits_Namespace);
@@ -523,9 +532,16 @@ namespace InstanceTraits { namespace fl
 
 namespace Classes { namespace fl
 {
+    // const UInt16 Namespace::tito[Namespace::ThunkInfoNum] = {
+    //    0, 1, 
+    // };
+    const TypeInfo* Namespace::tit[2] = {
+        &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, 
+    };
     const ThunkInfo Namespace::ti[Namespace::ThunkInfoNum] = {
-        {&InstanceTraits::fl::Namespace::valueOfProto, &AS3::fl::StringTI, "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::Namespace::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::Namespace::valueOfProto, &Namespace::tit[0], "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Namespace::toStringProto, &Namespace::tit[1], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     Namespace::Namespace(ClassTraits::Traits& t)
@@ -592,25 +608,28 @@ namespace Classes { namespace fl
 
 namespace ClassTraits { namespace fl
 {
-    Namespace::Namespace(VM& vm)
-    : Traits(vm, AS3::fl::NamespaceCI)
+
+    Namespace::Namespace(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::Namespace::Namespace()"
         SetTraitsType(Traits_Namespace);
 //##protect##"ClassTraits::Namespace::Namespace()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Namespace(vm, AS3::fl::NamespaceCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::Namespace(*this));
 
     }
 
     Pickable<Traits> Namespace::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Namespace(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) Namespace(vm, AS3::fl::NamespaceCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::NamespaceCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
     bool Namespace::Coerce(const Value& value, Value& result) const
@@ -627,6 +646,11 @@ namespace fl
 {
     const TypeInfo NamespaceTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl::Namespace::InstanceType),
+        0,
+        0,
+        InstanceTraits::fl::Namespace::ThunkInfoNum,
+        0,
         "Namespace", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -634,10 +658,6 @@ namespace fl
     const ClassInfo NamespaceCI = {
         &NamespaceTI,
         ClassTraits::fl::Namespace::MakeClassTraits,
-        0,
-        0,
-        InstanceTraits::fl::Namespace::ThunkInfoNum,
-        0,
         NULL,
         NULL,
         InstanceTraits::fl::Namespace::ti,

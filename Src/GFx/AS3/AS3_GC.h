@@ -857,7 +857,9 @@ void RefCountCollector<Stat>::AddRoot(const RefCountBaseGC<Stat>* root, bool for
 
     SF_ASSERT(!root->IsDelayedRelease());
     SF_ASSERT(!root->IsInList());
+#ifdef GFX_AS3_VERBOSE
     SF_ASSERT(!root->IsRoot());
+#endif
 
     // figure out which root is this and get the appropriate RootDesc
     RootDesc& r = GetRootDesc(root);
@@ -907,7 +909,7 @@ bool RefCountCollector<Stat>::Collect(unsigned uptoGeneration, bool upgradeGen, 
         }
         return false;
     }
-    AmpStats* ampStats = (pstat)?pstat->AdvanceStats:0;
+    AmpStats* ampStats = (pstat != NULL) ? pstat->AdvanceStats : NULL;
     SF_AMP_SCOPE_TIMER_ID(ampStats, "GC::Collect", Amp_Native_Function_Id_GcCollect);
     Flags |= Flags_InCollect;
 

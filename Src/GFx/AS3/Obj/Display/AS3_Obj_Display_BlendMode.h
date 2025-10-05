@@ -56,7 +56,7 @@ namespace Classes { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class BlendMode : public Traits
+    class BlendMode : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -64,9 +64,11 @@ namespace ClassTraits { namespace fl_display
 #endif
     public:
         typedef Classes::fl_display::BlendMode ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        BlendMode(VM& vm);
+        BlendMode(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 14 };
         static const MemberInfo mi[MemberInfoNum];

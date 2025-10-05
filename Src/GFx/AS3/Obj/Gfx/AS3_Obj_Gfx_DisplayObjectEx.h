@@ -32,6 +32,11 @@ namespace fl_gfx
     extern const TypeInfo DisplayObjectExTI;
     extern const ClassInfo DisplayObjectExCI;
 } // namespace fl_gfx
+namespace fl_display
+{
+    extern const TypeInfo DisplayObjectTI;
+    extern const ClassInfo DisplayObjectCI;
+} // namespace fl_display
 namespace fl
 {
     extern const TypeInfo BooleanTI;
@@ -62,7 +67,7 @@ namespace Classes { namespace fl_gfx
     
 namespace ClassTraits { namespace fl_gfx
 {
-    class DisplayObjectEx : public Traits
+    class DisplayObjectEx : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -70,12 +75,16 @@ namespace ClassTraits { namespace fl_gfx
 #endif
     public:
         typedef Classes::fl_gfx::DisplayObjectEx ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        DisplayObjectEx(VM& vm);
+        DisplayObjectEx(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 6 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[15];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

@@ -97,7 +97,7 @@ void CircularDataQueue::PopDataEnd(UPInt size)
 // ***** RTCommandQueue
 
 RTCommandQueue::RTCommandQueue(ThreadingType type)
-: TType(type), Queue(2048),
+: TType(type), Queue(64*1024),
   ProcessingStopped(false), ConsumerSleeping(false)
 {
     if (type == AutoDetectThreading)

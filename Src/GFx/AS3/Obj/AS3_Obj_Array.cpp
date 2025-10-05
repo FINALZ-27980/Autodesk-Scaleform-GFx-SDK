@@ -874,11 +874,20 @@ AbsoluteIndex SparseArray::GetNextArrayIndex(AbsoluteIndex ind) const
 
 void SparseArray::ForEach(ArrayFunc& f) const
 {
+    ForEachDense(f);
+    ForEachSparse(f);
+}
+
+void SparseArray::ForEachDense(ArrayFunc& f) const
+{
     // ValueA
     const UPInt sizeA = ValueA.GetSize();
     for (UInt32 i = 0; i < sizeA; ++i)
         f(i, ValueA[i]);
+}
 
+void SparseArray::ForEachSparse(ArrayFunc& f) const
+{
     // ValueH
     ValueHashDH::ConstIterator it = ValueH.Begin();
     while (!it.IsEnd())
@@ -922,6 +931,7 @@ void Value2NumberCollector::operator()(UInt32 ind, const Value& v)
 
 //##protect##"methods"
 
+#ifndef SF_AS3_EMIT_DEF_ARGS
 // Values of default arguments.
 namespace Impl
 {
@@ -983,6 +993,8 @@ namespace Impl
     }
 
 } // namespace Impl
+#endif // SF_AS3_EMIT_DEF_ARGS
+
 typedef ThunkFunc0<Instances::fl::Array, Instances::fl::Array::mid_lengthGet, UInt32> TFunc_Instances_Array_lengthGet;
 typedef ThunkFunc1<Instances::fl::Array, Instances::fl::Array::mid_lengthSet, const Value, UInt32> TFunc_Instances_Array_lengthSet;
 typedef ThunkFunc2<Instances::fl::Array, Instances::fl::Array::mid_AS3join, Value, unsigned, const Value*> TFunc_Instances_Array_AS3join;
@@ -1136,14 +1148,14 @@ namespace Instances { namespace fl
         result.Pick(r);
         r.GetPtr()->Assign(*this);
         
-        const Traits& tr = GetVM().GetValueTraits(argv[0]);
-        if (argc == 1 && 
-            tr.GetTraitsType() == Traits_Array &&
-            tr.IsInstanceTraits()
-            )
-            r.GetPtr()->Append(static_cast<Array&>(*argv[0].GetObject()));
-        else
-            r.GetPtr()->Append(argc, argv);
+        if (argc == 1)
+        {
+            const Traits& tr = GetVM().GetValueTraits(argv[0]);
+            if (tr.GetTraitsType() == Traits_Array && tr.IsInstanceTraits())
+                return r.GetPtr()->Append(static_cast<Array&>(*argv[0].GetObject()));
+        }
+
+        r.GetPtr()->Append(argc, argv);
 //##protect##"instance::Array::AS3concat()"
     }
     void Array::AS3shift(Value& result)
@@ -1400,7 +1412,11 @@ namespace Instances { namespace fl
             SA.ForEach(vc);
 
             // Sort.
-            Impl::CompareValuePtr functor(GetVM(), compareFunction);
+            Impl::CompareValuePtr functor(
+                GetVM(),
+                compareFunction,
+                (flags & Instances::fl::Array::SortFlags_Descending) != 0
+                );
             Alg::QuickSortSafe(pairs, functor);
             const UPInt size = pairs.GetSize();
 
@@ -1996,43 +2012,97 @@ namespace Instances { namespace fl
         return Instances::fl::Object::DeleteProperty(prop_name);
     }
 
+    bool Array::HasProperty(const Multiname& prop_name, bool check_prototype)
+    {
+        const Value& name = prop_name.GetName();
+
+        if (name.IsInt())
+        {
+            // This case also handles UInt.
+            const SInt32 ind = name.AsInt();
+            return (ind >= 0 && static_cast<UPInt>(ind) < GetSize());
+        }
+        else if (name.IsString())
+        {
+            UInt32 ind = 0;
+
+            if (GetArrayInd(name.GetStringNode(), ind))
+                return (ind < GetSize());
+        }
+
+        return Instances::fl::Object::HasProperty(prop_name, check_prototype);
+    }
+
 //##protect##"instance$methods"
 
 }} // namespace Instances
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 Array::tito[Array::ThunkInfoNum] = {
+    //    0, 1, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 18, 21, 24, 27, 30, 33, 36, 
+    // };
+    const TypeInfo* Array::tit[39] = {
+        &AS3::fl::uintTI, 
+        NULL, &AS3::fl::uintTI, 
+        &AS3::fl::StringTI, 
+        NULL, 
+        &AS3::fl::uintTI, 
+        &AS3::fl::ArrayTI, 
+        &AS3::fl::ArrayTI, 
+        NULL, 
+        &AS3::fl::ArrayTI, &AS3::fl::int_TI, &AS3::fl::int_TI, 
+        &AS3::fl::uintTI, 
+        &AS3::fl::ArrayTI, 
+        &AS3::fl::ArrayTI, 
+        &AS3::fl::ArrayTI, &AS3::fl::ObjectTI, &AS3::fl::ObjectTI, 
+        &AS3::fl::int_TI, NULL, &AS3::fl::int_TI, 
+        &AS3::fl::int_TI, NULL, &AS3::fl::int_TI, 
+        &AS3::fl::BooleanTI, &AS3::fl::FunctionTI, NULL, 
+        &AS3::fl::ArrayTI, &AS3::fl::FunctionTI, NULL, 
+        NULL, &AS3::fl::FunctionTI, NULL, 
+        &AS3::fl::ArrayTI, &AS3::fl::FunctionTI, NULL, 
+        &AS3::fl::BooleanTI, &AS3::fl::FunctionTI, NULL, 
+    };
+    const Abc::ConstValue Array::dva[7] = {
+        {Abc::CONSTANT_Int, 2}, 
+        {Abc::CONSTANT_Int, 1}, 
+        {Abc::CONSTANT_Null, 0}, 
+        {Abc::CONSTANT_Null, 0}, 
+        {Abc::CONSTANT_Null, 0}, 
+        {Abc::CONSTANT_Null, 0}, 
+        {Abc::CONSTANT_Null, 0}, 
+    };
     const ThunkInfo Array::ti[Array::ThunkInfoNum] = {
-        {TFunc_Instances_Array_lengthGet::Func, &AS3::fl::uintTI, "length", NULL, Abc::NS_Public, CT_Get, 0, 0},
-        {TFunc_Instances_Array_lengthSet::Func, NULL, "length", NULL, Abc::NS_Public, CT_Set, 1, 1},
-        {TFunc_Instances_Array_AS3join::Func, &AS3::fl::StringTI, "join", NS_AS3, Abc::NS_Public, CT_Method, 0, 1},
-        {TFunc_Instances_Array_AS3pop::Func, NULL, "pop", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Array_AS3push::Func, &AS3::fl::uintTI, "push", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_Instances_Array_AS3reverse::Func, &AS3::fl::ArrayTI, "reverse", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Array_AS3concat::Func, &AS3::fl::ArrayTI, "concat", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_Instances_Array_AS3shift::Func, NULL, "shift", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {TFunc_Instances_Array_AS3slice::Func, &AS3::fl::ArrayTI, "slice", NS_AS3, Abc::NS_Public, CT_Method, 0, 2},
-        {TFunc_Instances_Array_AS3unshift::Func, &AS3::fl::uintTI, "unshift", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_Instances_Array_AS3splice::Func, &AS3::fl::ArrayTI, "splice", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_Instances_Array_AS3sort::Func, &AS3::fl::ArrayTI, "sort", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM},
-        {TFunc_Instances_Array_AS3sortOn::Func, &AS3::fl::ArrayTI, "sortOn", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3indexOf::Func, &AS3::fl::int_TI, "indexOf", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3lastIndexOf::Func, &AS3::fl::int_TI, "lastIndexOf", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3every::Func, &AS3::fl::BooleanTI, "every", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3filter::Func, &AS3::fl::ArrayTI, "filter", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3forEach::Func, NULL, "forEach", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3map::Func, &AS3::fl::ArrayTI, "map", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
-        {TFunc_Instances_Array_AS3some::Func, &AS3::fl::BooleanTI, "some", NS_AS3, Abc::NS_Public, CT_Method, 1, 2},
+        {TFunc_Instances_Array_lengthGet::Func, &Array::tit[0], "length", NULL, Abc::NS_Public, CT_Get, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Array_lengthSet::Func, &Array::tit[1], "length", NULL, Abc::NS_Public, CT_Set, 1, 1, 0, 0, NULL},
+        {TFunc_Instances_Array_AS3join::Func, &Array::tit[3], "join", NS_AS3, Abc::NS_Public, CT_Method, 0, 1, 1, 0, NULL},
+        {TFunc_Instances_Array_AS3pop::Func, &Array::tit[4], "pop", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Array_AS3push::Func, &Array::tit[5], "push", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {TFunc_Instances_Array_AS3reverse::Func, &Array::tit[6], "reverse", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Array_AS3concat::Func, &Array::tit[7], "concat", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {TFunc_Instances_Array_AS3shift::Func, &Array::tit[8], "shift", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {TFunc_Instances_Array_AS3slice::Func, &Array::tit[9], "slice", NS_AS3, Abc::NS_Public, CT_Method, 0, 2, 0, 1, &Array::dva[0]},
+        {TFunc_Instances_Array_AS3unshift::Func, &Array::tit[12], "unshift", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {TFunc_Instances_Array_AS3splice::Func, &Array::tit[13], "splice", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {TFunc_Instances_Array_AS3sort::Func, &Array::tit[14], "sort", NS_AS3, Abc::NS_Public, CT_Method, 0, SF_AS3_VARARGNUM, 1, 0, NULL},
+        {TFunc_Instances_Array_AS3sortOn::Func, &Array::tit[15], "sortOn", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 0, NULL},
+        {TFunc_Instances_Array_AS3indexOf::Func, &Array::tit[18], "indexOf", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 0, NULL},
+        {TFunc_Instances_Array_AS3lastIndexOf::Func, &Array::tit[21], "lastIndexOf", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 1, &Array::dva[1]},
+        {TFunc_Instances_Array_AS3every::Func, &Array::tit[24], "every", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 1, &Array::dva[2]},
+        {TFunc_Instances_Array_AS3filter::Func, &Array::tit[27], "filter", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 1, &Array::dva[3]},
+        {TFunc_Instances_Array_AS3forEach::Func, &Array::tit[30], "forEach", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 1, &Array::dva[4]},
+        {TFunc_Instances_Array_AS3map::Func, &Array::tit[33], "map", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 1, &Array::dva[5]},
+        {TFunc_Instances_Array_AS3some::Func, &Array::tit[36], "some", NS_AS3, Abc::NS_Public, CT_Method, 1, 2, 0, 1, &Array::dva[6]},
     };
 
     Array::Array(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::Array::Array()"
         SetArrayLike();
         SetTraitsType(Traits_Array);
 //##protect##"InstanceTraits::Array::Array()"
-        SetMemSize(sizeof(Instances::fl::Array));
 
     }
 
@@ -2100,9 +2170,14 @@ namespace Classes { namespace fl
         AddConstructor(obj);
     }
 
+    const TypeInfo* Array::tit[2] = {
+        &AS3::fl::StringTI,
+        &AS3::fl::StringTI,
+    };
+
     const ThunkInfo Array::ti[2] = {
-        {&Instances::fl::Array::toLocaleStringProto, &AS3::fl::StringTI, "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&Instances::fl::Array::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&Instances::fl::Array::toLocaleStringProto, &Array::tit[0], "toLocaleString", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&Instances::fl::Array::toStringProto, &Array::tit[1], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
     };
 
 //##protect##"class_$methods"
@@ -2120,25 +2195,28 @@ namespace ClassTraits { namespace fl
         {"NUMERIC", NULL, OFFSETOF(Classes::fl::Array, NUMERIC), Abc::NS_Public, SlotInfo::BT_UInt, 1},
     };
 
-    Array::Array(VM& vm)
-    : Traits(vm, AS3::fl::ArrayCI)
+
+    Array::Array(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::Array::Array()"
         SetTraitsType(Traits_Array);
 //##protect##"ClassTraits::Array::Array()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Array(vm, AS3::fl::ArrayCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::Array(*this));
 
     }
 
     Pickable<Traits> Array::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Array(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) Array(vm, AS3::fl::ArrayCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::ArrayCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 #if 0
@@ -2170,6 +2248,11 @@ namespace fl
 {
     const TypeInfo ArrayTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl::Array::InstanceType),
+        0,
+        ClassTraits::fl::Array::MemberInfoNum,
+        InstanceTraits::fl::Array::ThunkInfoNum,
+        0,
         "Array", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -2177,10 +2260,6 @@ namespace fl
     const ClassInfo ArrayCI = {
         &ArrayTI,
         ClassTraits::fl::Array::MakeClassTraits,
-        0,
-        ClassTraits::fl::Array::MemberInfoNum,
-        InstanceTraits::fl::Array::ThunkInfoNum,
-        0,
         NULL,
         ClassTraits::fl::Array::mi,
         InstanceTraits::fl::Array::ti,

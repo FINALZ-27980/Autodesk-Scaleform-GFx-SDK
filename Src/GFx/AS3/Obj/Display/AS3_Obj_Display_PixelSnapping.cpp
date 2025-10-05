@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_display
         {"NEVER", NULL, OFFSETOF(Classes::fl_display::PixelSnapping, NEVER), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    PixelSnapping::PixelSnapping(VM& vm)
-    : Traits(vm, AS3::fl_display::PixelSnappingCI)
+
+    PixelSnapping::PixelSnapping(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::PixelSnapping::PixelSnapping()"
 //##protect##"ClassTraits::PixelSnapping::PixelSnapping()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_display::PixelSnappingCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_display::PixelSnapping(*this));
 
     }
 
     Pickable<Traits> PixelSnapping::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) PixelSnapping(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) PixelSnapping(vm, AS3::fl_display::PixelSnappingCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::PixelSnappingCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_display
 {
     const TypeInfo PixelSnappingTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::PixelSnapping::InstanceType),
+        0,
+        ClassTraits::fl_display::PixelSnapping::MemberInfoNum,
+        0,
+        0,
         "PixelSnapping", "flash.display", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_display
     const ClassInfo PixelSnappingCI = {
         &PixelSnappingTI,
         ClassTraits::fl_display::PixelSnapping::MakeClassTraits,
-        0,
-        ClassTraits::fl_display::PixelSnapping::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_display::PixelSnapping::mi,
         NULL,

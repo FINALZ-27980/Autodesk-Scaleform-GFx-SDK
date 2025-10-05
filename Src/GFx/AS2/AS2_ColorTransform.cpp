@@ -121,7 +121,7 @@ bool ColorTransformObject::GetMember(Environment *penv, const ASString &name, Va
         UInt8 gc = (UInt8) (NumberUtil::IsNaN(mColorTransform.M[1][1]) ? 0 : mColorTransform.M[1][1]);
         UInt8 bc = (UInt8) (NumberUtil::IsNaN(mColorTransform.M[1][2]) ? 0 : mColorTransform.M[1][2]);
         UInt32 p = (rc << 16) | (gc << 8) | bc;
-        *val = Number(p);
+        *val = Double(p);
         return true;
     }
     return Object::GetMember(penv, name, val);

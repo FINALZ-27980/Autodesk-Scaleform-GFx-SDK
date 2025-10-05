@@ -1227,7 +1227,21 @@ void PlaceObject3Tag::Unpack(PlaceObjectTag::UnpackedData& data)
     }
     if (po3Flags & PO3_BitmapCaching)
     {
-        sc.ReadU8();
+        UByte cabProperty = sc.ReadU8();
+        Ptr<Render::FilterSet> pfilters = data.Pos.pFilters;
+        if (cabProperty == 1)
+        {
+            if (!pfilters)
+            {
+                pfilters = *SF_HEAP_NEW_ID(Memory::GetGlobalHeap(), StatMD_Tags_Mem) Render::FilterSet;
+                data.Pos.pFilters = pfilters;
+            }
+            pfilters->SetCacheAsBitmap(true);
+        }
+        else if (pfilters)
+        {
+            pfilters->SetCacheAsBitmap(false);
+        }
     }
     if (po3Flags & PlaceObject3Tag::PO3_Invisible)
     {

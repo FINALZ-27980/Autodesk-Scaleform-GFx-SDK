@@ -48,13 +48,16 @@ public:
     void    Prepend(const Cxform& c);
     void    Prepend_NonOpt(const Cxform& c);
     Color   Transform(const Color in) const;
-    
+
     void    SetToAppend(const Cxform& c0, const Cxform& c1);
     void    SetToAppend_NonOpt(const Cxform& c0, const Cxform& c1);
 
     // Normalize transform from range 0...255 to 0...1
     void    Normalize();
     void    Normalize_NonOpt();
+#if (defined(SF_OS_WII) || defined(SF_OS_WIIU)) && !defined(SF_BUILD_DEBUG)
+    void    Normalize_Opt(float *invScale);
+#endif
 
     void    GetAsFloat2x4(float (*rows)[4]) const;
     void    GetAsFloat2x4Aligned(float (*rows)[4]) const;

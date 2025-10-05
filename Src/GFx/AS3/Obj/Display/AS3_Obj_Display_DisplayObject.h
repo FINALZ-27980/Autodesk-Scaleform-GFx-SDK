@@ -562,7 +562,7 @@ namespace Instances { namespace fl_display
 
 namespace InstanceTraits { namespace fl_display
 {
-    class DisplayObject : public CTraits
+    class DisplayObject : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -588,6 +588,8 @@ namespace InstanceTraits { namespace fl_display
 
         enum { ThunkInfoNum = 62 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[96];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -600,17 +602,19 @@ namespace InstanceTraits { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class DisplayObject : public Traits
+    class DisplayObject : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::DisplayObject"; }
 #endif
     public:
-        typedef Classes::fl_display::DisplayObject ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_display::DisplayObject InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        DisplayObject(VM& vm);
+        DisplayObject(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

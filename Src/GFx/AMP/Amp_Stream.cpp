@@ -14,6 +14,8 @@ otherwise accompanies this software in either electronic or hard copy form.
 **************************************************************************/
 
 #include "Amp_Stream.h"
+#ifdef SF_ENABLE_STATS
+
 #include "Kernel/SF_Alg.h"
 #include "Kernel/SF_Debug.h"
 
@@ -215,3 +217,5 @@ bool AmpStream::PopFirstMessage()
 } // namespace AMP
 } // namespace GFx
 } // namespace Scaleform
+
+#endif

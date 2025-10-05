@@ -31,24 +31,27 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace ClassTraits { namespace fl_errors
 {
-    ScriptTimeoutError::ScriptTimeoutError(VM& vm)
-    : Traits(vm, AS3::fl_errors::ScriptTimeoutErrorCI)
+
+    ScriptTimeoutError::ScriptTimeoutError(VM& vm, const ClassInfo& ci)
+    : fl::Error(vm, ci)
     {
 //##protect##"ClassTraits::ScriptTimeoutError::ScriptTimeoutError()"
 //##protect##"ClassTraits::ScriptTimeoutError::ScriptTimeoutError()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Error(vm, AS3::fl_errors::ScriptTimeoutErrorCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Class(*this));
 
     }
 
     Pickable<Traits> ScriptTimeoutError::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) ScriptTimeoutError(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) ScriptTimeoutError(vm, AS3::fl_errors::ScriptTimeoutErrorCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_errors::ScriptTimeoutErrorCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -59,6 +62,11 @@ namespace fl_errors
 {
     const TypeInfo ScriptTimeoutErrorTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl_errors::ScriptTimeoutError::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "ScriptTimeoutError", "flash.errors", &fl::ErrorTI,
         TypeInfo::None
     };
@@ -66,10 +74,6 @@ namespace fl_errors
     const ClassInfo ScriptTimeoutErrorCI = {
         &ScriptTimeoutErrorTI,
         ClassTraits::fl_errors::ScriptTimeoutError::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

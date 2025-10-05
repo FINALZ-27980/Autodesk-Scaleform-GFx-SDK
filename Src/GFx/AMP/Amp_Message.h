@@ -21,7 +21,11 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef INCLUDE_GFX_AMP_MESSAGE_H
 #define INCLUDE_GFX_AMP_MESSAGE_H
 
+#include "GFxConfig.h"
+#ifdef SF_ENABLE_STATS
+
 #include "Amp_ProfileFrame.h"
+#include "Kernel/SF_AmpInterface.h"
 
 namespace Scaleform {
 namespace GFx {
@@ -35,6 +39,28 @@ class MsgHandler;
 class Message : public RefCountBase<Message, StatAmp_Message>, public ListNode<Message>
 {
 public:
+    // For backwards compatibility, add new platforms to the end of this list
+    // and don't delete any obsolete platforms
+    enum PlatformType
+    {
+        PlatformOther = 0,
+
+        PlatformWindows,
+        PlatformMac,
+        PlatformLinux,
+
+        PlatformXbox360,
+        PlatformPs3,
+        PlatformWii,
+        Platform3DS,
+
+        PlatformAndroid,
+        PlatformIphone,
+
+        PlatformNgp,
+        PlatformWiiU
+    };
+
     virtual ~Message() { }
 
     // Message serialization methods
@@ -64,6 +90,7 @@ public:
     static void         ReadString(File& inFile, String* str);
     static void         WriteString(File& outFile, const String& str);
     static String       MsgTypeToMsgName(UInt32 msgType); 
+    static PlatformType GetLocalPlatform();
 
 protected:
 
@@ -104,7 +131,7 @@ protected:
 
     enum VersionType
     {
-        Version_Latest = 33
+        Version_Latest = 42
     };
 
     UInt32                      Version;
@@ -301,7 +328,7 @@ class MessageObjectsReport : public Message
 {
 public:
     static String           GetStaticTypeName()        { return "ObjectsReport"; }
-    MessageObjectsReport(const char* objectsReport = NULL);
+    MessageObjectsReport(const char* objectsReport = NULL, Ptr<AmpMovieObjectDesc> root = NULL, UInt32 movieHandle = 0);
 
     // Message overrides
     virtual String          GetMessageName() const        { return GetStaticTypeName(); }
@@ -309,11 +336,15 @@ public:
     virtual void            Write(File& str) const;
 
     // Accessors
-    const char*             GetObjectsReport() const;
-
+    const char*                                 GetObjectsReport() const;
+    const Ptr<AmpMovieObjectDesc>               GetObjectsRoot() const;
+    UInt32                                      GetMovieHandle() const;
 protected:
 
-    StringLH                ObjectsReport;
+    StringLH                            ObjectsReport;
+    Ptr<AmpMovieObjectDesc>             ObjectsRoot;
+    UInt32                              MovieHandle;
+
 
     // enum used only for compatibility with older versions
     virtual MessageType     GetMessageType() const { return Msg_ObjectsReport; } 
@@ -438,6 +469,10 @@ public:
     void                    SetToggleOverdraw(bool overdrawToggle);
     bool                    IsToggleBatch() const;
     void                    SetToggleBatch(bool batchToggle);
+    bool                    IsToggleBlending() const;
+    void                    SetToggleBlending(bool blendingToggle);
+    bool                    IsToggleTextureDensity() const;
+    void                    SetToggleTextureDensity(bool texDensityToggle);
     bool                    IsToggleInstructionProfile() const;
     void                    SetToggleInstructionProfile(bool instToggle);
     bool                    IsToggleFastForward() const;
@@ -470,6 +505,8 @@ public:
     void                    SetLoadMovieFile(const char* fileName);
     SInt32                  GetProfileLevel() const;
     void                    SetProfileLevel(SInt32 profileLevel);
+    SInt32                  GetBatchChange() const;
+    void                    SetBatchChange(SInt32 change);
 
 protected:
 
@@ -494,11 +531,14 @@ protected:
         OF_DebugNextMovie               = 0x00020000,
         OF_ToggleMemReport              = 0x00040000,
         OF_ToggleBatch                  = 0x00080000,
+        OF_ToggleBlending               = 0x00100000,
+        OF_ToggleTextureDensity         = 0x00200000,
     };
 
     UInt32                  OptionBits;
     StringLH                LoadMovieFile;
     SInt32                  ProfileLevel;
+    SInt32                  BatchChange;
 
     // enum used only for compatibility with older versions
     virtual MessageType     GetMessageType() const { return Msg_AppControl; } 
@@ -511,25 +551,6 @@ class MessagePort : public Message
 {
 public:
     static String           GetStaticTypeName()        { return "Port"; }
-    enum PlatformType
-    {
-        PlatformOther = 0,
-
-        PlatformWindows,
-        PlatformMac,
-        PlatformLinux,
-
-        PlatformXbox360,
-        PlatformPs3,
-        PlatformWii,
-        Platform3DS,
-
-        PlatformAndroid,
-        PlatformIphone,
-
-        PlatformNgp,
-        PlatformWiiU
-    };
 
     MessagePort(UInt32 port = 0, const char* appName = NULL, const char* FileName = NULL);
 
@@ -656,11 +677,14 @@ public:
 
     // Accessors
     UInt32                  GetFontId() const;
+    UInt32                  GetNumTextures() const;
+    void                    SetNumTextures(UInt32 numTextures);
     AmpStream*              GetImageData() const;
     void                    SetImageData(AmpStream* imageData);
 
 protected:
     UInt32                  FontId;
+    UInt32                  NumTextures;
     AmpStream*              FontDataStream;
 
     // enum used only for compatibility with older versions
@@ -696,6 +720,8 @@ private:
 } // namespace AMP
 } // namespace GFx
 } // namespace Scaleform
+
+#endif
 
 #endif
 

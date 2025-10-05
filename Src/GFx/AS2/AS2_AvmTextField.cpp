@@ -187,8 +187,9 @@ void AvmTextField::OnEventLoad()
 {
     // finalize the initialization. We need to initialize text here rather than in ctor
     // since the name of instance is not set yet in the ctor and setting text might cause
-    // GFxTranslator to be invoked, which uses the instance name.
+    // GFx::Translator to be invoked, which uses the instance name.
     TextField* ptf = GetTextField();
+
     if (GetTextFieldDef()->DefaultText.GetLength() > 0)
     {
         bool varExists = false;
@@ -936,6 +937,15 @@ bool AvmTextField::SetMember(Environment* penv, const ASString& name, const Valu
             return true;
         }
         break;
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+    case M_bidirectionalTextEnabled:
+        if (penv->CheckExtensions())
+        {
+            ptf->EnableBidirectionalText(val.ToBool(penv));
+            return true;
+        }
+        break;
+#endif
     case M_filters:
         {
 #ifdef GFX_AS2_ENABLE_FILTERS
@@ -1539,7 +1549,15 @@ bool AvmTextField::GetMember(Environment* penv, const ASString& name, Value* pva
 #endif  // SF_NO_FXPLAYER_AS_FILTERS
             return true;
         }
-
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+    case M_bidirectionalTextEnabled:
+        if (penv->CheckExtensions())
+        {
+            pval->SetBool(ptf->IsBidirectionalTextEnabled());
+            return true;
+        }
+        break;
+#endif
     default: 
         if (GetStandardMember(member, pval, 0))
             return true;
@@ -1674,7 +1692,7 @@ void AvmTextField::ProceedImageSubstitution(const FnCall& fn, int idx, const Val
                     GetName().ToCStr(), idx);
                 return;
             }
-            UTF8Util::DecodeString(isElem.SubString, str.ToCStr(), str.GetSize() + 1);
+            UTF8Util::DecodeStringSafe(isElem.SubString, 20, str.ToCStr(), str.GetSize() + 1);
             isElem.SubStringLen = (UByte)wstrLen;
         }
         else
@@ -2091,8 +2109,8 @@ void AvmTextField::ReplaceText(const FnCall& fn)
                 // replicate this behavior. Though, it still works differently from Flash,
                 // since that default text format will be combined with current text format
                 // at the cursor position. Not sure, we should worry about this.
-                const Text::TextFormat* ptextFmt;
-                const Text::ParagraphFormat* pparaFmt;
+                ConstPtr<Text::TextFormat> ptextFmt;
+                ConstPtr<Text::ParagraphFormat> pparaFmt;
                 UPInt prevLen = pthis->GetTextLength();
                 UPInt newLen  = prevLen - (endPos - startPos) + len;
                 if (startPos >= prevLen)
@@ -2102,20 +2120,24 @@ void AvmTextField::ReplaceText(const FnCall& fn)
                     pparaFmt = pthis->GetDefaultParagraphFormat();
                 }
                 else
-                    pthis->GetTextAndParagraphFormat(&ptextFmt, &pparaFmt, startPos);
-                if (ptextFmt) ptextFmt->AddRef(); // save format from possible releasing
-                if (pparaFmt) pparaFmt->AddRef(); // save format from possible releasing
+                {
+                    const Text::TextFormat* _ptextFmt;
+                    const Text::ParagraphFormat* _pparaFmt;
+                    pthis->GetTextAndParagraphFormat(&_ptextFmt, &_pparaFmt, startPos);
+                    ptextFmt = _ptextFmt;
+                    pparaFmt = _pparaFmt;
+                }
 
                 wchar_t buf[1024];
                 if (len < sizeof(buf)/sizeof(buf[0]))
                 {
-                    UTF8Util::DecodeString(buf, str.ToCStr());
+                    UTF8Util::DecodeStringSafe(buf, 1024, str.ToCStr());
                     pthis->ReplaceText(buf, startPos, endPos);
                 }
                 else
                 {
                     wchar_t* pbuf = (wchar_t*)SF_ALLOC((len + 1) * sizeof(wchar_t), StatMV_Text_Mem);
-                    UTF8Util::DecodeString(pbuf, str.ToCStr());
+                    UTF8Util::DecodeStringSafe(pbuf, len + 1, str.ToCStr());
                     pthis->ReplaceText(pbuf, startPos, endPos);
                     SF_FREE(pbuf);
                 }
@@ -2133,8 +2155,6 @@ void AvmTextField::ReplaceText(const FnCall& fn)
                 {
                     pthis->SetTextFormat(*ptextFmt, startPos, startPos + len);
                 }
-                if (ptextFmt) ptextFmt->Release();
-                if (pparaFmt) pparaFmt->Release();
                 pthis->SetDirtyFlag();
             }
         }
@@ -2153,8 +2173,8 @@ void AvmTextField::ReplaceSel(const FnCall& fn)
         {
             ASString str = fn.Arg(0).ToString(fn.Env);
 
-            const Text::TextFormat* ptextFmt = pthis->GetDefaultTextFormat();
-            const Text::ParagraphFormat* pparaFmt = pthis->GetDefaultParagraphFormat();
+            ConstPtr<Text::TextFormat> ptextFmt = pthis->GetDefaultTextFormat();
+            ConstPtr<Text::ParagraphFormat> pparaFmt = pthis->GetDefaultParagraphFormat();
 
             unsigned len = str.GetLength();
             UPInt startPos = pthis->GetEditorKit()->GetBeginSelection();
@@ -2162,13 +2182,13 @@ void AvmTextField::ReplaceSel(const FnCall& fn)
             wchar_t buf[1024];
             if (len < sizeof(buf)/sizeof(buf[0]))
             {
-                UTF8Util::DecodeString(buf, str.ToCStr());
+                UTF8Util::DecodeStringSafe(buf, 1024, str.ToCStr());
                 pthis->ReplaceText(buf, startPos, endPos);
             }
             else
             {
                 wchar_t* pbuf = (wchar_t*)SF_ALLOC((len + 1) * sizeof(wchar_t), StatMV_Text_Mem);
-                UTF8Util::DecodeString(pbuf, str.ToCStr());
+                UTF8Util::DecodeStringSafe(pbuf, len + 1, str.ToCStr());
                 pthis->ReplaceText(pbuf, startPos, endPos);
                 SF_FREE(pbuf);
             }

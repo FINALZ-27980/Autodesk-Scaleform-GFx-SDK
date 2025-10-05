@@ -200,7 +200,6 @@ namespace Instances { namespace fl
 //##protect##"instance$data"
 #ifdef SF_ENABLE_PCRE
         static const UInt32 OUTPUT_VECTOR_SIZE  = 99;   // Output 32 matches (32+1)*3
-        static const UInt32 MATCH_BUFFER_SIZE   = 1024; // 1K for match
 
         pcre*   CompRegExp;     // Compiled regexp pattern
         SInt32  MatchOffset;    // Last match offset
@@ -219,7 +218,7 @@ namespace Instances { namespace fl
 
 namespace InstanceTraits { namespace fl
 {
-    class RegExp : public CTraits
+    class RegExp : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -245,6 +244,8 @@ namespace InstanceTraits { namespace fl
 
         enum { ThunkInfoNum = 10 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[13];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -257,7 +258,7 @@ namespace InstanceTraits { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class RegExp : public Traits
+    class RegExp : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -265,9 +266,11 @@ namespace ClassTraits { namespace fl
 #endif
     public:
         typedef Classes::fl::RegExp ClassType;
+        typedef InstanceTraits::fl::RegExp InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        RegExp(VM& vm);
+        RegExp(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

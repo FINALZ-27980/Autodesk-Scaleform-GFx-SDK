@@ -28,7 +28,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 // For GFxMovieImpl::IsPathAbsolute
 //#include "GFx/GFx_PlayerImpl.h"
 
-
 namespace Scaleform { namespace GFx {
 
 // ***** LoadStates
@@ -118,7 +117,7 @@ void        LoadStates::SetRelativePathForDataDef(MovieDataDef* pdef)
 
 // Implementation that allows us to override the log.
 File*      LoadStates::OpenFile(const char *pfilename, unsigned loadConstants)
-{    
+{
     if (!pBindStates->pFileOpener)
     {             
         // Don't even have a way to open the file.
@@ -252,6 +251,13 @@ LoadProcess::LoadProcess(MovieDataDef* pdataDef,
 
 LoadProcess::~LoadProcess()
 {
+#ifdef SF_ENABLE_HTTP_LOADING
+    String fileURL = pLoadData->GetFileURL();
+    if (URLBuilder::IsProtocol(fileURL))
+    {
+        pLoadStates->pLoaderImpl->LoadingDone(fileURL);
+    }
+#endif
     pJpegTables = NULL; // MUST be released before pLoadData dies!
 #ifdef SF_DEBUG_COUNT_TAGS
     SF_DEBUG_MESSAGE(1,    ">");

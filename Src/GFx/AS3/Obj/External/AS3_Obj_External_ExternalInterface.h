@@ -37,6 +37,8 @@ namespace fl
     extern const ClassInfo BooleanCI;
     extern const TypeInfo StringTI;
     extern const ClassInfo StringCI;
+    extern const TypeInfo FunctionTI;
+    extern const ClassInfo FunctionCI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl_external
@@ -59,7 +61,7 @@ namespace Classes { namespace fl_external
     
 namespace ClassTraits { namespace fl_external
 {
-    class ExternalInterface : public Traits
+    class ExternalInterface : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -67,12 +69,16 @@ namespace ClassTraits { namespace fl_external
 #endif
     public:
         typedef Classes::fl_external::ExternalInterface ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ExternalInterface(VM& vm);
+        ExternalInterface(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 6 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[10];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

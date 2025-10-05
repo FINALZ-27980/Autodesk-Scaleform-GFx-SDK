@@ -74,17 +74,6 @@ typedef Array<Value> ValueArray;
 // but it does not have enough mantissa bits so do so correctly. To account for this,
 // we could store both Int + float in GASFloat and do some conditional logic...
 
-#ifdef SF_NO_DOUBLE
-typedef float       Number;
-// This is a version of float that can be stored in a union; thus GASFloat 
-// must be convertible to GASFloatValue, though perhaps with some extra calls.
-typedef Number   GASNumberValue;
-
-//#define   GFX_ASNUMBER_NAN
-#define GFX_ASNUMBER_ZERO   0.0f
-
-#else
-
 typedef Double      Number;
 // This is a version of float that can be stored in a union; thus GASFloat 
 // must be convertible to GASFloatValue, though perhaps with some extra calls.
@@ -92,8 +81,6 @@ typedef Number   GASNumberValue;
 
 //#define   GFX_ASNUMBER_NAN
 #define GFX_ASNUMBER_ZERO   0.0
-
-#endif
 
 // C-code function type used by values.
 typedef void (*CFunctionPtr)(const FnCall& fn);
@@ -146,14 +133,14 @@ public:
 
     // This method should be called every frame (every full advance). 
     // It evaluates necessity of collection and performs it if necessary.
-    void AdvanceFrame(unsigned* movieFrameCnt, unsigned* movieLastCollectFrame);
+    void AdvanceFrame(unsigned* movieFrameCnt, unsigned* movieLastCollectFrame, AmpStats* ampStats);
 
     // Forces collection.
-    void ForceCollect();
+    void ForceCollect(AmpStats* ampStats);
 
     // Forces emergency collect. This method is called when memory heap cap is 
     // reached. It tries to free as much memory as possible.
-    void ForceEmergencyCollect();
+    void ForceEmergencyCollect(AmpStats* ampStats);
 };
 template <class T> class ASRefCountBase : public ASRefCountBaseType 
 {

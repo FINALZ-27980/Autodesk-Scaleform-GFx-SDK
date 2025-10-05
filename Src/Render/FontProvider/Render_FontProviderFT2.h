@@ -43,7 +43,8 @@ public:
                     const String& fontName, 
                     unsigned fontFlags,
                     const char* fileName, 
-                    unsigned faceIndex);
+                    unsigned faceIndex,
+                    Lock* plock);
 
     ExternalFontFT2(FontProviderFT2* pprovider, 
                     FT_Library lib, 
@@ -51,7 +52,8 @@ public:
                     unsigned fontFlags,
                     const char* fontMem, 
                     unsigned fontMemSize, 
-                    unsigned faceIndex);
+                    unsigned faceIndex,
+                    Lock* plock);
 
     void SetHinting(NativeHintingRange vectorHintingRange,
                     NativeHintingRange rasterHintingRange, 
@@ -119,6 +121,9 @@ private:
     NativeHintingRange              VectorHintingRange;
     unsigned                        MaxRasterHintedSize;
     unsigned                        MaxVectorHintedSize;
+
+    mutable Lock*                   pFontLock;
+
 };
 
 
@@ -173,7 +178,7 @@ private:
     Array<FontType>     Fonts;
     unsigned            NamesEndIdx;
 #ifdef SF_ENABLE_THREADS
-    mutable Mutex       LockMutex;
+    mutable Lock       FontLock;
 #endif
 };
 

@@ -682,32 +682,32 @@ void TextureManager::Reset()
 
 void TextureManager::SetSamplerState( unsigned stage, unsigned viewCount, ID3D1x(ShaderResourceView)** views, ID3D1x(SamplerState)* state)
 {
-	bool loadSamplers = false;
-	bool loadTextures = false;
-	ID3D1x(SamplerState)* states[16];
-	for ( unsigned i = 0; i < viewCount; ++i)
-	{
-		states[i] = state;
-		if ( CurrentSamplers[i+stage] != state )
-		{
-			loadSamplers = true;
-		}
+    bool loadSamplers = false;
+    bool loadTextures = false;
+    ID3D1x(SamplerState)* states[16];
+    for ( unsigned i = 0; i < viewCount; ++i)
+    {
+        states[i] = state;
+        if ( CurrentSamplers[i+stage] != state )
+        {
+            loadSamplers = true;
+        }
 
-		if ( CurrentTextures[i+stage] != views[i] )
-		{
-			loadTextures = true;
-		}
-	}
-	if ( loadSamplers )
-	{
-		pDeviceContext->PSSetSamplers( stage, viewCount, states );
-		memcpy(&CurrentSamplers[stage], states, viewCount*sizeof(ID3D1x(SamplerState)*));
-	}
-	if ( loadTextures )
-	{
-		pDeviceContext->PSSetShaderResources( stage, viewCount, views );
-		memcpy(&CurrentTextures[stage], views, viewCount*sizeof(ID3D1x(ShaderResourceView)*));
-	}
+        if ( CurrentTextures[i+stage] != views[i] )
+        {
+            loadTextures = true;
+        }
+    }
+    if ( loadSamplers )
+    {
+        pDeviceContext->PSSetSamplers( stage, viewCount, states );
+        memcpy(&CurrentSamplers[stage], states, viewCount*sizeof(ID3D1x(SamplerState)*));
+    }
+    if ( loadTextures )
+    {
+        pDeviceContext->PSSetShaderResources( stage, viewCount, views );
+        memcpy(&CurrentTextures[stage], views, viewCount*sizeof(ID3D1x(ShaderResourceView)*));
+    }
 }
 
 void TextureManager::BeginScene()
@@ -771,30 +771,54 @@ TextureFormat::Mapping TextureFormatMapping[] =
 {
     // Warning: Different versions of the same ImageFormat must go right after each-other,
     // as initTextureFormats relies on that fact to skip them during detection.
-    { Image_R8G8B8A8,   DXGI_FORMAT_R8G8B8A8_UNORM, 4, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
-    { Image_B8G8R8A8,   DXGI_FORMAT_B8G8R8A8_UNORM, 4, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
-    { Image_R8G8B8,     DXGI_FORMAT_R8G8B8A8_UNORM, 4, &Image_CopyScanline24_Extend_RGB_RGBA,   &Image_CopyScanline32_Retract_RGBA_RGB },
-    { Image_B8G8R8,     DXGI_FORMAT_B8G8R8A8_UNORM, 4, &Image_CopyScanline24_Extend_RGB_RGBA,   &Image_CopyScanline32_Retract_RGBA_RGB },
-    { Image_A8,         DXGI_FORMAT_R8_UNORM,       1, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
+    { Image_R8G8B8A8,   DXGI_FORMAT_R8G8B8A8_UNORM,  4, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
+    { Image_B8G8R8A8,   DXGI_FORMAT_B8G8R8A8_UNORM,  4, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
+    { Image_R8G8B8,     DXGI_FORMAT_R8G8B8A8_UNORM,  4, D3D_FEATURE_LEVEL_9_1,  &Image_CopyScanline24_Extend_RGB_RGBA,   &Image_CopyScanline32_Retract_RGBA_RGB },
+    { Image_B8G8R8,     DXGI_FORMAT_B8G8R8A8_UNORM,  4, D3D_FEATURE_LEVEL_9_1,  &Image_CopyScanline24_Extend_RGB_RGBA,   &Image_CopyScanline32_Retract_RGBA_RGB },
+    { Image_A8,         DXGI_FORMAT_R8_UNORM,        1, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
 
     // Compressed formats.
-    { Image_DXT1,       DXGI_FORMAT_BC1_UNORM,      0, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
-    { Image_DXT3,       DXGI_FORMAT_BC2_UNORM,      0, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
-    { Image_DXT5,       DXGI_FORMAT_BC3_UNORM,      0, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
+    { Image_DXT1,       DXGI_FORMAT_BC1_UNORM,       0, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
+    { Image_DXT3,       DXGI_FORMAT_BC2_UNORM,       0, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
+    { Image_DXT5,       DXGI_FORMAT_BC3_UNORM,       0, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
+    { Image_BC7,        DXGI_FORMAT_BC7_UNORM,       0, D3D_FEATURE_LEVEL_11_0, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault},
 
     // Video formats.
-    { Image_Y8_U2_V2,   DXGI_FORMAT_R8_UNORM,       1, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
-    { Image_Y8_U2_V2_A8,DXGI_FORMAT_R8_UNORM,       1, &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
+    { Image_Y8_U2_V2,   DXGI_FORMAT_R8_UNORM,        1, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
+    { Image_Y8_U2_V2_A8,DXGI_FORMAT_R8_UNORM,        1, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
 
-    { Image_None,       DXGI_FORMAT_UNKNOWN,        0, 0,                                       0 }
+#ifdef _DURANGO
+    // Format used by the ColorFrameReader of the Xbox One Kinect. Not used directly by GFx itself, but it is
+    // included here so that users can easily replace textures within .SWFs using the Kinect color output.
+    { Image_Y4_U2_V2,    DXGI_FORMAT_G8R8_G8B8_UNORM, 1, D3D_FEATURE_LEVEL_9_1,  &Image::CopyScanlineDefault,             &Image::CopyScanlineDefault },
+#endif
+
+    { Image_None,       DXGI_FORMAT_UNKNOWN,         0, D3D_FEATURE_LEVEL_9_1,  0,                                       0 }
 };
 
 
 void        TextureManager::initTextureFormats()
 {
+    // Obtain the feature level, so we can check if the TextureFormat is unsupported by the current feature level.
+    D3D_FEATURE_LEVEL currentFeatureLevel = D3D_FEATURE_LEVEL_10_0;
+#if (SF_D3D_VERSION == 11)
+    currentFeatureLevel = pDevice->GetFeatureLevel();
+#elif (SF_D3D_VERSION == 10 )
+    Ptr<ID3D1x(Device1)> d3d10Device1;
+    if ( SUCCEEDED(pDevice->QueryInterface(IID_ID3D10Device1, (void**)&d3d10Device1.GetRawRef())) && d3d10Device1)
+    {
+        currentFeatureLevel = (D3D_FEATURE_LEVEL)d3d10Device1->GetFeatureLevel();
+    }
+#endif
+
     TextureFormat::Mapping* pmapping = 0;
     for (pmapping = TextureFormatMapping; pmapping->Format != Image_None; pmapping++)
     {
+        // Must exclude non-supported image formats before checking the support, because they will
+        // cause the D3D11 debug runtime to assert.
+        if (currentFeatureLevel < pmapping->MinFeatureLevel)
+            continue;
+
         UINT formatSupport;
         // See if format is supported.        
         if (SUCCEEDED( pDevice->CheckFormatSupport(pmapping->D3DFormat, &formatSupport) ) &&

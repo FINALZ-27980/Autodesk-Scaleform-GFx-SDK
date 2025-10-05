@@ -61,17 +61,19 @@ namespace Classes { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class ScreenMouseEvent : public Traits
+    class ScreenMouseEvent : public fl_events::MouseEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ScreenMouseEvent"; }
 #endif
     public:
-        typedef Classes::fl_events::ScreenMouseEvent ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::MouseEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ScreenMouseEvent(VM& vm);
+        ScreenMouseEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

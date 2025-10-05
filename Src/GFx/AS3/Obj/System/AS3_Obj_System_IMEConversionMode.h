@@ -52,7 +52,7 @@ namespace Classes { namespace fl_system
     
 namespace ClassTraits { namespace fl_system
 {
-    class IMEConversionMode : public Traits
+    class IMEConversionMode : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_system
 #endif
     public:
         typedef Classes::fl_system::IMEConversionMode ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IMEConversionMode(VM& vm);
+        IMEConversionMode(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 8 };
         static const MemberInfo mi[MemberInfoNum];

@@ -52,17 +52,19 @@ namespace Classes { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class EvalError : public Traits
+    class EvalError : public fl::Error
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::EvalError"; }
 #endif
     public:
-        typedef Classes::fl::EvalError ClassType;
+        typedef ClassCallConstruct ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        EvalError(VM& vm);
+        EvalError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

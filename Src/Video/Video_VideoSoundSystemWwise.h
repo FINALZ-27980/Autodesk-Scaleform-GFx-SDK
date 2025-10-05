@@ -17,7 +17,11 @@ otherwise accompanies this software in either electronic or hard copy form.
 #define INC_GFX_VIDEO_SYSTEMSOUND_WWISE_H
 
 #include "GFxConfig.h"
-#if defined(GFX_ENABLE_VIDEO) && defined(GFX_VIDEO_USE_WWISE)
+#ifdef GFX_ENABLE_VIDEO
+
+// Wwise support for Windows, Mac, Xbox360, PS3 and Wii only
+#if defined(SF_OS_WIN32)   || defined(SF_OS_MAC) || \
+    defined(SF_OS_XBOX360) || defined(SF_OS_PS3) || defined(SF_OS_WII) || defined(SF_OS_ORBIS)
 
 #include "Video/Video_Video.h"
 #include "Kernel/SF_MemoryHeap.h"
@@ -47,6 +51,7 @@ private:
 
 }}} // Scaleform::GFx::Video
 
+#endif
 #endif // GFX_ENABLE_VIDEO
 
 #endif // INC_GFX_VIDEO_SYSTEMSOUND_WWISE_H

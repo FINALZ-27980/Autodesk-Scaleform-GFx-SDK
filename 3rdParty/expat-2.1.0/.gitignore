@@ -1,0 +1,16 @@
+vc100
+vc110
+vc120
+vc140
+vc141
+vc142
+.vs
+**/bin/*
+**/release/*
+**/debug/*
+**/*.dir
+**/*.sdf
+**/*.VC.db
+**/ipch*
+**/ImVecTool/*
+*.suo

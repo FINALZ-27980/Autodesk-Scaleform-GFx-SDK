@@ -78,17 +78,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_display
 {
-    class NativeWindow : public Traits
+    class NativeWindow : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::NativeWindow"; }
 #endif
     public:
-        typedef Classes::fl_display::NativeWindow ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeWindow(VM& vm);
+        NativeWindow(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

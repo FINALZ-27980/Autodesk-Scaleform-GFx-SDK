@@ -54,7 +54,7 @@ public:
     typedef CriUint32 (*GetFloatPcmDataCallback)(void *obj, CriUint32 nch, CriFloat32 *pcmbuf[], CriUint32 req_nsmpl);
     typedef CriUint32 (*GetSInt16PcmDataCallback)(void *obj, CriUint32 nch, CriSint16 *pcmbuf[], CriUint32 req_nsmpl);
 
-    CriMvSound(MemoryHeap*, VideoSound* psound) : pVSInterface(psound) {}
+    CriMvSound(MemoryHeap* pheap, VideoSound* psound) : pHeap(pheap), pVSInterface(psound) {}
     virtual ~CriMvSound() {}
 
     // Implementation of CriMvSoundInterface
@@ -119,6 +119,7 @@ private:
         }
     };
 
+    MemoryHeap*         pHeap;
     Ptr<VideoSound>     pVSInterface;
     PCMStreamImpl       StreamImpl;
 };

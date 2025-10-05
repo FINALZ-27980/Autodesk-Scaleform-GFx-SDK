@@ -52,7 +52,7 @@ namespace Classes { namespace fl_desktop
     
 namespace ClassTraits { namespace fl_desktop
 {
-    class NativeDragActions : public Traits
+    class NativeDragActions : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_desktop
 #endif
     public:
         typedef Classes::fl_desktop::NativeDragActions ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        NativeDragActions(VM& vm);
+        NativeDragActions(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

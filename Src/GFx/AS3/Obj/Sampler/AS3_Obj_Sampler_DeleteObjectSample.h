@@ -92,7 +92,7 @@ namespace Instances { namespace fl_sampler
 
 namespace InstanceTraits { namespace fl_sampler
 {
-    class DeleteObjectSample : public CTraits
+    class DeleteObjectSample : public fl_sampler::Sample
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -130,17 +130,19 @@ namespace InstanceTraits { namespace fl_sampler
     
 namespace ClassTraits { namespace fl_sampler
 {
-    class DeleteObjectSample : public Traits
+    class DeleteObjectSample : public fl_sampler::Sample
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::DeleteObjectSample"; }
 #endif
     public:
-        typedef Classes::fl_sampler::DeleteObjectSample ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_sampler::DeleteObjectSample InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        DeleteObjectSample(VM& vm);
+        DeleteObjectSample(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

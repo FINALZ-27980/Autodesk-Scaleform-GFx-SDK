@@ -638,8 +638,8 @@ public:
     enum PresentationType { FmtDecimal, FmtScientific, FmtSignificant };
     
 public:
-    DoubleFormatter(Double v);
-    DoubleFormatter(MsgFormat& f, Double v);
+    DoubleFormatter(double v);
+    DoubleFormatter(MsgFormat& f, double v);
 
 public:
     virtual void        Parse(const StringDataPtr& str);
@@ -708,7 +708,7 @@ private:
 
 private:
     PresentationType    Type;
-    const Double        Value;
+    const double        Value;
     UPInt               Len;
 
     char                Buff[347 + 1]; 
@@ -725,7 +725,6 @@ struct FmtInfo<double>
 {
     typedef DoubleFormatter formatter;
 };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 class ResouceProvider;

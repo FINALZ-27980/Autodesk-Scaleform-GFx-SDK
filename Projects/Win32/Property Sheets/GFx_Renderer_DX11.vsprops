@@ -10,6 +10,6 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="d3d11.lib dxgi.lib d3dcompiler.lib dxguid.lib"
+		AdditionalDependencies="d3d11.lib dxgi.lib d3dcompiler.lib dxguid.lib libgfxrender_d3d11.lib"
 	/>
 </VisualStudioPropertySheet>

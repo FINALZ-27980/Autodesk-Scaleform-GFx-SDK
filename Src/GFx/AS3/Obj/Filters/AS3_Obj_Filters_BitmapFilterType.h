@@ -52,7 +52,7 @@ namespace Classes { namespace fl_filters
     
 namespace ClassTraits { namespace fl_filters
 {
-    class BitmapFilterType : public Traits
+    class BitmapFilterType : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_filters
 #endif
     public:
         typedef Classes::fl_filters::BitmapFilterType ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        BitmapFilterType(VM& vm);
+        BitmapFilterType(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 3 };
         static const MemberInfo mi[MemberInfoNum];

@@ -86,13 +86,14 @@ public:
 
 bool TreeMesh::NodeData::PropagateUp(Context::Entry* entry) const
 {
-    RectF bounds, parentBounds;
+    RectF bounds, parentBounds, orgBounds;
 
     if (pShape)
         bounds = pShape->GetIdentityBounds();
     if (!bounds.IsEmpty())
     {
         // Must apply any filters to the bounds before it is transformed into parent space.
+        orgBounds = bounds;
         expandByFilterBounds(&bounds, false );
         if ( Is3D() )
         {
@@ -111,6 +112,7 @@ bool TreeMesh::NodeData::PropagateUp(Context::Entry* entry) const
         NodeData* d = pm->GetWritableData(Change_AproxBounds);
         d->AproxLocalBounds = bounds;
         d->AproxParentBounds= parentBounds;
+        d->updateOriginalBoundState(orgBounds);
         return IsVisible(); // Only update parent for visible children.
     }
     return false;   

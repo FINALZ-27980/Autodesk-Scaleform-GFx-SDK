@@ -1,0 +1,115 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2017 CRI Middleware Co., Ltd.
+ *
+ * Library : CRI Base Library for PC
+ * Module  : Revision history
+ * File    : history_cribase_pc_e.txt
+ * Version : 2.45.07
+ *
+ ****************************************************************************/
+
+1. Library Version
+(1) CRI Base library
+  [cri_base_pcx86.lib] 631,284 bytes
+  CRI ADX Decoder              PCx86  Ver.1.00.08  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Ambisonics               PCx86  Ver.1.00.00  Build:May  8 2019 11:06:53  MSC19.00.24210.0,MT
+  CRI Base                     PCx86  Ver.2.45.07  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI C Runtime Wrapper        PCx86  Ver.1.04.00  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Critical Section         PCx86  Ver.1.00.13  Build:May  8 2019 11:07:00  MSC19.00.24210.0,MT
+  CRI Delegate                 PCx86  Ver.1.04.00  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Error                    PCx86  Ver.1.04.04  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Handle Manager           PCx86  Ver.1.01.00  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Hash Table               PCx86  Ver.0.51.00  Build:May  8 2019 11:06:53  MSC19.00.24210.0,MT
+  CRI Heap                     PCx86  Ver.1.21.03  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI LLDECOMP3                PCx86  Ver.0.90.04  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Malloc                   PCx86  Ver.0.50.01  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Random Number Generator  PCx86  Ver.1.00.00  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Stream Joint             PCx86  Ver.1.02.00  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Thread                   PCx86  Ver.1.04.08  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI Timer                    PCx86  Ver.0.50.05  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI UsfDmx                   PCx86  Ver.1.03     Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  CRI UTF Retriever            PCx86  Ver.1.00.02  Build:May  8 2019 11:07:01  MSC19.00.24210.0,MT
+  HCA Decoder (Float)                 Ver.2.06.05  Build:May  8 2019 11:07:02
+  HCA Mixer                           Ver.2.00.02  Build:May  8 2019 11:07:02
+
+  [cri_base_pcx86D.lib] 2,983,386 bytes
+  CRI ADX Decoder              PCx86  Ver.1.00.08  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Ambisonics               PCx86  Ver.1.00.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Base                     PCx86  Ver.2.45.07  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI C Runtime Wrapper        PCx86  Ver.1.04.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Critical Section         PCx86  Ver.1.00.13  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Delegate                 PCx86  Ver.1.04.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Error                    PCx86  Ver.1.04.04  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Handle Manager           PCx86  Ver.1.01.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Hash Table               PCx86  Ver.0.51.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Heap                     PCx86  Ver.1.21.03  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI LLDECOMP3                PCx86  Ver.0.90.04  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Malloc                   PCx86  Ver.0.50.01  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Random Number Generator  PCx86  Ver.1.00.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Stream Joint             PCx86  Ver.1.02.00  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Thread                   PCx86  Ver.1.04.08  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI Timer                    PCx86  Ver.0.50.05  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI UsfDmx                   PCx86  Ver.1.03     Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  CRI UTF Retriever            PCx86  Ver.1.00.02  Build:May  8 2019 11:07:04  MSC19.00.24210.0,DEBUG,MT
+  HCA Decoder (Float)                 Ver.2.06.05  Build:May  8 2019 11:07:05
+  HCA Mixer                           Ver.2.00.02  Build:May  8 2019 11:07:05
+
+2. Library Size
+The static memory size used by the CRI Base library depends on the libraries above.
+It depends on the linking size.
+
+3. System requirements/Testing environment
+This release has been developed and tested in the following environment:
+
+3.1 Hardware
+  CPU       : Intel Core i7-3770 (3.4GHz) 
+  Memory    : 8GB
+
+3.2 Development environment
+(1) OS
+  Microsoft Windows 10 Professional
+
+(2) Compiler / Debugger
+  Microsoft Visual Studio 2015 Update 3
+
+4. Revision history
+ [2019-05-17 CRI Base Ver.2.45.07]--------------------------------------
+Internal modification only.
+
+ [2019-02-28 CRI Base Ver.2.45.06]--------------------------------------
+ (1) Specification changes
+  (a) Changed the behavior so that they are serialized in the library 
+      since there is a possibility of a crash when a string operation is performed from multiple threads
+      at the same time, even when error callbacks are invoked from multiple threads at the same time.
+
+ [2018-09-26 CRI Base Ver.2.44.04]--------------------------------------
+Internal modification only.
+
+ [2018-06-01 CRI Base Ver.2.43.07]--------------------------------------
+Internal modification only.
+
+ [2018-01-31 CRI Base Ver.2.43.06]--------------------------------------
+Internal modification only.
+
+ [2017-10-18 CRI Base Ver.2.43.01.01]----------------------------------------
+(1) Bug fixes
+  (a) Removed the dependency of Core Codec AAC module to C ++ standard library.
+      There was a possibility of causing a mismatch error with the C ++ library used by the user's project.
+
+ [2017-10-05 CRI Base Ver.2.43.01]------------------------------------------
+Internal modification only.
+
+ [2017-06-30 CRI Base Ver.2.42.15]------------------------------------------
+(1) Bug fixes
+  (a) Fixed a problem where an error occurred instead of a warning
+      if the error callback function was overwritten by criErr_SetCallback().
+
+ [2017-01-10 CRI Base Ver.2.42.07]------------------------------------------
+The first release of the CRI Base Library for PC.
+
+-END-
+
+/*--< end of file >---------------------------------------------------------*/

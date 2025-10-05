@@ -34,6 +34,8 @@ namespace fl_system
 } // namespace fl_system
 namespace fl
 {
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
 } // namespace fl
@@ -89,7 +91,11 @@ namespace Instances { namespace fl_system
 //##protect##"instance$methods"
     public:
         virtual void AS3Constructor(unsigned argc, const Value* argv);
-        VMAppDomain& GetAppDomain() const;
+        VMAppDomain& GetAppDomain() const
+        {
+            SF_ASSERT(VMDomain);
+            return *VMDomain;
+        }
         void SetAppDomain(VMAppDomain& appDomain);
 //##protect##"instance$methods"
 
@@ -125,7 +131,7 @@ namespace Instances { namespace fl_system
         }
 
 //##protect##"instance$data"
-        VMAppDomain* VMDomain;
+        SPtr<VMAppDomain> VMDomain;
 //##protect##"instance$data"
 
     };
@@ -133,7 +139,7 @@ namespace Instances { namespace fl_system
 
 namespace InstanceTraits { namespace fl_system
 {
-    class ApplicationDomain : public CTraits
+    class ApplicationDomain : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -159,6 +165,8 @@ namespace InstanceTraits { namespace fl_system
 
         enum { ThunkInfoNum = 3 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[5];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -171,7 +179,7 @@ namespace InstanceTraits { namespace fl_system
     
 namespace ClassTraits { namespace fl_system
 {
-    class ApplicationDomain : public Traits
+    class ApplicationDomain : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -179,12 +187,16 @@ namespace ClassTraits { namespace fl_system
 #endif
     public:
         typedef Classes::fl_system::ApplicationDomain ClassType;
+        typedef InstanceTraits::fl_system::ApplicationDomain InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ApplicationDomain(VM& vm);
+        ApplicationDomain(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 1 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[1];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

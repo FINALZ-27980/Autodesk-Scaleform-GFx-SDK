@@ -174,7 +174,6 @@ public:
     ~SimpleMeshCache();
 
     virtual void    ClearCache();
-    virtual void    BeginFrame();
     virtual void    EndFrame();
 
     virtual UPInt   Evict(Render::MeshCacheItem* p, AllocAddr* pallocator = 0, MeshBase* pmesh = 0);

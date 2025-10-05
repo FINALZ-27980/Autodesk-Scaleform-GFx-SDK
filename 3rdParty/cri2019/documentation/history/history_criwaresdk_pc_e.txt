@@ -1,0 +1,203 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2017 CRI Middleware Co., Ltd.
+ *
+ * Title   : CRIWARE SDK for PC
+ * Module  : Revision history
+ * File    : history_criwaresdk_pc_e.txt
+ * Date    : 2019-06-07
+ * Version : 2.19.03
+ *
+ ****************************************************************************/
+
+1.  Revision History
+[2019-06-07 CRI ADX2 SDK Ver.2.19.03]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.19.03
+  (b) CRI File System      : Ver.2.78.07
+  (c) CRI Base             : Ver.2.45.07
+
+(2) Tools
+  (a) CRI Atom Tools Ver.3 : Ver.3.41.10
+  (b) CRI Sofdec2 Tools    : Ver.2.22.01
+
+(3) Samples
+  (a) Fixed a bug where did not correspond to the change of voice data header
+      in the "playback_multi_ch" sample.
+
+[2019-04-05 CRI ADX2 SDK Ver.2.19.01]------------------------------------------
+(1) General
+  (a) Changed the library development environment and sample project environment from VS2012 to VS2015.
+
+(2) Libraries
+  (a) CRI Atom             : Ver.2.19.00
+  (b) CRI File System      : Ver.2.78.05
+  (c) CRI Mana             : Ver.2.18.00
+  (d) CRI Base             : Ver.2.45.06
+
+(3) Tools
+  (a) CRI Atom Tools Ver.2 : Ver.2.35.19
+  (b) CRI Atom Tools Ver.3 : Ver.3.41.01
+  (c) CRI Sofdec2 Tools    : Ver.2.22.00
+      * Added batch file to convert Sofdec.Prime or H.264 usm to VP9 usm.
+
+(4) Expansion Plugin
+  (a) CRI ADX2 Audio Effect McDSP Expansion Ver.1.00.02
+  (b) CRI Sofdec2 Codec VP9 Expansion Ver.1.01.00
+
+(5) Samples
+  (a) Corrected an error in the operation instruction displayed on the "seek_playback" sample.
+  (b) Corrected an error in the operation instruction displayed on the "multi_device" sample.
+
+[2018-11-09 CRIWARE SDK Ver.2.18.01]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.17.21
+  (b) CRI Mana             : Ver.2.16.17
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2 : Ver.2.35.12
+  (b) CRI Atom Tools Ver.3 : Ver.3.40.04
+  (c) CRI Sofdec2 Tools    : Ver.2.20.05
+
+[2018-10-09 CRIWARE SDK Ver.2.18.00]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.17.20
+  (b) CRI File System      : Ver.2.77.01
+  (c) CRI Mana             : Ver.2.16.16
+  (d) CRI Base             : Ver.2.44.04
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2 : Ver.2.35.10
+  (b) CRI Atom Tools Ver.3 : Ver.3.40.02
+      CRI Atom Tools Ver.3 became official release from this version.
+      For details, please refer to the manual.
+  (c) CRI Sofdec2 Tools    : Ver.2.20.04
+
+[2018-06-20 CRIWARE SDK Ver.2.17.02]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.16.26
+  (b) CRI File System      : Ver.2.76.07
+  (c) CRI Mana             : Ver.2.15.17
+  (d) CRI Base             : Ver.2.43.07
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2 : Ver.2.35.02
+  (b) CRI Atom Tools Ver.3 : Ver.3.35.10
+  (c) CRI Sofdec2 Tools    : Ver.2.20.01
+  (d) Version Checker Wizz : Ver.1.47
+
+(3) Expansion Plugin
+  (a) CRI Sofdec2 Codec VP9 Expansion Ver.1.00.00
+
+[2018-03-14 CRIWARE SDK Ver.2.17.01]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.16.22
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2 : Ver.2.35.01
+  (b) CRI Atom Tools Ver.3 : Ver.3.35.01
+
+[2018-02-28 CRIWARE SDK Ver.2.17.00]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.16.20
+  (b) CRI File System      : Ver.2.76.04
+  (c) CRI Mana             : Ver.2.15.04
+  (d) CRI Base             : Ver.2.43.06
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2 : Ver.2.35.00
+  (b) CRI Atom Tools Ver.3 : Ver.3.35.00
+  (c) CRI Sofdec2 Tools    : Ver.2.17.00
+
+(3) Expansion Plugin
+  (a) CRI ADX2 Audio Effect McDSP Expansion Ver.1.00.01
+
+(4) Samples
+  (a) Changed the "criatom/memory_management" sample code, due to specification changes in the CRI Atom library.
+    - When calling criAtomEx_RegisterAcfFile(), it is essential to register a memory allocator.
+  (b) Added samples "criatom/multi_device", "criatom/select_device".
+  (c) Deleted samples "criatom/xaudio2_initialization", "criatom/xaudio2_output".
+  (d) Fixed an issue where warnings occurred in sample "crimana/playback_with_adx2".
+
+[2018-01-22 CRIWARE SDK Ver.2.16.02]------------------------------------------
+(1) Libraries
+  (a) CRI Atom             : Ver.2.15.18
+  (b) CRI File System      : Ver.2.75.06
+  (c) CRI Base             : Ver.2.43.01.01
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2      : Ver.2.34.03
+  (b) CRI Atom Tools Ver.3      : Ver.3.34.04
+  (c) CRI Sofdec2 Tools         : Ver.2.16.00
+
+(3) Expansion Plugin
+  (a) CRI ADX2 Audio Effect McDSP Expansion Ver.1.00.00
+
+[2017-10-23 CRIWARE SDK Ver.2.16]---------------------------------------------
+(1) Libraries
+  (a) CRI Atom Ver.2.15.14
+  (b) CRI Mana Ver.2.14.00
+  (c) CRI Base Ver.2.43.01
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2      : Ver.2.34.00
+  (b) CRI Atom Tools Ver.3      : Ver.3.34.01
+  (c) CRI Sofdec2 Tools         : Ver.2.15.00
+
+(3) Samples
+  (a) Added the following sample program:
+      - user_effect_plugin
+  (b) Following addition of "user_effect_plugin" sample,
+      the following header files and libraries have been added.
+      The following files are used in the sample program.
+      - CRIWARE/SDK/pc/include/expansion/audio_effect/simple_delay_for_adx2_sample.h
+      - CRIWARE/SDK/pc/libs/x64/expansion/audio_effect/criafx_simple_delay_pcx64.lib
+      - CRIWARE/SDK/pc/libs/x64/expansion/audio_effect/criafx_simple_delay_pcx64D.lib
+      - CRIWARE/SDK/pc/libs/x86/expansion/audio_effect/criafx_simple_delay_pcx86.lib
+      - CRIWARE/SDK/pc/libs/x86/expansion/audio_effect/criafx_simple_delay_pcx86D.lib
+  (c) Fixed a bug where the "crimana/multilingual" sample and "crimana/seek_playback" sample
+      hung up at the end of the application.
+
+(4) SDK structure
+Fixed a problem where The folder name under the "\SDK\documentation" folder was inappropriate. 
+
+[2017-08-10 CRIWARE SDK Ver.2.15 ] -------------------------------------------
+(1) Libraries
+  (a) CRI Atom Ver.2.14.35
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2.30.01
+
+[2017-07-21 CRIWARE SDK Ver.2.14 ] -------------------------------------------
+(1) Libraries
+  (a) CRI Atom Ver.2.14.29
+  (b) CRI File System Ver.2.75.05
+  (c) CRI Mana Ver.2.13.04
+  (d) CRI Base Ver.2.42.15
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2.30.00
+  (b) CRI File System Tools Ver.2.50.04
+  (c) CRI Sofdec2 Tools Ver.2.14.00
+  (d) Version Checker Wizz Ver.1.46
+
+[2017-03-28 CRIWARE SDK Ver.2.11 ] -------------------------------------------
+The first release of the CRIWARE SDK.
+
+(1) Libraries
+  (a) CRI Atom Ver.2.12.01
+  (b) CRI File System Ver.2.74.01
+  (c) CRI Mana Ver.2.10.00
+  (d) CRI Base Ver.2.42.07
+
+(2) Tools
+  (a) CRI Atom Tools Ver.2.27.05
+  (b) CRI File System Tools Ver.2.50.03
+  (c) CRI Sofdec2 Tools Ver.2.12.01
+  (d) Version Checker Wizz Ver.1.45
+
+-END-
+
+/*--< end of file >---------------------------------------------------------*/

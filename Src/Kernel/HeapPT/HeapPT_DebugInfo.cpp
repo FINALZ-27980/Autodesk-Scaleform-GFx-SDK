@@ -141,6 +141,22 @@ void DebugStorage::CheckDataTail(UPInt addr, UPInt usable)
 }
 
 //------------------------------------------------------------------------
+unsigned DebugStorage::GetStatId(UPInt parentAddr, const AllocInfo* info)
+{
+    AllocInfo i2 = info ? *info : AllocInfo();
+    if (i2.StatId != Stat_Default_Mem)
+    {
+        return i2.StatId;
+    }
+    DebugData* parent = (DebugData*)AllocTree.FindEqual(parentAddr);
+    if (parent == NULL)
+    {
+        return Stat_Default_Mem;
+    }
+    return parent->Info.StatId;
+}
+
+//------------------------------------------------------------------------
 bool DebugStorage::AddAlloc(UPInt parentAddr, bool autoHeap, UPInt thisAddr, 
                             UPInt size, UPInt usable, const AllocInfo* info)
 {
@@ -274,6 +290,7 @@ void DebugStorage::FreeAll()
 
 
 //------------------------------------------------------------------------
+#ifdef SF_ENABLE_STATS
 void DebugStorage::getStatNode(const DebugData* node, 
                                AllocEngine* allocator, 
                                StatBag* bag,
@@ -289,13 +306,13 @@ void DebugStorage::getStatNode(const DebugData* node,
         getStatNode(node->pNext, allocator, bag, count);
     }
 }
-
+#endif
 
 //------------------------------------------------------------------------
 void DebugStorage::GetStats(AllocEngine* allocator, StatBag* bag) const
 {
-    unsigned count = 0;
 #ifdef SF_ENABLE_STATS
+    unsigned count = 0;
     // Must be locked in GMemoryHeap.
     getStatNode(AllocTree.Root, allocator, bag, count);
 #else

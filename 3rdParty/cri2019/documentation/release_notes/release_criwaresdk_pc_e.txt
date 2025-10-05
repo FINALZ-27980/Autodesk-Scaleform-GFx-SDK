@@ -1,0 +1,254 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2017 CRI Middleware Co., Ltd.
+ *
+ * Title   : CRIWARE SDK for PC
+ * Module  : Release notes
+ * File    : release_criwaresdk_pc_e.txt
+ * Date    : 2019-06-07
+ * Version : 2.19.03
+ *
+ ****************************************************************************/
+
+/*--------------------------------------------------------------------------*
+ *
+ * [Table of Contents]
+ * 1.  About the CRIWARE SDK
+ * 2.  Version information
+ *   2.1  Version information for this release
+ *   2.2  Revision history
+ * 3.  How to use the SDK
+ *   3.1  Folder structure
+ *   3.2  Installation
+ * 4.  System requirements / Testing environment
+ *   4.1  Libraries
+ *   4.2  CRI Tools
+ * 5.  Notes
+ *   5.1  Known problems
+ *   5.2  Limitations
+ *   5.3  About CRI Atom tools Ver.3 transition
+ *
+ * Notes on using SDK
+ *
+ *--------------------------------------------------------------------------*/
+
+1.  About the CRIWARE SDK
+CRI ADX2 is a multi-platform, highly-functional and compact audio middleware.
+CRI Sofdec2 is a multi-platform, high-performance movie playback middleware.
+Both are part of the "CRIWARE SDK", the software development kit for "CRIWARE", which is provided for 
+developers of PC applications.
+CRIWARE SDK comes with the following items:
+
+    - CRI Atom runtime library
+    - CRI File System runtime library
+    - CRI Mana runtime library
+    - CRI Base runtime library
+    - CRI Atom tools (Ver.2 / Ver.3)
+    - CRI File System tools
+    - CRI Sofdec2 tools
+    - CRI ADX2 Expansion Plugins
+    - Tutorial / sample programs
+    - CRI ADX2 manual
+    - CRI File System manual
+    - CRI Sofdec2 manual
+
+2.  Version Information
+2.1  Version Information of This Release
+(1) SDK
+    CRIWARE SDK                : Ver.2.19.03
+
+(2) Libraries
+    CRI Atom library           : Ver.2.19.03
+    CRI File System library    : Ver.2.78.07
+    CRI Mana library           : Ver.2.18.00
+    CRI Base library           : Ver.2.45.07
+
+(3) Tools
+    CRI Atom tools Ver.2       : Ver.2.35.19
+    CRI Atom tools Ver.3       : Ver.3.41.10
+    CRI File System tools      : Ver.2.50.04
+    CRI Sofdec2 tools          : Ver.2.22.01
+    Version Information Viewer : Ver.1.49
+
+(4) Expansion Plugins
+    CRI ADX2 Audio Effect McDSP Expansion : Ver.1.00.02
+    CRI Sofdec2 Codec VP9 Expansion       : Ver.1.01.00
+
+2.2  Revision History
+(1) SDK
+The revision history of the SDK is stored in the following folder:
+  - /CRIWARE/SDK/documentation/history/
+
+(2) Tools
+The release notes and the revision history for the tools are stored in the following folders:
+  - /CRIWARE/Tools/ADX2/ver.2/docs/eng/
+  - /CRIWARE/Tools/ADX2/ver.3/docs/eng/
+  - /CRIWARE/Tools/Sofdec2/docs/eng/
+  - /CRIWARE/Tools/Others/crifilesystem/docs/eng/
+  - /CRIWARE/Tools/Others/version_checker/docs/eng/
+
+(3) Expansion Plugins
+The release notes and the revision history for the Expansion Plugins are stored in the following folders:
+  - /CRIWARE/Expansion/cri_audio_effect/McDSP/documentation/
+  - /CRIWARE/Expansion/sofdec2_codecs/vp9/documentation/
+
+3.  How to use the SDK
+3.1  Folder structure
+The CRIWARE SDK has the following folder structure:
+
+CRIWARE
+  + FirstSteps                  : Quick start manuals
+  |
+  + SDK
+  |   + common                  [Platform independent folder]
+  |   |   + smpdata             : Data for sample program
+  |   + documentation           [Documentation]
+  |   |   + error_reference     : Error manuals
+  |   |   + history             : Revision history
+  |   |   + release_notes       : Release notes
+  |   |   + sdk_manual          : SDK manual
+  |   + pc                      [PC specific folder]
+  |       + include             : Header files 
+  |       + libs                : Library files
+  |       + samples             : Sample programs
+  |       + source              : Common sample source
+  |       + tutorials           : Tutorial programs
+  |
+  + Tools                       [Data creation tools]
+  |   + ADX2                    : CRI Atom tools ("CRI ADX2")
+  |   + LicenseFiles            : License files needed to run the tools
+  |   + Others
+  |   |   +- crifilesystem      : CRI File System tools ("FileMajik PRO")
+  |   |   +- crypt              : Data encryption tools for Sofdec2
+  |   |   +- version_checker    : Version checker
+  |   +- Sofdec2                : Sofdec2 tools ("CRI Sofdec2")
+  +- Expansion                  [Expansion Plugin]
+      +- cri_audio_effect
+          +- McDSP              : McDSP Effect Plugin
+      +- sofdec2_codecs         :
+          +- vp9                : VP9 Expansion Plugin
+
+3.2  Installation
+Install the SDK with the following procedure:
+  - Execute "CRIWARE SDK Installer.exe"
+
+4.  System Requirements
+This release has been checked on the following environment:
+
+4.1  Libraries
+4.1.1  Hardware
+  CPU       : Intel Core2 Duo i7-3770 (3.4GHz) (*1)
+  Memory    : 8GB
+
+(*1) Because XAudio2 is used for the sound output, support for SSE2 instructions is required to use the ADX2 runtime library.
+
+4.1.2 Development Environment
+(1)  OS
+  Microsoft Windows 10 Professional
+
+(2)  Complier/Debugger
+  Microsoft Visual Studio 2015 Update 3
+
+(3)  DirectX SDK
+  DirectX SDK (June 2010)
+
+4.2  CRI Tools
+The CRI Atom and CRI File system tools run in the following environment:
+
+4.2.1  Hardware
+  CPU       : Pentium4 2GHz or higher 
+  Memory    : 2GB or more
+
+4.2.2  Development Environment
+(1)  OS
+  Windows 7 / Windows 8.1 / Windows 10
+
+(2)  .NET Framework
+  Microsoft .NET Framework 3.5 SP1 or later
+  Microsoft .NET Framework 4.0 or later
+
+[Note]
+Please note the following when using CRI Atom tools:
+  - Starting from the Network
+    The CRI Atom tools cannot be started from the network. 
+    To run the program, copy the executable files onto your PC before use. 
+
+5.  Notes
+5.1  Known problems
+5.1.1  Library
+The library has the following known problems:
+
+  - An audio file may not be released immediately after the playback  
+    is stopped by the criAtomExPlayer_Stop function or the player 
+    handle is destroyed by the criAtomExPlayer_Destroy function.
+   (There is a possibility that the audio file is still referenced within the library 
+    after the player is stopped.)
+  * A work around consists in destroying the player pool before releasing the data.
+  - Immediately after stopping the playback by calling the criAtomExPlayer_Stop function 
+    or destroying the player handle by calling the criAtomExPlayer_Destroy function 
+    during the playback of a single file, a sound file that is being played may not be deleted.
+   (The file may be referenced even after stopping the player.)
+    Please note that the above problem occurs only when playing a sound file 
+    by using the criAtomExPlayer_SetFile function.  
+    The ACB file can be deleted correctly after the execution of the criAtomExAcb_Release function.
+  - When ACB data is used, the seek information set by 
+    the criAtomExPlayer_SetStartTime function is not cleared by 
+    the criAtomExPlayer_ResetParameters function.
+  * If you want to reset the seek information independently of the audio data, 
+    please execute criAtomExPlayer_SetStartTime (player, 0);
+  - Values that an AtomEx player has at the first server processing after 
+    the execution of the criAtomExPlayer_Start function are used for 
+    the following parameters to perform a playback.
+      (a) ASR rack ID (criAtomExPlayer_SetAsrRackId)
+      (b) Mixer ID of the HCA decoding destination (criAtomExPlayer_SetHcaMxMixerId)
+      (c) Voice pool ID (criAtomExPlayer_SetVoicePoolIdentifier)
+      (d) Sound renderer type (criAtomExPlayer_SetSoundRendererType)
+    Therefore, when executing one of these functions immediately after 
+    the execution of the criAtomExPlayer_Start function, 
+    a sound played by the criAtomExPlayer_Start function may be output 
+    with the parameters specified at the start of the playback.
+   (Parameters may be overwritten between the execution of 
+    the criAtomExPlayer_Start function and the starting of the server processing.)
+    To handle these parameters each time you start the playback, 
+    please prepare a dedicated AtomEx player for each of them to avoid this problem.
+  - Executing the criAtomExAcb_AttachAwbFile function on the ACB data 
+    loaded with the criAtomExAcb_LoadAcbData function 
+   (or the criAtomExAcb_LoadAcbDataById function) may cause an access violation. 
+    In order to avoid this issue, it is necessary to load the ACB data 
+    into a memory area aligned on a 8-byte boundary.
+  - Seeking is not supported for looping data encoded with the ADX2 codec. A noisy output may occur.
+
+5.1.2  Tools
+Please see the tool's release notes about non-implemented features.
+
+5.2  Limitations
+5.2.1  Library
+The library has the following limitations:
+
+  (a) If the file path contains a comma: ",", tab: "\\t", or line break: "\\n" character, 
+      the library will interpret them wrongly as path separators and attempt to open a file with an incorrect path.
+      Do not use these characters, as errors such as failing to secure memory will occur.
+  (b) If you want to apply a ASR DSP effect to the L, R, Ls, Rs channels of a 4-channel waveform, 
+      please set the number of ASR output channels to 6 (5.1 ch) or 8 (7.1 ch).
+
+5.3 About CRI Atom tools Ver.3 transition
+There are some unsupported items compared with CRI Atom Craft Ver.2.
+For details, refer to "Released the new version CRI AtomCraft Ver.3" in the manual.
+
+/*--------------------------------------------------------------------------*
+ *
+ *  Notes on using the SDK
+ *    All the information contained in this SDK is confidential information of
+ *    CRI Middleware Co., Ltd.
+ *    You are required to enter into an evaluation license agreement beforehand.
+ *    Please treat this information carefully, in accordance with the agreement
+ *    between your company and CRI Middleware.
+ *
+ *--------------------------------------------------------------------------*/
+
+-END-
+
+
+/*--< end of file >---------------------------------------------------------*/

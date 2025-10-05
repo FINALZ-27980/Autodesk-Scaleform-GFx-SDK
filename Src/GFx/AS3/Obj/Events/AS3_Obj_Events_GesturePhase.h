@@ -52,7 +52,7 @@ namespace Classes { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class GesturePhase : public Traits
+    class GesturePhase : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::GesturePhase ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        GesturePhase(VM& vm);
+        GesturePhase(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

@@ -14,14 +14,10 @@ otherwise accompanies this software in either electronic or hard copy form.
 **************************************************************************/
 
 #include "Amp_ServerCallbacks.h"
+#ifdef SF_AMP_SERVER
+
 #include "Amp_Server.h"
 #include "Kernel/SF_MsgFormat.h"
-
-#ifndef SF_AMP_SERVER
-
-namespace { char dummyAmp_ServerCallbacksVar; }; // to disable warning LNK4221 on PC/Xbox
-
-#else
 
 namespace Scaleform {
 namespace GFx {

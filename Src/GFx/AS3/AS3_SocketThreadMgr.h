@@ -17,7 +17,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef INC_GFX_AS3_SOCKET_THREAD_MGR_H
 #define INC_GFX_AS3_SOCKET_THREAD_MGR_H
 
-#include "GFx/AMP/Amp_Socket.h"
+#include "GFx/Net/GFx_Socket.h"
 #include "Kernel/SF_RefCount.h"
 #include "GFx/GFx_PlayerStats.h"
 #include "Kernel/SF_String.h"
@@ -41,7 +41,7 @@ namespace fl_net
 class SocketThreadMgr : public RefCountBase<SocketThreadMgr, StatMV_Other_Mem>
 {
 public:
-    SocketThreadMgr(bool initSocketLib, AMP::SocketImplFactory* socketImplFactory, Instances::fl_net::Socket* sock);
+    SocketThreadMgr(bool initSocketLib, SocketImplFactory* socketImplFactory, Instances::fl_net::Socket* sock);
     virtual ~SocketThreadMgr();
 
     // Initialize Sockets - Starts the threads for sending and receiving messages
@@ -108,7 +108,7 @@ private:
     int Port;
     StringLH IpAddress;
     Lock SocketLock;
-    AMP::Socket Sock;
+    Socket Sock;
     bool InitSocketLib;
     mutable Lock StatusLock;
     bool Exiting;
@@ -128,7 +128,7 @@ private:
 #ifdef TEST_SERVER
     Ptr<Thread> TestServerSocketThread;
     Ptr<SocketBuffer> TestServerBuffer;
-    AMP::Socket TestServerSock;  // just for testing
+    Socket TestServerSock;  // just for testing
     static int TestServerSocketThreadLoop(Thread* sendThread, void* param);
     bool TestServerLoop();
 #endif

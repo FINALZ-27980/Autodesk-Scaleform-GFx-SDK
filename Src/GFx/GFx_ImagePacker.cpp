@@ -330,6 +330,11 @@ void ImagePackerImpl::Finish()
             imgHeight = (imgHeight + 127) & ~127;
             imgWidth = (imgWidth + 127) & ~127;
         }
+        
+        if (PackTextureConfig.Square)
+        {
+            imgWidth = imgHeight = Alg::Max<unsigned>(imgHeight, imgWidth);
+        }
 
         Render::RectPacker::RectType rect;
         rect.Id = rect.x = rect.y = 0;

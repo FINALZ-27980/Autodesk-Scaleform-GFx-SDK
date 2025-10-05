@@ -52,7 +52,7 @@ namespace Classes { namespace fl_html
     
 namespace ClassTraits { namespace fl_html
 {
-    class HTMLPDFCapability : public Traits
+    class HTMLPDFCapability : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_html
 #endif
     public:
         typedef Classes::fl_html::HTMLPDFCapability ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        HTMLPDFCapability(VM& vm);
+        HTMLPDFCapability(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 5 };
         static const MemberInfo mi[MemberInfoNum];

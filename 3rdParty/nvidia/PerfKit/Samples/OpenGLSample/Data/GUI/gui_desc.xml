@@ -1,0 +1,165 @@
+<Panel visible     = "true"
+       name        = "Main Frame">
+
+  <Texture  type        = "TEXTURE_2D"
+            path        = "GUIElements.png" 
+            mode        = "MODULATE"
+            mipmap      = "true">
+
+    <Wrap   s           = "REPEAT"
+            t           = "REPEAT" />
+
+    <Filter mag         = "LINEAR" 
+            min         = "LINEAR_MIPMAP_LINEAR" />
+  </Texture>
+  
+  <Font path = "GUIArialSmall.tga" />
+ 
+  <Panel name           = "Tweakables"
+         layout         = "YAXIS"
+         anchorPoint    = "CORNERLU"> 
+
+    <Position    x = "2" y = "2"/>
+    <Interval    y = "5" />
+
+    <ComboBox lowerPanelColorScale = "2.0"
+              callbackString       = "renderTech">
+
+       <Button clipSize   = "0"
+               drawBounds = "false">
+               
+         <BordersColor x = "150" y = "150" z =  "150" />
+         <Color        x =  "1.0" y =  "1.0" z = "1.0" a = "1.0"/>
+
+         <TextureRectangle x     = "136" y = "65" z = "160" w = "46" />
+         <Texture          type  = "TEXTURE_2D" path  = "GUIElements.png" />
+       </Button>
+
+       <ScrollingColor r = "150" y = "150" z = "150" />
+       <BordersColor   x = "150" y = "150" z = "150" />
+       <BGColor        x =  "40" y =  "40" z =  "40" a = "0.75"/>
+     
+       <Item string = "Render: VBO" />
+       <Item string = "Render: Vertex Array" />
+       <Item string = "Render: Immediate Mode" />
+    </ComboBox>
+
+    <ComboBox lowerPanelColorScale = "2.0"
+              callbackString       = "texture">
+
+       <Button clipSize   = "0"
+               drawBounds = "false">
+               
+         <BordersColor x = "150" y = "150" z =  "150" />
+         <Color        x =  "1.0" y =  "1.0" z = "1.0" a = "1.0"/>
+
+         <TextureRectangle x     = "136" y = "65" z = "160" w = "46" />
+         <Texture          type  = "TEXTURE_2D" path  = "GUIElements.png" />
+       </Button>
+
+       <ScrollingColor r = "150" y = "150" z = "150" />
+       <BordersColor   x = "150" y = "150" z = "150" />
+       <BGColor        x =  "40" y =  "40" z =  "40" a = "0.75"/>
+     
+       <Item string = "Texture: Simple Small" />
+       <Item string = "Texture: Simple Large" />
+    </ComboBox>
+
+    <ComboBox lowerPanelColorScale = "2.0"
+              callbackString       = "model">
+
+       <Button clipSize   = "0"
+               drawBounds = "false">
+               
+         <BordersColor x = "150" y = "150" z =  "150" />
+         <Color        x =  "1.0" y =  "1.0" z = "1.0" a = "1.0"/>
+
+         <TextureRectangle x     = "136" y = "65" z = "160" w = "46" />
+         <Texture          type  = "TEXTURE_2D" path  = "GUIElements.png" />
+       </Button>
+
+       <ScrollingColor r = "150" y = "150" z = "150" />
+       <BordersColor   x = "150" y = "150" z = "150" />
+       <BGColor        x =  "40" y =  "40" z =  "40" a = "0.75"/>
+     
+       <Item string = "Model: Cube" />
+       <Item string = "Model: Bunny" />
+       <!--Item string = "Model: Dragon" /-->
+    </ComboBox>
+
+    <Panel name           = "groupEm1"
+           layout         = "YAXIS"> 
+    <Interval  x = "0"  y = "0" />
+
+    <Label callbackString = "modelCountl">
+      <Text   string = "Model Count: 1" />
+    </Label>
+    <Slider    callbackString = "modelCount"
+               progress       = "27">
+      <Dimensions x = "100" />
+    </Slider>
+    
+    <CheckBox callbackString = "simpleprogram"
+          checked    = "false">
+      <Text   string  = "Simplified Shader" />
+    </CheckBox>
+
+    <CheckBox callbackString = "mipmaps"
+          checked    = "false">
+      <Text   string  = "Mipmaps" />
+    </CheckBox>
+
+    </Panel>
+
+  </Panel>
+  
+  <Panel name           = "DStats"
+         layout         = "XAXIS"
+         anchorPoint    = "CORNERRU"> 
+
+    <Position    x = "-2" y = "2"/>
+    <Interval    y = "0" />
+
+    <Label name = "fpsCounter"><Text string = "0.0 fps (640x480):" /></Label>
+    
+  </Panel>
+
+  <Panel name           = "PStats"
+         layout         = "XAXIS"
+         anchorPoint    = "CORNERRU"> 
+
+    <Position    x = "-7" y = "17"/>
+    <Interval    y = "0" />
+
+    <Label name = "primitiveCount"><Text string = "0 primtives" /></Label>
+    
+  </Panel>
+
+  <Panel name           = "BStats"
+         layout         = "XAXIS"
+         anchorPoint    = "CENTER"> 
+
+    <Position    x = "100" y = "100"/>
+    <Interval    y = "0" />
+
+    <Label name = "gbnCounter"><Text string = "Bottleneck and Utilization Analysis: Ready to run" /></Label>
+    
+  </Panel>
+
+  <Panel name           = "copyright"
+         layout         = "YAXIS"
+         visible        = "false"
+         drawBounds     = "true"
+         drawBackground = "true"
+         anchorPoint    = "CORNERLD"> 
+    <BordersColor   x = "150" y = "150" z = "150" />
+    <BGColor        x =  "40" y =  "40" z =  "40" a = "1.0"/>
+    <Position       x = "10" y = "-10"/>
+  </Panel>
+ 
+  <TexCoordsDesc xStart = "201" yStart = "2" xEnd = "233" yEnd = "34" type = "SLIDER"/>
+  <TexCoordsDesc xStart = "167" yStart = "2" xEnd = "199" yEnd = "34" type = "CHECK_BOX"/>
+  <TexCoordsDesc xStart = "131" yStart = "1" xEnd = "165" yEnd = "35" type = "CHECK_BOX_MARK"/>
+  <TexCoordsDesc xStart =   "1" yStart = "1" xEnd =  "65" yEnd = "66" type = "RADIO_BUTTON"/>
+  <TexCoordsDesc xStart =  "66" yStart = "2" xEnd = "130" yEnd = "66" type = "CHECK_RB_MARK"/>
+</Panel>

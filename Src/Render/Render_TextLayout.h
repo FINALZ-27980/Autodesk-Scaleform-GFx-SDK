@@ -72,7 +72,7 @@ class Image;
 //     }
 //
 //------------------------------------------------------------------------
-class TextLayout : public RefCountBase<TextLayout, StatRender_Text_Mem> // TO DO: StatID
+class TextLayout : public RefCountBase<TextLayout, StatRender_Text_Mem>
 {
 public:
     enum RecordType
@@ -308,7 +308,7 @@ private:
     TextFieldParam                          Param;
     RectF                                   Bounds;
     RectF                                   ClipBox;
-    ArrayLH_POD<UByte, Stat_Default_Mem>    Data;
+    ArrayLH_POD<UByte, StatRender_Text_Mem> Data;
     UPInt                                   DataSize;
     Font**                                  pFonts;
     UPInt                                   FontCount;

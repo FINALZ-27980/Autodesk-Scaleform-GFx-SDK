@@ -70,17 +70,17 @@ WStringBuffer& WStringBuffer::operator = (const WStringBuffer& buff)
 
 WStringBuffer& WStringBuffer::operator = (const String& str)
 {
-    UPInt size = str.GetLength();
+    const UPInt size = str.GetLength();
     if (Resize(size) && size)    
-        UTF8Util::DecodeString(pText, str.ToCStr(), str.GetSize());
+        UTF8Util::DecodeStringSafe(pText, size + 1, str.ToCStr(), str.GetSize());
     return *this;
 }
 
 WStringBuffer& WStringBuffer::operator = (const char* putf8str)
 {
-    UPInt size = UTF8Util::GetLength(putf8str);
+    const UPInt size = UTF8Util::GetLength(putf8str);
     if (Resize(size) && size)    
-        UTF8Util::DecodeString(pText, putf8str);
+        UTF8Util::DecodeStringSafe(pText, size + 1, putf8str);
     return *this;
 }
 
@@ -97,9 +97,9 @@ void WStringBuffer::SetString(const char* putf8str, UPInt utf8Sz)
 {
     if (utf8Sz == SF_MAX_UPINT)
         utf8Sz = SFstrlen(putf8str);
-    UPInt numChars = UTF8Util::GetLength(putf8str, utf8Sz);
+    const UPInt numChars = UTF8Util::GetLength(putf8str, utf8Sz);
     if (Resize(numChars) && utf8Sz)
-        UTF8Util::DecodeString(pText, putf8str, utf8Sz);
+        UTF8Util::DecodeStringSafe(pText, numChars + 1, putf8str, utf8Sz);
 }
 
 void WStringBuffer::SetString(const wchar_t* pstr, UPInt length)

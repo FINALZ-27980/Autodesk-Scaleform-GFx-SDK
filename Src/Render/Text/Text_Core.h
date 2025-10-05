@@ -143,9 +143,13 @@ public:
     friend class HashFunctor;
     struct HashFunctor
     {
-        UPInt  operator()(const TextFormat& data) const;
+        static UPInt CalcHash(const TextFormat& data);
+
+        UPInt  operator()(const TextFormat& data) const { return CalcHash(data); }
+        UPInt  operator()(const TextFormat* data) const { return CalcHash(*data); }
     };
 private:
+    class Allocator*                pAllocator;
     mutable unsigned                RefCount;
 protected:
     StringDH                        FontList; // comma separated list of font names
@@ -154,7 +158,7 @@ protected:
     Ptr<FontHandle>                 pFontHandle; // required if font was referenced by id
 
     UInt32                          ColorV; // format AA RR GG BB.
-    SInt16                          LetterSpacing; // in 11.5 fixed point!
+    float                           LetterSpacing;
     UInt16                          FontSize;      // in 11.5 fixed point!
 
     enum
@@ -187,29 +191,17 @@ protected:
     //    void InvalidateCachedFont() { pCachedFont = 0; }
 public:
 
-    TextFormat(MemoryHeap *pheap)
-        : RefCount(1), FontList(pheap), Url(pheap),
-          ColorV(0xFF000000u), LetterSpacing(0), FontSize(0), FormatFlags(0), PresentMask(0) 
-    { 
-    }
-    TextFormat(const TextFormat& srcfmt, MemoryHeap* pheap = NULL)
-        : RefCount(1), FontList((pheap) ? pheap:srcfmt.GetHeap(), srcfmt.FontList),
-          Url((pheap) ? pheap:srcfmt.GetHeap(), srcfmt.Url),
-          pImageDesc(srcfmt.pImageDesc), pFontHandle(srcfmt.pFontHandle),
-          ColorV(srcfmt.ColorV), LetterSpacing(srcfmt.LetterSpacing),
-          FontSize(srcfmt.FontSize), FormatFlags(srcfmt.FormatFlags), PresentMask(srcfmt.PresentMask)
-    {
-    }
-    ~TextFormat() 
-    {
-        //SF_ASSERT(!pFontHandle || !pFontHandle->GetFont() || pFontHandle->GetFont()->GetFont());
-    }
+    TextFormat(MemoryHeap* pheap = NULL);
+    TextFormat(Allocator* allocator);
+    TextFormat(const TextFormat& srcfmt, Allocator* allocator = NULL);
+    ~TextFormat();
 
     void AddRef() const  { ++RefCount; }
     void Release() const { if (--RefCount == 0) delete this; }
     unsigned GetRefCount() const { return RefCount; }
 
     MemoryHeap* GetHeap() const { return FontList.GetHeap(); }
+    Allocator*  GetAllocator() const { return pAllocator; }
 
     void SetBold(bool bold = true);
     void ClearBold()    { FormatFlags &= ~Format_Bold; PresentMask &= ~PresentMask_Bold; }
@@ -242,8 +234,8 @@ public:
     // letterSpacing is specified in pixels, e.g.: 2.6 pixels, but stored in twips
     void SetLetterSpacing(float letterSpacing) 
     {
-        SF_ASSERT(PixelsToFixp(letterSpacing) >= -32768 && PixelsToFixp(letterSpacing) < 32768); 
-        LetterSpacing = (SInt16)PixelsToFixp(letterSpacing); PresentMask |= PresentMask_LetterSpacing; 
+        PresentMask |= PresentMask_LetterSpacing; 
+        LetterSpacing = PixelsToFixp(letterSpacing);
     }
     float GetLetterSpacing() const             { return FixpToPixels(LetterSpacing); }
     void SetLetterSpacingInFixp(int letterSpacing) 
@@ -251,7 +243,7 @@ public:
         SF_ASSERT(letterSpacing >= -32768 && letterSpacing < 32768); 
         LetterSpacing = (SInt16)letterSpacing; PresentMask |= PresentMask_LetterSpacing; 
     }
-    SInt16 GetLetterSpacingInFixp() const        { return LetterSpacing; }
+    SInt16 GetLetterSpacingInFixp() const        { return (SInt16)LetterSpacing; }
     void ClearLetterSpacing()                  { LetterSpacing = 0; PresentMask &= ~PresentMask_LetterSpacing; }
 
     void SetFontSizeInFixp(unsigned fontSize) 
@@ -328,63 +320,6 @@ public:
     void InitByDefaultValues();
 };
 
-template <class T>
-class TextFormatPtrWrapper
-{
-public:
-    Ptr<T> pFormat;
-
-    TextFormatPtrWrapper() {}
-    TextFormatPtrWrapper(Ptr<T>& ptr) : pFormat(ptr) {}
-    TextFormatPtrWrapper(const Ptr<T>& ptr) : pFormat(ptr) {}
-    TextFormatPtrWrapper(T* ptr) : pFormat(ptr) {}
-    TextFormatPtrWrapper(const T* ptr) : pFormat(const_cast<T*>(ptr)) {}
-    TextFormatPtrWrapper(T& ptr) : pFormat(ptr) {}
-    TextFormatPtrWrapper(const TextFormatPtrWrapper& orig) : pFormat(orig.pFormat) {}
-
-    Ptr<T>& operator*() { return pFormat; }
-    const Ptr<T>& operator*() const { return pFormat; }
-
-    operator TextFormat*() { return pFormat; }
-    operator const TextFormat*() const { return pFormat; }
-
-    T* operator-> () { return pFormat; }
-    const T* operator-> () const { return pFormat; }
-
-    T* GetPtr() { return pFormat; }
-    const T* GetPtr() const { return pFormat; }
-
-    TextFormatPtrWrapper<T>& operator=(const TextFormatPtrWrapper<T>& p)
-    {
-        pFormat = (*p).GetPtr();
-        return *this;
-    }
-    bool operator==(const TextFormatPtrWrapper<T>& p) const
-    {
-        return *pFormat == *p.pFormat;
-    }
-    bool operator==(const T* p) const
-    {
-        return *pFormat == *p;
-    }
-    bool operator==(const Ptr<T> p) const
-    {
-        return *pFormat == *p;
-    }
-
-    // hash functor
-    struct HashFunctor
-    {
-        UPInt  operator()(const TextFormatPtrWrapper<T>& data) const
-        {
-            typename T::HashFunctor h;
-            return h.operator()(*data.pFormat);
-        }
-    };
-};
-
-typedef TextFormatPtrWrapper<TextFormat> TextFormatPtr;
-
 // Format descriptor, applying to whole paragraph
 class ParagraphFormat : public NewOverrideBase<StatRender_Text_Mem>
 {
@@ -392,7 +327,10 @@ public:
     friend class HashFunctor;
     struct HashFunctor
     {
-        UPInt  operator()(const ParagraphFormat& data) const;
+        static UPInt CalcHash(const ParagraphFormat& data);
+
+        UPInt  operator()(const ParagraphFormat& data) const { return CalcHash(data); }
+        UPInt  operator()(const ParagraphFormat* data) const { return CalcHash(*data); }
     };
 
     // ranges:
@@ -414,6 +352,7 @@ public:
         Display_None   = 2
     };
 private:
+    class Allocator* pAllocator;
     mutable unsigned RefCount;
 protected:
     unsigned*  pTabStops;   // First elem is total num of tabstops, followed by tabstops in twips
@@ -442,25 +381,28 @@ protected:
     };
     UInt16 PresentMask;
 public:
-    ParagraphFormat() : RefCount(1), pTabStops(NULL), BlockIndent(0), Indent(0), Leading(0), 
+    ParagraphFormat() : 
+        pAllocator(NULL),
+        RefCount(1), pTabStops(NULL), BlockIndent(0), Indent(0), Leading(0), 
         LeftMargin(0), RightMargin(0), PresentMask(0) 
     {}
 
-    ParagraphFormat(const ParagraphFormat& src) : RefCount(1), pTabStops(NULL), 
+    ParagraphFormat(const ParagraphFormat& src, Allocator* allocator = NULL) : 
+        pAllocator(allocator),
+        RefCount(1), pTabStops(NULL), 
         BlockIndent(src.BlockIndent), Indent(src.Indent), Leading(src.Leading), 
         LeftMargin(src.LeftMargin), RightMargin(src.RightMargin), 
         PresentMask(src.PresentMask)
     {
         CopyTabStops(src.pTabStops);
     }
-    ~ParagraphFormat()
-    {
-        FreeTabStops();
-    }
+    ~ParagraphFormat();
 
     void AddRef() const  { ++RefCount; }
     void Release() const { if (--RefCount == 0) delete this; }
     unsigned GetRefCount() const { return RefCount; }
+
+    Allocator*  GetAllocator() const { return pAllocator; }
 
     void SetAlignment(AlignType align) 
     { 
@@ -550,11 +492,41 @@ protected:
     void CopyTabStops(const unsigned* psrcTabStops);
 };
 
-typedef TextFormatPtrWrapper<ParagraphFormat> ParagraphFormatPtr;
+// A special class that adds operator== to a pointer to use with Hash 
+template <class T> 
+class PtrCompare
+{
+	T P;
+public:
+	PtrCompare():P(NULL) {}
+	PtrCompare(T p):P(p) {}
+	PtrCompare(const PtrCompare& pp):P(pp.P) {}
+	~PtrCompare() {}
+
+	operator T() const   { return P; }
+	T operator->() const { return P; }
+	bool operator==(const T p) const 
+	{
+		return (p == P) || (P && p && *P == *p);
+	}
+	bool operator==(const PtrCompare<T>& p) const 
+	{
+		return (p.P == P) || (P && p.P && *P == *p.P);
+	}
+	PtrCompare& operator=(const PtrCompare& pp) { P = pp.P; return *this; }
+	PtrCompare& operator=(T p) { P = p; return *this; }
+};
+template <class T>
+bool operator==(const T* p, const PtrCompare<T>& p1)
+{
+	return p1 == p;
+}
 
 // Text allocator. Allocates text, text and paragraph formats.
 class Allocator : public RefCountBaseNTS<Allocator, StatRender_Text_Mem>
 {
+    friend class TextFormat;
+    friend class ParagraphFormat;
 public:
     enum FlagsEnum
     {
@@ -566,11 +538,11 @@ protected:
         InitialFormatCacheCap = 100,
         FormatCacheCapacityDelta = 10
     };
-    typedef HashSetLH<TextFormatPtr, TextFormatPtr::HashFunctor,
-                       TextFormatPtr::HashFunctor, StatRender_Text_Mem> TextFormatStorageType;
+    typedef HashSetLH<PtrCompare<TextFormat*>, TextFormat::HashFunctor,
+                       TextFormat::HashFunctor, StatRender_Text_Mem> TextFormatStorageType;
 
-    typedef HashSetLH<ParagraphFormatPtr, ParagraphFormatPtr::HashFunctor,
-                       ParagraphFormatPtr::HashFunctor, StatRender_Text_Mem> ParagraphFormatStorageType;
+    typedef HashSetLH<PtrCompare<ParagraphFormat*>, ParagraphFormat::HashFunctor,
+                       ParagraphFormat::HashFunctor, StatRender_Text_Mem> ParagraphFormatStorageType;
 
     TextFormatStorageType       TextFormatStorage;
     ParagraphFormatStorageType  ParagraphFormatStorage;
@@ -582,6 +554,11 @@ protected:
     // Default text format used for heap-correct format allocation.
     TextFormat                  EntryTextFormat;
     UInt8                       Flags;
+
+protected:
+    void Remove(TextFormat*);
+    void Remove(ParagraphFormat*);
+    Allocator* _GetThis() { return this; }
 
 public:
     Allocator(MemoryHeap* pheap, UInt8 flags = 0)

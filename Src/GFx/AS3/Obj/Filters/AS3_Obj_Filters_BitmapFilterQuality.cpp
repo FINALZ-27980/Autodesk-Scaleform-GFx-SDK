@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_filters
         {"MEDIUM", NULL, OFFSETOF(Classes::fl_filters::BitmapFilterQuality, MEDIUM), Abc::NS_Public, SlotInfo::BT_Int, 1},
     };
 
-    BitmapFilterQuality::BitmapFilterQuality(VM& vm)
-    : Traits(vm, AS3::fl_filters::BitmapFilterQualityCI)
+
+    BitmapFilterQuality::BitmapFilterQuality(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::BitmapFilterQuality::BitmapFilterQuality()"
 //##protect##"ClassTraits::BitmapFilterQuality::BitmapFilterQuality()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_filters::BitmapFilterQualityCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_filters::BitmapFilterQuality(*this));
 
     }
 
     Pickable<Traits> BitmapFilterQuality::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) BitmapFilterQuality(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) BitmapFilterQuality(vm, AS3::fl_filters::BitmapFilterQualityCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_filters::BitmapFilterQualityCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_filters
 {
     const TypeInfo BitmapFilterQualityTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_filters::BitmapFilterQuality::InstanceType),
+        0,
+        ClassTraits::fl_filters::BitmapFilterQuality::MemberInfoNum,
+        0,
+        0,
         "BitmapFilterQuality", "flash.filters", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_filters
     const ClassInfo BitmapFilterQualityCI = {
         &BitmapFilterQualityTI,
         ClassTraits::fl_filters::BitmapFilterQuality::MakeClassTraits,
-        0,
-        ClassTraits::fl_filters::BitmapFilterQuality::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_filters::BitmapFilterQuality::mi,
         NULL,

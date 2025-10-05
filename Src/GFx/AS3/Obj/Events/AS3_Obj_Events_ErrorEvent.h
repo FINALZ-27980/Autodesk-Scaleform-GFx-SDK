@@ -89,6 +89,8 @@ namespace Instances { namespace fl_events
         ErrorEvent(InstanceTraits::Traits& t);
 
 //##protect##"instance$methods"
+         void AS3Constructor(unsigned argc, const Value* argv);
+         virtual SPtr<Instances::fl_events::Event> Clone() const;
 //##protect##"instance$methods"
 
     public:
@@ -118,6 +120,7 @@ namespace Instances { namespace fl_events
         }
 
 //##protect##"instance$data"
+        int errorID; 
 //##protect##"instance$data"
 
     };
@@ -125,7 +128,7 @@ namespace Instances { namespace fl_events
 
 namespace InstanceTraits { namespace fl_events
 {
-    class ErrorEvent : public CTraits
+    class ErrorEvent : public fl_events::TextEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -151,6 +154,8 @@ namespace InstanceTraits { namespace fl_events
 
         enum { ThunkInfoNum = 3 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[3];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -163,7 +168,7 @@ namespace InstanceTraits { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class ErrorEvent : public Traits
+    class ErrorEvent : public fl_events::TextEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -171,9 +176,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::ErrorEvent ClassType;
+        typedef InstanceTraits::fl_events::ErrorEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ErrorEvent(VM& vm);
+        ErrorEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 1 };
         static const MemberInfo mi[MemberInfoNum];

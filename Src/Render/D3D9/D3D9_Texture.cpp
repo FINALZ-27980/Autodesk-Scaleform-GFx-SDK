@@ -929,6 +929,20 @@ void TextureManager::BeginScene()
         FilterType[i] = D3DTEXF_FORCE_DWORD;
         CurrentTextures[i] = 0;
         pDevice->SetTexture(i, 0);
+
+        // Set sampler parameters to known values, that GFx will not modify during its rendering.
+        union 
+        {
+            float fbias;
+            DWORD d;
+        } bias;
+        bias.fbias = -0.75f;
+        pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, bias.d );
+        pDevice->SetSamplerState(i, D3DSAMP_ELEMENTINDEX, 0);
+        pDevice->SetSamplerState(i, D3DSAMP_SRGBTEXTURE, 0);
+
+        // Set texture coordinate indices to match their stages, as we will be using the programmable pipeline.
+        pDevice->SetTextureStageState(i, D3DTSS_TEXCOORDINDEX, i);
     }    
 }
 

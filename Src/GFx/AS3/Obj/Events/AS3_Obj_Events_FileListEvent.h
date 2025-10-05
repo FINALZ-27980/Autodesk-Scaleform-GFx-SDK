@@ -91,7 +91,7 @@ namespace Instances { namespace fl_events
 
 namespace InstanceTraits { namespace fl_events
 {
-    class FileListEvent : public CTraits
+    class FileListEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -129,7 +129,7 @@ namespace InstanceTraits { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class FileListEvent : public Traits
+    class FileListEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -137,9 +137,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::FileListEvent ClassType;
+        typedef InstanceTraits::fl_events::FileListEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FileListEvent(VM& vm);
+        FileListEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 2 };
         static const MemberInfo mi[MemberInfoNum];

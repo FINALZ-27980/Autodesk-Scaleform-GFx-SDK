@@ -256,10 +256,11 @@ void FILEFile::init()
     FileName = sb;
 #endif
     wchar_t womode[16];
-    wchar_t *pwFileName = (wchar_t*)SF_ALLOC((UTF8Util::GetLength(FileName.ToCStr())+1) * sizeof(wchar_t), Stat_Default_Mem);
-    UTF8Util::DecodeString(pwFileName, FileName.ToCStr());
+    UPInt bufLen = UTF8Util::GetLength(FileName.ToCStr()) + 1;
+    wchar_t *pwFileName = (wchar_t*)SF_ALLOC(bufLen * sizeof(wchar_t), Stat_Default_Mem);
+    UTF8Util::DecodeStringSafe(pwFileName, bufLen, FileName.ToCStr());
     SF_ASSERT(strlen(omode) < sizeof(womode)/sizeof(womode[0]));
-    UTF8Util::DecodeString(womode, omode);
+    UTF8Util::DecodeStringSafe(womode, 16, omode);
     _wfopen_s(&fs, pwFileName, womode);
     SF_FREE(pwFileName);
 #else
@@ -628,8 +629,9 @@ bool    SysFile::GetFileStat(FileStat* pfileStat, const String& path)
     // 64-bit implementation on Windows.
     struct __stat64 fileStat;
     // Stat returns 0 for success.
-    wchar_t *pwpath = (wchar_t*)SF_ALLOC((UTF8Util::GetLength(path.ToCStr())+1)*sizeof(wchar_t), Stat_Default_Mem);
-    UTF8Util::DecodeString(pwpath, path.ToCStr());
+    UPInt numChars = (UTF8Util::GetLength(path.ToCStr())+1);
+    wchar_t *pwpath = (wchar_t*)SF_ALLOC(numChars*sizeof(wchar_t), Stat_Default_Mem);
+    UTF8Util::DecodeStringSafe(pwpath, numChars, path.ToCStr());
 
     int ret = _wstat64(pwpath, &fileStat);
     SF_FREE(pwpath);

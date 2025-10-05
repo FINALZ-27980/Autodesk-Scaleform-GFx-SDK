@@ -135,7 +135,7 @@ NumberProto::NumberProto(ASStringContext *psc, Object* pprototype, const Functio
 struct GASNameNumberFunc
 {
     const char* Name;
-    Number (SF_CDECL *Function)();
+    Double (SF_CDECL *Function)();
 };
 
 static const GASNameNumberFunc GASNumberConstTable[] = 
@@ -169,7 +169,7 @@ void NumberCtorFunction::GlobalCtor(const FnCall& fn)
         *fn.Result = retVal;
     }
     else
-        fn.Result->SetNumber((fn.NArgs == 0)?0:fn.Arg(0).ToNumber(fn.Env));
+        fn.Result->SetNumber((fn.NArgs == 0) ? Double(0.0) : fn.Arg(0).ToNumber(fn.Env));
 }
 
 Object* NumberCtorFunction::CreateNewObject(Environment* penv) const 

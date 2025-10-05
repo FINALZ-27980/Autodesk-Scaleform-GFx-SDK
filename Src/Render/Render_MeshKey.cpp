@@ -120,10 +120,10 @@ bool MeshKey::Match(unsigned layer, unsigned flags,
                 // Uniform scaling means ScaleX1/ScaleX2 == ScaleY1/ScaleY2, or, better
                 // ScaleX1 * ScaleY2 == ScaleX2 * ScaleY1. Besides, skewing must not change
                 //--------------------------
-                float sx = keyData[0] * Data[1];        // sx = ScaleX1 * ScaleY2
+                float sx = keyData[0] * *(Data+1);        // sx = ScaleX1 * ScaleY2
                 float sy = keyData[1] * Data[0];        // sy = ScaleX2 * ScaleY1
-                if (keyData[2] >= Data[2] * 0.999f &&
-                    keyData[2] <= Data[2] * 1.001f &&
+                if (keyData[2] >= *(Data+2) * 0.999f &&
+                    keyData[2] <= *(Data+2) * 1.001f &&
                     sx >= sy * 0.999f && sx <= sy * 1.001f)
                 {
                     lowerScale = cfg.FillLowerScale;

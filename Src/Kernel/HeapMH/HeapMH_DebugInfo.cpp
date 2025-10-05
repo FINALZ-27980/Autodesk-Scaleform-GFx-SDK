@@ -311,7 +311,7 @@ bool DebugStorageMH::AddAlloc(PageInfoMH* parentInfo, UPInt parentAddr, UPInt th
 
         DebugDataPtr parent;
         findDebugData(parentInfo, parentAddr, &parent);
-        SF_ASSERT(parent.pSelf != 0);
+        SF_DEBUG_ASSERT(parent.pSelf != 0, "Error, allocation was not allocated in a heap (perhaps it was a stack allocation?).");
         if (data->Info.StatId == Stat_Default_Mem)
         {
             data->Info.StatId = parent.pSelf->Info.StatId;

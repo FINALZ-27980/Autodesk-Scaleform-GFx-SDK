@@ -72,6 +72,7 @@ protected:
 public:
     // RefCountImpl constructor always initializes RefCount to 1 by default.
     SF_INLINE RefCountImplCore() : RefCount(1) { }
+    RefCountImplCore(const RefCountImplCore &) : RefCount(1) { }
 
     // Need virtual destructor
     // This:    1. Makes sure the right destructor's called.
@@ -79,7 +80,7 @@ public:
     SF_EXPORT virtual ~RefCountImplCore();
 
     // Debug method only.
-    int             GetRefCount() const { return RefCount;  }
+    int GetRefCount() const { return RefCount;  }
 
     // This logic is used to detect invalid 'delete' calls of reference counted
     // objects. Direct delete calls are not allowed on them unless they come in
@@ -578,7 +579,41 @@ public:
     }
 };
 
-
+// A smart pointer for const refcnt objects. This will work only for RefCountNTS ones.
+template<class C>
+class ConstPtr : public Ptr<C>
+{
+#ifdef SF_CC_ARM
+    static C* ReturnArg(const void* p) { return (C*)ReturnArg0(const_cast<void*>(p)); }
+#endif
+public:
+    SF_INLINE ConstPtr() {}
+    SF_INLINE ConstPtr(const C &robj)
+    {
+        // make sure the C has the right type: it should support const AddRef/Release
+        SF_ASSERT((robj.AddRef(), 1));
+        SF_ASSERT((robj.Release(), 1));
+#ifdef SF_CC_ARM
+        this->pObject = ReturnArg(&robj);
+#else
+        this->pObject = const_cast<C*>(&robj); // safe const cast, because of asserts above.
+#endif
+    }
+    SF_INLINE ConstPtr(const C *pobj)
+    {
+        // This will work only for RefCountNTS
+        if (pobj) pobj->AddRef();
+        // It is safe to use const_cast here since the line above will filter out
+        // all bad cases.
+        this->pObject = const_cast<C*>(pobj);
+    }
+    SF_INLINE ConstPtr(const Ptr<C> &src) : Ptr<C>(src) {}
+    SF_INLINE ConstPtr(const ConstPtr<C> &src)
+    {
+        if (src.pObject) src.pObject->AddRef();     
+        this->pObject = src.pObject;
+    }
+};
 
 // *** Weak Pointer Support
 

@@ -93,7 +93,7 @@ namespace Instances { namespace fl_text
 
 namespace InstanceTraits { namespace fl_text
 {
-    class CSMSettings : public CTraits
+    class CSMSettings : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -131,17 +131,19 @@ namespace InstanceTraits { namespace fl_text
     
 namespace ClassTraits { namespace fl_text
 {
-    class CSMSettings : public Traits
+    class CSMSettings : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::CSMSettings"; }
 #endif
     public:
-        typedef Classes::fl_text::CSMSettings ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_text::CSMSettings InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        CSMSettings(VM& vm);
+        CSMSettings(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

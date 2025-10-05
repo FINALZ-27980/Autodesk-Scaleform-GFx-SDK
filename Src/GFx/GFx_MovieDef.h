@@ -278,6 +278,7 @@ public:
     // Allocates an individual chunk of memory, without using the pool.
     // The chunk will be freed later together with the pool.
     void*    AllocIndividual(UPInt bytes);
+    void*    AllocIndividualAlign(UPInt bytes, size_t a);
 
 };
 
@@ -1179,7 +1180,15 @@ public:
     // It could be 'const MovieDefBindStates*' but we can't do that with Ptr.
     Ptr<MovieDefBindStates> pBindStates;
 
+    class ReleaseNotifier
+    {
+    public:
+        virtual ~ReleaseNotifier() {}
 
+        virtual void OnMovieDefRelease(MovieDefImpl*) = 0;
+    };
+    HashSetLH<ReleaseNotifier*> ReleaseNotifiers;
+    Lock ReleaseNotifiersLock;
 
     // *** BindTaskData
 
@@ -1535,6 +1544,9 @@ public:
 
     virtual ResourceKey     GetKey()                        { return CreateMovieKey(GetDataDef(), pBindStates); }
     virtual unsigned        GetResourceTypeCode() const     { return MakeTypeCode(RT_MovieDef); }
+
+    void AddReleaseNotifier(ReleaseNotifier* rn);
+    void RemoveReleaseNotifier(ReleaseNotifier* rn);
 };
 
 

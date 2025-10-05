@@ -51,24 +51,27 @@ namespace ClassTraits { namespace fl_desktop
         {"INFORMATIONAL", NULL, OFFSETOF(Classes::fl_desktop::NotificationType, INFORMATIONAL), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    NotificationType::NotificationType(VM& vm)
-    : Traits(vm, AS3::fl_desktop::NotificationTypeCI)
+
+    NotificationType::NotificationType(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::NotificationType::NotificationType()"
 //##protect##"ClassTraits::NotificationType::NotificationType()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_desktop::NotificationTypeCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_desktop::NotificationType(*this));
 
     }
 
     Pickable<Traits> NotificationType::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) NotificationType(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) NotificationType(vm, AS3::fl_desktop::NotificationTypeCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_desktop::NotificationTypeCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -79,6 +82,11 @@ namespace fl_desktop
 {
     const TypeInfo NotificationTypeTI = {
         TypeInfo::CompileTime | TypeInfo::Final | TypeInfo::NotImplemented,
+        sizeof(ClassTraits::fl_desktop::NotificationType::InstanceType),
+        0,
+        ClassTraits::fl_desktop::NotificationType::MemberInfoNum,
+        0,
+        0,
         "NotificationType", "flash.desktop", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -86,10 +94,6 @@ namespace fl_desktop
     const ClassInfo NotificationTypeCI = {
         &NotificationTypeTI,
         ClassTraits::fl_desktop::NotificationType::MakeClassTraits,
-        0,
-        ClassTraits::fl_desktop::NotificationType::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_desktop::NotificationType::mi,
         NULL,

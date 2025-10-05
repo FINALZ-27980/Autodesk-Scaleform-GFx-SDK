@@ -16,3 +16,4 @@ otherwise accompanies this software in either electronic or hard copy form.
 //##protect##"disclaimer"
 
 #include "AS3_Obj_External_ExternalInterface.cpp"
+#include "AS3_Obj_External_ExtensionContext.cpp"

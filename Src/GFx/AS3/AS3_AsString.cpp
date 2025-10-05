@@ -1221,7 +1221,7 @@ void OutputSlotName(const VM& vm, FlashUI& ui, int index, Abc::Code::OpCode opco
         const SlotInfo& si = tr.GetSlotInfo(AbsoluteIndex(SlotIndex(index), tr));
 
         ui.Output(FlashUI::Output_Action, " // ");
-        ui.Output(FlashUI::Output_Action, si.GetName().ToCStr());
+        ui.Output(FlashUI::Output_Action, si.GetQualifiedName().ToCStr());
 #else
         const ASString name = tr.GetSlotName(AbsoluteIndex(SlotIndex(index), tr));
 
@@ -1239,7 +1239,7 @@ void OutputGlobalSlotName(const VM& vm, FlashUI& ui, int index)
     const SlotInfo& si = tr.GetSlotInfo(AbsoluteIndex(SlotIndex(index), tr));
 
     ui.Output(FlashUI::Output_Action, " // ");
-    ui.Output(FlashUI::Output_Action, si.GetName().ToCStr());
+    ui.Output(FlashUI::Output_Action, si.GetQualifiedName().ToCStr());
 #else
     const ASString name = tr.GetSlotName(AbsoluteIndex(SlotIndex(index), tr));
 
@@ -1262,7 +1262,7 @@ void OutputAbsSlotName(const VM& vm, FlashUI& ui, int index, Abc::Code::OpCode o
         const SlotInfo& si = tr.GetSlotInfo(AbsoluteIndex(index - 1));
 
         ui.Output(FlashUI::Output_Action, " // ");
-        ui.Output(FlashUI::Output_Action, si.GetName().ToCStr());
+        ui.Output(FlashUI::Output_Action, si.GetQualifiedName().ToCStr());
 #else
         const ASString name = tr.GetSlotName(AbsoluteIndex(SlotIndex(index), tr));
 

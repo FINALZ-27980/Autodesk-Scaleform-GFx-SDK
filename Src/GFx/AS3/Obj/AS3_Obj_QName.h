@@ -178,7 +178,7 @@ namespace Instances { namespace fl
 
 namespace InstanceTraits { namespace fl
 {
-    class QName : public CTraits
+    class QName : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -204,6 +204,8 @@ namespace InstanceTraits { namespace fl
 
         enum { ThunkInfoNum = 4 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[4];
 //##protect##"instance_traits$methods"
 #ifdef SF_URI_AS_NAMESPACE
         Pickable<Instances::fl::QName> MakeInstance(Traits& t, const ASString& n, Instances::fl::Namespace* ns)
@@ -227,7 +229,7 @@ namespace InstanceTraits { namespace fl
     
 namespace ClassTraits { namespace fl
 {
-    class QName : public Traits
+    class QName : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -235,9 +237,11 @@ namespace ClassTraits { namespace fl
 #endif
     public:
         typedef Classes::fl::QName ClassType;
+        typedef InstanceTraits::fl::QName InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        QName(VM& vm);
+        QName(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -266,6 +270,8 @@ namespace Classes { namespace fl
         virtual void InitPrototype(AS3::Object& obj) const;
         enum { ThunkInfoNum = 1 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[1];
        
     private:
         SelfType& GetSelf()

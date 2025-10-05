@@ -55,24 +55,27 @@ namespace ClassTraits { namespace fl_filters
         {"WRAP", NULL, OFFSETOF(Classes::fl_filters::DisplacementMapFilterMode, WRAP), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    DisplacementMapFilterMode::DisplacementMapFilterMode(VM& vm)
-    : Traits(vm, AS3::fl_filters::DisplacementMapFilterModeCI)
+
+    DisplacementMapFilterMode::DisplacementMapFilterMode(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::DisplacementMapFilterMode::DisplacementMapFilterMode()"
 //##protect##"ClassTraits::DisplacementMapFilterMode::DisplacementMapFilterMode()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_filters::DisplacementMapFilterModeCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_filters::DisplacementMapFilterMode(*this));
 
     }
 
     Pickable<Traits> DisplacementMapFilterMode::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) DisplacementMapFilterMode(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) DisplacementMapFilterMode(vm, AS3::fl_filters::DisplacementMapFilterModeCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_filters::DisplacementMapFilterModeCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -83,6 +86,11 @@ namespace fl_filters
 {
     const TypeInfo DisplacementMapFilterModeTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_filters::DisplacementMapFilterMode::InstanceType),
+        0,
+        ClassTraits::fl_filters::DisplacementMapFilterMode::MemberInfoNum,
+        0,
+        0,
         "DisplacementMapFilterMode", "flash.filters", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -90,10 +98,6 @@ namespace fl_filters
     const ClassInfo DisplacementMapFilterModeCI = {
         &DisplacementMapFilterModeTI,
         ClassTraits::fl_filters::DisplacementMapFilterMode::MakeClassTraits,
-        0,
-        ClassTraits::fl_filters::DisplacementMapFilterMode::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_filters::DisplacementMapFilterMode::mi,
         NULL,

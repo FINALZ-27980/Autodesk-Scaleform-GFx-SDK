@@ -31,24 +31,27 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace ClassTraits { namespace fl
 {
-    URIError::URIError(VM& vm)
-    : Traits(vm, AS3::fl::URIErrorCI)
+
+    URIError::URIError(VM& vm, const ClassInfo& ci)
+    : fl::Error(vm, ci)
     {
 //##protect##"ClassTraits::URIError::URIError()"
 //##protect##"ClassTraits::URIError::URIError()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Error(vm, AS3::fl::URIErrorCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassCallConstruct(*this));
 
     }
 
     Pickable<Traits> URIError::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) URIError(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) URIError(vm, AS3::fl::URIErrorCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::URIErrorCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -59,6 +62,11 @@ namespace fl
 {
     const TypeInfo URIErrorTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl::URIError::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "URIError", "", &fl::ErrorTI,
         TypeInfo::None
     };
@@ -66,10 +74,6 @@ namespace fl
     const ClassInfo URIErrorCI = {
         &URIErrorTI,
         ClassTraits::fl::URIError::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

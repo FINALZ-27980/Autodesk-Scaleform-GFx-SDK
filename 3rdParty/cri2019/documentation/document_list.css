@@ -1,0 +1,106 @@
+body,h1,div,dl,dt,dd,.note
+{
+  margin: 0;
+  padding: 0;
+}
+
+body
+{
+  background-color: #ccc;
+}
+
+ul
+{
+  list-style-type: circle;
+}
+
+ol
+{
+  list-style-type: lower-latin;
+}
+
+h1
+{
+  font-size: 20pt;
+}
+
+a
+{
+  text-decoration: none;
+}
+
+.document_list_container
+{
+  background-color: #fff;
+  color: #333;
+  font: 11pt/150% sans-serif;
+  margin: 0 auto;
+  padding: 40px 50px;
+  width: 640px;
+}
+
+.document_list_container>.list_title
+{
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.document_list
+{
+  margin: 10px 0 20px;
+}
+
+.document_list>dt
+{
+  border-bottom: 1px solid #005bac;
+  font-weight: bold;
+  line-height: 140%;
+  padding-left: 10px;
+}
+
+.document_list>dt.directory
+{
+  background-color: #005bac;
+  color: #fff;
+}
+
+.document_list>dt.directory:after
+{
+  content: '/';
+}
+
+.document_list>dt+dd
+{
+  padding-left: 30px;
+  margin: 6px 0 10px;
+}
+
+.to_note
+{
+  font-size: 6pt;
+  line-height: 100%;
+  vertical-align: super;
+}
+
+.to_note:before
+{
+  content: '*';
+}
+
+.note
+{
+  color: #777;
+  font-size: 10pt;
+}
+
+.note>li
+{
+  counter-increment: note;
+  list-style-type: none;
+  margin-bottom: 20px;
+}
+
+.note>li:before
+{
+  content: '[Note' counter(note) '] ';
+}

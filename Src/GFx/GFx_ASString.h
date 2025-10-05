@@ -976,7 +976,7 @@ public:
     void    Free()
     {   
         typedef typename C::FirstType FirstDtor;
-        typedef typename C::SecondType SecondDtor;
+        //typedef typename C::SecondType SecondDtor;
         Value.First.~FirstDtor();
         Value.Second.Finalize_GC(); // placement delete
         //Value.Second.~SecondDtor(); // placement delete

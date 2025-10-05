@@ -91,7 +91,7 @@ namespace Instances { namespace fl_printing
 
 namespace InstanceTraits { namespace fl_printing
 {
-    class PrintJobOptions : public CTraits
+    class PrintJobOptions : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -129,17 +129,19 @@ namespace InstanceTraits { namespace fl_printing
     
 namespace ClassTraits { namespace fl_printing
 {
-    class PrintJobOptions : public Traits
+    class PrintJobOptions : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::PrintJobOptions"; }
 #endif
     public:
-        typedef Classes::fl_printing::PrintJobOptions ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_printing::PrintJobOptions InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        PrintJobOptions(VM& vm);
+        PrintJobOptions(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -64,7 +64,7 @@ namespace Classes { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class InvokeEvent : public Traits
+    class InvokeEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -72,9 +72,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::InvokeEvent ClassType;
+        typedef InstanceTraits::fl_events::Event InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        InvokeEvent(VM& vm);
+        InvokeEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 1 };
         static const MemberInfo mi[MemberInfoNum];

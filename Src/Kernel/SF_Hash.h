@@ -63,12 +63,15 @@ public:
 };
 
 // Computes a hash of an object's representation.
+// WARNING: If you are using a struct/class for the key ('C') that may be padded then the padded part 
+//          may be uninitialized, due to C++ object member initialization. In this case, make sure your 
+//          key class initializes the padding, or has manual padding to account for this.
 template<class C>
 class FixedSizeHash
 {
 public:
     // Alternative: "sdbm" hash function, suggested at same web page
-    // above, http::/www.cs.yorku.ca/~oz/hash.html
+    // above, http::/www.cse.yorku.ca/~oz/hash.html
     // This is somewhat slower then Bernstein, but it works way better than the above
     // hash function for hashing large numbers of 32-bit ints.
     static SF_INLINE UPInt SDBM_Hash(const void* data_in, UPInt size, UPInt seed = 5381)     
@@ -91,8 +94,6 @@ public:
         return SDBM_Hash(p, size);
     }
 };
-
-
 
 // *** HashsetEntry Entry types. 
 
@@ -494,7 +495,6 @@ public:
         {
             return ! (*this == it);
         }
-
 
         bool    IsEnd() const
         {

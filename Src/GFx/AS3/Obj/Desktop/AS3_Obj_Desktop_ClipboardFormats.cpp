@@ -32,8 +32,12 @@ namespace Classes { namespace fl_desktop
 {
     ClipboardFormats::ClipboardFormats(ClassTraits::Traits& t)
     : Class(t)
+    , BITMAP_FORMAT("air:bitmap")
+    , FILE_LIST_FORMAT("air:file list")
+    , FILE_PROMISE_LIST_FORMAT("air:file promise list")
     , HTML_FORMAT("air:html")
     , TEXT_FORMAT("air:text")
+    , URL_FORMAT("air:url")
     {
 //##protect##"class_::ClipboardFormats::ClipboardFormats()"
 //##protect##"class_::ClipboardFormats::ClipboardFormats()"
@@ -47,28 +51,35 @@ namespace Classes { namespace fl_desktop
 namespace ClassTraits { namespace fl_desktop
 {
     const MemberInfo ClipboardFormats::mi[ClipboardFormats::MemberInfoNum] = {
+        {"BITMAP_FORMAT", NULL, OFFSETOF(Classes::fl_desktop::ClipboardFormats, BITMAP_FORMAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
+        {"FILE_LIST_FORMAT", NULL, OFFSETOF(Classes::fl_desktop::ClipboardFormats, FILE_LIST_FORMAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
+        {"FILE_PROMISE_LIST_FORMAT", NULL, OFFSETOF(Classes::fl_desktop::ClipboardFormats, FILE_PROMISE_LIST_FORMAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
         {"HTML_FORMAT", NULL, OFFSETOF(Classes::fl_desktop::ClipboardFormats, HTML_FORMAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
         {"TEXT_FORMAT", NULL, OFFSETOF(Classes::fl_desktop::ClipboardFormats, TEXT_FORMAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
+        {"URL_FORMAT", NULL, OFFSETOF(Classes::fl_desktop::ClipboardFormats, URL_FORMAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    ClipboardFormats::ClipboardFormats(VM& vm)
-    : Traits(vm, AS3::fl_desktop::ClipboardFormatsCI)
+
+    ClipboardFormats::ClipboardFormats(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::ClipboardFormats::ClipboardFormats()"
 //##protect##"ClassTraits::ClipboardFormats::ClipboardFormats()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_desktop::ClipboardFormatsCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_desktop::ClipboardFormats(*this));
 
     }
 
     Pickable<Traits> ClipboardFormats::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) ClipboardFormats(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) ClipboardFormats(vm, AS3::fl_desktop::ClipboardFormatsCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_desktop::ClipboardFormatsCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -79,6 +90,11 @@ namespace fl_desktop
 {
     const TypeInfo ClipboardFormatsTI = {
         TypeInfo::CompileTime | TypeInfo::NotImplemented,
+        sizeof(ClassTraits::fl_desktop::ClipboardFormats::InstanceType),
+        0,
+        ClassTraits::fl_desktop::ClipboardFormats::MemberInfoNum,
+        0,
+        0,
         "ClipboardFormats", "flash.desktop", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -86,10 +102,6 @@ namespace fl_desktop
     const ClassInfo ClipboardFormatsCI = {
         &ClipboardFormatsTI,
         ClassTraits::fl_desktop::ClipboardFormats::MakeClassTraits,
-        0,
-        ClassTraits::fl_desktop::ClipboardFormats::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_desktop::ClipboardFormats::mi,
         NULL,

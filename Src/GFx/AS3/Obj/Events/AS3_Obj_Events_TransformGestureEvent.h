@@ -193,7 +193,7 @@ namespace Instances { namespace fl_events
 
 namespace InstanceTraits { namespace fl_events
 {
-    class TransformGestureEvent : public CTraits
+    class TransformGestureEvent : public fl_events::GestureEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -219,6 +219,8 @@ namespace InstanceTraits { namespace fl_events
 
         enum { ThunkInfoNum = 12 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[17];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -231,7 +233,7 @@ namespace InstanceTraits { namespace fl_events
     
 namespace ClassTraits { namespace fl_events
 {
-    class TransformGestureEvent : public Traits
+    class TransformGestureEvent : public fl_events::GestureEvent
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -239,9 +241,11 @@ namespace ClassTraits { namespace fl_events
 #endif
     public:
         typedef Classes::fl_events::TransformGestureEvent ClassType;
+        typedef InstanceTraits::fl_events::TransformGestureEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        TransformGestureEvent(VM& vm);
+        TransformGestureEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

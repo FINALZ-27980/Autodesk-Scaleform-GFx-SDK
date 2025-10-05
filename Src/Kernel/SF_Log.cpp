@@ -64,21 +64,21 @@ void Log::FormatLog(char* buffer, unsigned bufferSize, LogMessageId messageId,
                     const char* fmt, va_list argList)
 {
     // Generate a format string.
+    UPInt prefixLength = 0;
     switch(messageId.GetMessageType())
     {
-    case LogMessage_Error:     SFstrcpy(buffer, bufferSize, "Error: ");     break;
-    case LogMessage_Warning:   SFstrcpy(buffer, bufferSize, "Warning: ");   break;
-    case LogMessage_Assert:    SFstrcpy(buffer, bufferSize, "Assert: ");    break;
+    case LogMessage_Error:     SFstrcpy(buffer, bufferSize, "Error: "); prefixLength = sizeof("Error: ") - 1; break;
+    case LogMessage_Warning:   SFstrcpy(buffer, bufferSize, "Warning: "); prefixLength = sizeof("Warning: ") - 1; break;
+    case LogMessage_Assert:    SFstrcpy(buffer, bufferSize, "Assert: "); prefixLength = sizeof("Assert: ") - 1; break;
     case LogMessage_Text:      buffer[0] = 0; break;
     case LogMessage_Report:    buffer[0] = 0; break;
     case LogMessage_Mask:      break; 
     }
 
-    UPInt prefixLength = SFstrlen(buffer);
-    char *buffer2      = buffer + prefixLength;
-    SFvsprintf(buffer2, bufferSize - prefixLength, fmt, argList);
+    char *buffer2 = buffer + prefixLength;
+    prefixLength += SFvsprintf(buffer2, bufferSize - prefixLength, fmt, argList);
 
-    if (messageId.GetMessageType() != LogMessage_Text)
+    if (messageId.GetMessageType() != LogMessage_Text && (prefixLength < (bufferSize - 1)))
         SFstrcat(buffer, bufferSize, "\n");
 }
 

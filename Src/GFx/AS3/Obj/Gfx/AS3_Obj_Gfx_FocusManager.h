@@ -37,6 +37,8 @@ namespace fl
 {
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
     extern const TypeInfo uintTI;
     extern const ClassInfo uintCI;
 } // namespace fl
@@ -44,6 +46,8 @@ namespace fl_display
 {
     extern const TypeInfo InteractiveObjectTI;
     extern const ClassInfo InteractiveObjectCI;
+    extern const TypeInfo DisplayObjectContainerTI;
+    extern const ClassInfo DisplayObjectContainerCI;
     extern const TypeInfo SpriteTI;
     extern const ClassInfo SpriteCI;
 } // namespace fl_display
@@ -68,7 +72,7 @@ namespace Classes { namespace fl_gfx
     
 namespace ClassTraits { namespace fl_gfx
 {
-    class FocusManager : public Traits
+    class FocusManager : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -76,12 +80,16 @@ namespace ClassTraits { namespace fl_gfx
 #endif
     public:
         typedef Classes::fl_gfx::FocusManager ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FocusManager(VM& vm);
+        FocusManager(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 16 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[41];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

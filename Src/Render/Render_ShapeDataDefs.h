@@ -108,7 +108,7 @@ class Image;
 class GradientData;
 
 //------------------------------------------------------------------------
-struct ComplexFill : public RefCountBase<ComplexFill, Stat_Default_Mem>
+struct ComplexFill : public RefCountBase<ComplexFill, StatRender_TreeCache_Mem>
 {
     Ptr<Image>          pImage;
     Ptr<GradientData>   pGradient;
@@ -133,7 +133,7 @@ struct FillStyleType
 // will repeat the list in the SVG manner so the total number of entries is even. 
 // Thus, DashArray 5,3,2 is equivalent to 5,3,2,5,3,2.
 //------------------------------------------------------------------------
-struct DashArray : public RefCountBase<DashArray, Stat_Default_Mem>
+struct DashArray : public RefCountBase<DashArray, StatRender_TreeCache_Mem>
 {
     enum { MaxDashes = 8 };
 
@@ -208,7 +208,7 @@ struct StrokeStyleType
 
 
 //------------------------------------------------------------------------
-class ShapeDataInterface : public RefCountBase<ShapeDataInterface, Stat_Default_Mem>
+class ShapeDataInterface : public RefCountBase<ShapeDataInterface, StatRender_TreeCache_Mem>
 {
 public:
     virtual bool     IsEmpty() const { return false; }

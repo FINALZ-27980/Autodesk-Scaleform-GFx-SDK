@@ -182,7 +182,7 @@ namespace Instances { namespace fl_gfx
 
 namespace InstanceTraits { namespace fl_gfx
 {
-    class GamePadAnalogEvent : public CTraits
+    class GamePadAnalogEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -208,6 +208,8 @@ namespace InstanceTraits { namespace fl_gfx
 
         enum { ThunkInfoNum = 10 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[14];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -220,7 +222,7 @@ namespace InstanceTraits { namespace fl_gfx
     
 namespace ClassTraits { namespace fl_gfx
 {
-    class GamePadAnalogEvent : public Traits
+    class GamePadAnalogEvent : public fl_events::Event
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -228,9 +230,11 @@ namespace ClassTraits { namespace fl_gfx
 #endif
     public:
         typedef Classes::fl_gfx::GamePadAnalogEvent ClassType;
+        typedef InstanceTraits::fl_gfx::GamePadAnalogEvent InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        GamePadAnalogEvent(VM& vm);
+        GamePadAnalogEvent(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 1 };
         static const MemberInfo mi[MemberInfoNum];

@@ -41,7 +41,14 @@ namespace fl
     extern const ClassInfo ArrayCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo XMLTI;
+    extern const ClassInfo XMLCI;
 } // namespace fl
+namespace fl_utils
+{
+    extern const TypeInfo ByteArrayTI;
+    extern const ClassInfo ByteArrayCI;
+} // namespace fl_utils
 
 namespace ClassTraits { namespace fl_security
 {
@@ -69,17 +76,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_security
 {
-    class XMLSignatureValidator : public Traits
+    class XMLSignatureValidator : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::XMLSignatureValidator"; }
 #endif
     public:
-        typedef Classes::fl_security::XMLSignatureValidator ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        XMLSignatureValidator(VM& vm);
+        XMLSignatureValidator(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

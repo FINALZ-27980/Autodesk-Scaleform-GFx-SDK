@@ -1,6 +1,6 @@
 /**************************************************************************
 
-Filename    :   Amp_ThreadMgr.cpp
+Filename    :   AS3_SocketThreadMgr.cpp
 Content     :   Manages the socket threads
 Created     :   December 2009
 Authors     :   Alex Mantzaris
@@ -17,7 +17,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "AS3_SocketBuffer.h"
 #include "Kernel/SF_Threads.h"
 #include "Kernel/SF_Debug.h"
-#include "GFx/AMP/Amp_Socket.h"
+#include "GFx/Net/GFx_Socket.h"
 #include "GFx/AS3/Obj/Net/AS3_Obj_Net_Socket.h"
 
 #if defined(SF_ENABLE_THREADS) && defined(SF_ENABLE_SOCKETS)
@@ -84,7 +84,7 @@ int SocketThreadMgr::TestServerSocketThreadLoop(Thread* sendThread, void* param)
 
 
 // Constructor
-SocketThreadMgr::SocketThreadMgr(bool initSocketLib, AMP::SocketImplFactory* socketFactory, Instances::fl_net::Socket* sock) : 
+SocketThreadMgr::SocketThreadMgr(bool initSocketLib, SocketImplFactory* socketFactory, Instances::fl_net::Socket* sock) : 
     AS3Sock(sock),
     Port(0),
     Sock(initSocketLib, socketFactory),
@@ -491,12 +491,15 @@ bool SocketThreadMgr::SendReceiveLoop()
             ReceivedBuffer->Append(reinterpret_cast<UByte*>(bufferReceived), packetSize);
         }
 
-        SF_DEBUG_MESSAGE2(bytesReceived > 0, "Received %u bytes, %lu remaining to be read\n", bytesReceived, ReceivedBuffer->GetBufferSize());
+        SF_DEBUG_MESSAGE2(bytesReceived > 0, "Received %u bytes, %u remaining to be read\n", bytesReceived, ReceivedBuffer->GetBufferSize());
 
-        ReceivedBuffer->DiscardReadBytes();
-        if (ReceivedBuffer->GetBufferSize() > 0)
         {
-            QueueEvent(EventSocketData, &bytesReceived, 1);
+            Lock::Locker rcvLock(&ReceivedBufferLock);
+            ReceivedBuffer->DiscardReadBytes();
+            if (ReceivedBuffer->GetBufferSize() > 0)
+            {
+                QueueEvent(EventSocketData, &bytesReceived, 1);
+            }
         }
 
         if (!Sock.IsConnected())

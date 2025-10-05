@@ -46,7 +46,7 @@ namespace ClassTraits
     {
         MemoryHeap* mh = vm.GetMemoryHeap();
 
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::ClassClass(vm, ClassClassCI));
+        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::ClassClass(vm, AS3::fl::ClassCI));
         SetInstanceTraits(it);
 
         Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::ClassClass(*this));
@@ -83,23 +83,24 @@ namespace InstanceTraits
 
 } // namespace InstanceTraits
 
-const TypeInfo ClassClassTI = {
-    TypeInfo::CompileTime | TypeInfo::DynamicObject, 
-    "Class", "", NULL,
-    TypeInfo::None
-};
+namespace fl {
+    const TypeInfo ClassTI = {
+        TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        // ClassClass MAY NOT create objects ...
+        0,
+        0, 0, 0, 0,
+        "Class", "", NULL,
+        TypeInfo::None
+    };
 
-const ClassInfo ClassClassCI = {
-    &ClassClassTI, 
-    NULL,
-    0,
-    0,
-    0,
-    0,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-};
+    const ClassInfo ClassCI = {
+        &ClassTI,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    };
+} // namespace fl
 
 }}} // namespace Scaleform { namespace GFx { namespace AS3

@@ -51,24 +51,27 @@ namespace ClassTraits { namespace fl_display
         {"RADIAL", NULL, OFFSETOF(Classes::fl_display::GradientType, RADIAL), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    GradientType::GradientType(VM& vm)
-    : Traits(vm, AS3::fl_display::GradientTypeCI)
+
+    GradientType::GradientType(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::GradientType::GradientType()"
 //##protect##"ClassTraits::GradientType::GradientType()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_display::GradientTypeCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_display::GradientType(*this));
 
     }
 
     Pickable<Traits> GradientType::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) GradientType(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) GradientType(vm, AS3::fl_display::GradientTypeCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::GradientTypeCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -79,6 +82,11 @@ namespace fl_display
 {
     const TypeInfo GradientTypeTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::GradientType::InstanceType),
+        0,
+        ClassTraits::fl_display::GradientType::MemberInfoNum,
+        0,
+        0,
         "GradientType", "flash.display", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -86,10 +94,6 @@ namespace fl_display
     const ClassInfo GradientTypeCI = {
         &GradientTypeTI,
         ClassTraits::fl_display::GradientType::MakeClassTraits,
-        0,
-        ClassTraits::fl_display::GradientType::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_display::GradientType::mi,
         NULL,

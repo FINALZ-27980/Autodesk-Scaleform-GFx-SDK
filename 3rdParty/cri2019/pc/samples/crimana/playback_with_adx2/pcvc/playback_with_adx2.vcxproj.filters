@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Sample Utilities">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Sample Utilities\Shader">
+      <UniqueIdentifier>{d486b9be-6677-4d6c-80ba-63e1b61d96b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\playback_with_adx2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\smp_video_texture_yuv_PC.cpp">
+      <Filter>Sample Utilities</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\smp_video_texture.h">
+      <Filter>Sample Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\smp_vs_video_texture_yuv.hlsl">
+      <Filter>Sample Utilities\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\smp_ps_video_texture_yuv.hlsl">
+      <Filter>Sample Utilities\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\smp_ps_video_texture_yuv_with_alpha.hlsl">
+      <Filter>Sample Utilities\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

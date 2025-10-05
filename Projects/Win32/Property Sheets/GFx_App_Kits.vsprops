@@ -14,7 +14,7 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="libgfx.lib libgfx_as2.lib libgfx_as3.lib libjpeg.lib libpng.lib zlib.lib XInput.lib winmm.lib pcre.lib odbc32.lib odbccp32.lib imm32.lib Ws2_32.lib Msacm32.lib dbghelp.lib"
-		AdditionalLibraryDirectories="&quot;..\..\..\..\..\Lib\$(PlatformName)\$(MsvcVer)\$(ConfigShort)\&quot;;&quot;..\..\..\..\..\3rdParty\libpng-1.5.13\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\zlib-1.2.7\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\jpeg-8d\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\cri\pc\libs\$(PlatformName)&quot;;&quot;..\..\..\..\..\3rdParty\pcre\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\fmod\pc\$(PlatformName)\lib&quot;;&quot;$(DXSDK_DIR)\lib\x$(BitSet)&quot;"
+		AdditionalDependencies="libgfx.lib libgfx_as2.lib libgfx_as3.lib libgfx_air.lib libjpeg.lib libpng.lib zlib.lib XInput.lib libcurl.lib Wldap32.lib winmm.lib pcre.lib odbc32.lib odbccp32.lib imm32.lib Ws2_32.lib Msacm32.lib dbghelp.lib"
+		AdditionalLibraryDirectories="&quot;..\..\..\..\..\Lib\$(PlatformName)\$(MsvcVer)\$(ConfigShort)\&quot;;&quot;..\..\..\..\..\3rdParty\curl-7.29.0\lib\$(PlatformName)\$(MsvcVer)\Release\&quot;;&quot;..\..\..\..\..\3rdParty\libpng-1.5.13\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\zlib-1.2.7\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\jpeg-8d\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\cri\pc\libs\$(PlatformName)&quot;;&quot;..\..\..\..\..\3rdParty\pcre\Lib\$(PlatformName)\$(MsvcVer)\Release&quot;;&quot;..\..\..\..\..\3rdParty\fmod\pc\$(PlatformName)\lib&quot;;&quot;$(DXSDK_DIR)\lib\x$(BitSet)&quot;"
 	/>
 </VisualStudioPropertySheet>

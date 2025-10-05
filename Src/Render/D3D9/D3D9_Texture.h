@@ -251,8 +251,8 @@ class TextureManager : public Render::TextureManager
 public:
     TextureManager(IDirect3DDevice9* pdevice,
                    D3DCapFlags caps,
-                   ThreadId renderThreadId = 0, 
-                   ThreadCommandQueue* commandQueue = 0,
+                   ThreadId renderThreadId, 
+                   ThreadCommandQueue* commandQueue,
                    TextureCache* texCache = 0);
     ~TextureManager();
 
@@ -262,6 +262,7 @@ public:
     void    Reset();
 
     IDirect3DDevice9* GetDevice() const { return pDevice; }
+    const D3DCapFlags& GetCaps() const { return Caps; }
 
     void            SetSamplerState( unsigned stage, IDirect3DTexture9* d3dtex, 
                                      D3DTEXTUREFILTERTYPE filter = D3DTEXF_POINT, 

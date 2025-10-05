@@ -837,6 +837,14 @@ void DateCtorFunction::GlobalCtor(const FnCall& fn)
 #if defined(SF_OS_WIN32) || defined(SF_OS_XBOX) || defined(SF_OS_XBOX360)
     struct timeb t;
     ftime(&t);
+#ifdef _DURANGO
+    int daylight = 0;
+    _get_daylight(&daylight);
+    //long timezone = 0;
+    //_get_timezone(&timezone);
+    //timezone /= 60;
+    long bias = t.timezone - daylight * 60;
+#else
     TIME_ZONE_INFORMATION tz;
     DWORD r = GetTimeZoneInformation(&tz);
     long bias = tz.Bias;
@@ -848,6 +856,7 @@ void DateCtorFunction::GlobalCtor(const FnCall& fn)
     { 
         bias += tz.DaylightBias; 
     } 
+#endif
     // else leave the bias alone
     pdateObj->LocalOffset = -60000 * bias;
     pdateObj->SetDate(SInt64(t.time) * 1000 + t.millitm);

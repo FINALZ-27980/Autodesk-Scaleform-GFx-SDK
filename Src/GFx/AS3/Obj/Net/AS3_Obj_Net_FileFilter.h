@@ -57,17 +57,19 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class FileFilter : public Traits
+    class FileFilter : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::FileFilter"; }
 #endif
     public:
-        typedef Classes::fl_net::FileFilter ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        FileFilter(VM& vm);
+        FileFilter(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

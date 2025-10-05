@@ -215,7 +215,7 @@ protected:
     // at appropriate position. Returns the detached render node.
     // 'newParent' node is used only for safety check, to avoid circular references. Can be NULL.
     Ptr<Render::TreeNode>  SetIndirectTransform(Render::TreeNode* newParent);
-    void                   RemoveIndirectTransform();
+    void                   RemoveIndirectTransform(bool readdToDisplayList=true);
 public:
 
     // Constructor
@@ -252,8 +252,10 @@ public:
     virtual void            SetMatrix3D(const Matrix3F& m);
     virtual bool            GetProjectionMatrix3D(Matrix4F *m, bool bInherit=false) const;
     virtual void            SetProjectionMatrix3D(const Matrix4F& m);
+    virtual void            ClearProjectionMatrix3D();
     virtual bool            GetViewMatrix3D(Matrix3F *m, bool bInherit=false) const;
     virtual void            SetViewMatrix3D(const Matrix3F& m);
+    virtual void            ClearViewMatrix3D();
     virtual void            UpdateViewAndPerspective();
     virtual void            UpdateTransform3D();
     virtual bool            Has3D() { return Is3D(); }          // checks object and descendants
@@ -432,6 +434,7 @@ public:
 
     // Return character bounds in specified coordinate space.
     virtual RectF           GetBounds(const Matrix &t) const     { SF_UNUSED(t); return RectF(0); }
+    RectF                   GetBoundsIn3D() const;
     // Returns character bounds excluding stroke
     virtual RectF           GetRectBounds(const Matrix &t) const { SF_UNUSED(t); return RectF(0); }
     // Return transformed bounds of character in root movie space.
@@ -543,9 +546,9 @@ public:
 protected:
     virtual void            OnEventUnload();
     //void                    OnRemoved() { GetAvmObjImpl()->OnRemoved(); }
-    void                    EnsureGeomDataCreated();
 
 public:
+    void                    EnsureGeomDataCreated();
     void                    OnUnload() 
     { 
         OnEventUnload();
@@ -867,7 +870,7 @@ public:
 
     DisplayObject*          GetMask() const;
     DisplayObject*          GetMaskOwner() const;
-    void                    SetMask(DisplayObject* ch);
+    void                    SetMask(DisplayObject* ch, bool readdMaskToDisplayList=true);
     void                    SetMaskOwner(DisplayObject* ch);
 
     // if parameter NULL, scrollRect is removed

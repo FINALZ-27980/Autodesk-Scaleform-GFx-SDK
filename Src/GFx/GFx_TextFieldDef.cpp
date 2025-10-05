@@ -329,17 +329,17 @@ void    SF_STDCALL GFx_CSMTextSettings(LoadProcess* p, const TagInfo& tagInfo)
 }
 
 //////////////////////////////////////////////////
-TextClipboard::TextClipboard() : 
-State(State_TextClipboard), pStyledText(NULL)
+Clipboard::Clipboard() : 
+State(State_Clipboard), pStyledText(NULL)
 {
 }
 
-TextClipboard::~TextClipboard() 
+Clipboard::~Clipboard() 
 {
     ReleaseStyledText();
 }
 
-void TextClipboard::ReleaseStyledText()
+void Clipboard::ReleaseStyledText()
 {
     if (pStyledText)
     {
@@ -348,33 +348,33 @@ void TextClipboard::ReleaseStyledText()
     }
 }
 
-void TextClipboard::SetPlainText(const wchar_t* ptext, UPInt len)
+void Clipboard::SetPlainText(const wchar_t* ptext, UPInt len)
 {
     PlainText.SetString(ptext, len);
     OnTextStore(PlainText.ToWStr(), PlainText.GetLength());
 }
 
-void TextClipboard::SetText(const String& str)
+void Clipboard::SetText(const String& str)
 {
     ReleaseStyledText();
     UPInt len = str.GetLength();
     PlainText.Resize(len + 1);
-    UTF8Util::DecodeString(PlainText.GetBuffer(), str.ToCStr(), (SPInt)str.GetSize());
+    UTF8Util::DecodeStringSafe(PlainText.GetBuffer(), len + 1, str.ToCStr(), (SPInt)str.GetSize());
     OnTextStore(PlainText.ToWStr(), PlainText.GetLength());
 }
 
-void TextClipboard::SetText(const wchar_t* ptext, UPInt len)
+void Clipboard::SetText(const wchar_t* ptext, UPInt len)
 {
     ReleaseStyledText();
     SetPlainText(ptext, len);
 }
 
-const WStringBuffer& TextClipboard::GetText()
+const WStringBuffer& Clipboard::GetText()
 {
     return PlainText;
 }
 
-void TextClipboard::SetStyledText(class Text::StyledText* pstyledText)
+void Clipboard::SetStyledText(class Text::StyledText* pstyledText)
 {
     if (pStyledText)
         pStyledText->Release();
@@ -385,13 +385,13 @@ void TextClipboard::SetStyledText(class Text::StyledText* pstyledText)
     pstyledText->CopyStyledText(pStyledText);
 }
 
-void TextClipboard::SetTextAndStyledText(const wchar_t* ptext, UPInt len, class Text::StyledText* pstyledText)
+void Clipboard::SetTextAndStyledText(const wchar_t* ptext, UPInt len, class Text::StyledText* pstyledText)
 {
     SetStyledText(pstyledText);
     SetText(ptext, len);
 }
 
-class Text::StyledText* TextClipboard::GetStyledText()
+class Text::StyledText* Clipboard::GetStyledText()
 {
     return pStyledText;
 }

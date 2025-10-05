@@ -16,6 +16,9 @@ otherwise accompanies this software in either electronic or hard copy form.
 #ifndef INC_GFXAMP_SEND_THREAD_CALLBACK_H
 #define INC_GFXAMP_SEND_THREAD_CALLBACK_H
 
+#include "GFxConfig.h"
+#ifdef SF_AMP_SERVER
+
 #include "Kernel/SF_RefCount.h"
 #include "Amp_Interfaces.h"
 
@@ -57,5 +60,7 @@ protected:
 } // namespace AMP
 } // namespace GFx
 } // namespace Scaleform
+
+#endif
 
 #endif

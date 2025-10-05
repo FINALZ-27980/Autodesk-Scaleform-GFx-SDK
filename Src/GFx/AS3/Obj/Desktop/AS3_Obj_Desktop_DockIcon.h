@@ -37,6 +37,8 @@ namespace fl
     extern const ClassInfo ArrayCI;
     extern const TypeInfo int_TI;
     extern const ClassInfo int_CI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
 } // namespace fl
 namespace fl_display
 {
@@ -68,17 +70,19 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_desktop
 {
-    class DockIcon : public Traits
+    class DockIcon : public fl_desktop::InteractiveIcon
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::DockIcon"; }
 #endif
     public:
-        typedef Classes::fl_desktop::DockIcon ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        DockIcon(VM& vm);
+        DockIcon(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

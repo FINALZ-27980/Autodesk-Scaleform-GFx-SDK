@@ -39,6 +39,9 @@ otherwise accompanies this software in either electronic or hard copy form.
 #define THREAD_NAME "Scaleform FMOD Update"
 #define THREAD_STACK_SIZE 32768
 
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+#include <fmodwiiu.h>
+#endif
 
 namespace Scaleform { namespace Sound {
 
@@ -292,7 +295,12 @@ FMOD_RESULT CreateSubSound(SoundRendererFMODImpl* prenderer, AppendableSoundData
     exinfo.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
     exinfo.length = 0x0FFFFFFF;
 
-    int flags = FMOD_SOFTWARE | FMOD_OPENONLY | FMOD_IGNORETAGS;
+    FMOD_MODE flags = FMOD_OPENONLY | FMOD_IGNORETAGS;
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+	flags |= FMOD_HARDWARE;
+#else
+	flags |= FMOD_SOFTWARE;
+#endif
     switch (psd->GetFormat() & SoundData::Sample_Format)
     {
     case SoundData::Sample_PCM:
@@ -513,7 +521,12 @@ SoundSampleFMODImplAux::SoundSampleFMODImplAux(SoundRendererFMODImpl* pp,
     exinfo.defaultfrequency  = SampleRate;                     // Default playback rate of sound
     exinfo.format            = Format;
 
-    FMOD_MODE flags = FMOD_SOFTWARE | FMOD_OPENUSER | FMOD_LOOP_NORMAL;
+    FMOD_MODE flags = FMOD_OPENUSER | FMOD_LOOP_NORMAL;
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+	flags |= FMOD_HARDWARE;
+#else
+	flags |= FMOD_SOFTWARE;
+#endif
     FMOD_RESULT result = pPlayer->pDevice->createSound(0, flags, &exinfo, &pSound);
     if (result != FMOD_OK)
     {
@@ -545,6 +558,10 @@ SoundChannelFMODImplAux* SoundSampleFMODImplAux::Start(bool paused)
         pPlayer->LogError(result);
         return NULL;
     }
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+    FMOD_WiiU_SetControllerSpeaker((FMOD_CHANNEL *)pchannel, FMOD_WIIU_CONTROLLER_DRC);
+#endif
+    
     BlockSize = (AUX_SOUND_READBUFLEN_MS * SampleRate/1000) * Channels * (Bits / 8);
     if (pBlockBuffer)
         SF_FREE(pBlockBuffer);
@@ -981,7 +998,12 @@ SoundSampleFMODImpl* SoundRendererFMODImpl::CreateSampleFromFile(const char* fna
     psample = SF_NEW SoundSampleFMODImpl(this);
     }
 
-    FMOD_MODE flags = FMOD_SOFTWARE | FMOD_LOOP_OFF | FMOD_2D;
+    FMOD_MODE flags = FMOD_LOOP_OFF | FMOD_2D;
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+	flags |= FMOD_HARDWARE;
+#else
+	flags |= FMOD_SOFTWARE;
+#endif
 #if defined(SF_OS_WINMETRO)
     flags |= FMOD_NONBLOCKING;
 #endif
@@ -1299,7 +1321,12 @@ FMOD_RESULT SoundSampleFMODImpl::CreateSubSound(SoundData* psd, FMOD::Sound** ps
     Alg::MemUtil::Set(&exinfo, 0, sizeof(FMOD_CREATESOUNDEXINFO));
     exinfo.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 
-    FMOD_MODE flags = FMOD_SOFTWARE | FMOD_LOWMEM | FMOD_IGNORETAGS;
+    FMOD_MODE flags = FMOD_LOWMEM | FMOD_IGNORETAGS;
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+	flags |= FMOD_HARDWARE;
+#else
+	flags |= FMOD_SOFTWARE;
+#endif
 #if defined(SF_OS_IPHONE) || defined(SF_OS_ANDROID)
     flags |= FMOD_OPENMEMORY;
 #else
@@ -1336,7 +1363,12 @@ FMOD_RESULT SoundSampleFMODImpl::CreateSubSound(AppendableSoundData* psd, FMOD::
     exinfo.userseek = &DecodeSeek;
     exinfo.decodebuffersize = 1024 * 4;
 
-    FMOD_MODE flags = FMOD_SOFTWARE | FMOD_LOWMEM | FMOD_CREATESTREAM | FMOD_IGNORETAGS;
+    FMOD_MODE flags = FMOD_LOWMEM | FMOD_CREATESTREAM | FMOD_IGNORETAGS;
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+	flags |= FMOD_HARDWARE;
+#else
+	flags |= FMOD_SOFTWARE;
+#endif
     switch (psd->GetFormat() & SoundData::Sample_Format)
     {
     case SoundData::Sample_PCM:
@@ -1360,7 +1392,11 @@ FMOD_RESULT SoundSampleFMODImpl::CreateSubSound(AppendableSoundData* psd, FMOD::
 
 FMOD_RESULT SoundSampleFMODImpl::CreateSubSound(SoundFile* psd, FMOD::Sound** psound)
 {
-    FMOD_MODE flags = FMOD_SOFTWARE;
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+	FMOD_MODE flags = FMOD_HARDWARE;
+#else
+	FMOD_MODE flags = FMOD_SOFTWARE;
+#endif
     if (psd->IsStreamSample())
         flags |= FMOD_CREATESTREAM;
     else
@@ -1393,6 +1429,9 @@ SoundChannelFMODImpl* SoundSampleFMODImpl::Start(bool paused)
         r = pPlayer->pDevice->playSound(FMOD_CHANNEL_FREE, pSound, true, &pchan);
         if (r == FMOD_OK)
         {
+#if defined(GFX_SOUND_OUTPUT_DRC) && defined(SF_OS_WIIU)
+            FMOD_WiiU_SetControllerSpeaker((FMOD_CHANNEL *)pchan, FMOD_WIIU_CONTROLLER_DRC);
+#endif
             unsigned hi = 0;
             unsigned lo = 0;
             r = pPlayer->pDevice->getDSPClock(&hi, &lo);
@@ -1559,6 +1598,7 @@ void SoundChannelFMODImpl::Loop(int count, float start, float end)
     slen = unsigned((end_pcm - start_pcm) * count * (pPlayer->SystemBitRate/sample_rate));
     FMOD_64BIT_ADD(hi, lo, 0, slen); 
     result = pChan->setDelay(FMOD_DELAYTYPE_DSPCLOCK_END, hi, lo);
+    SF_UNUSED(result);
 }
 
 void SoundChannelFMODImpl::SetVolume(float volume)
@@ -1608,9 +1648,9 @@ static inline void s_SetChannelPan(FMOD::Channel* pchan, const SoundChannel::Tra
 {
     FMOD_RESULT r;
     r = pchan->setVolume((transform.LeftVolume + transform.RightVolume)/2);
-    float levels[2];
-    levels[0] = transform.LeftVolume;
-    levels[1] = transform.RightVolume;
+    // float levels[2];
+    // levels[0] = transform.LeftVolume;
+    // levels[1] = transform.RightVolume;
 	float pan = Alg::Abs(transform.LeftVolume - transform.RightVolume);
     if (transform.LeftVolume > transform.RightVolume)
         pan *= -1;

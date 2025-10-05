@@ -31,24 +31,27 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace ClassTraits { namespace fl
 {
-    ReferenceError::ReferenceError(VM& vm)
-    : Traits(vm, AS3::fl::ReferenceErrorCI)
+
+    ReferenceError::ReferenceError(VM& vm, const ClassInfo& ci)
+    : fl::Error(vm, ci)
     {
 //##protect##"ClassTraits::ReferenceError::ReferenceError()"
 //##protect##"ClassTraits::ReferenceError::ReferenceError()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Error(vm, AS3::fl::ReferenceErrorCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassCallConstruct(*this));
 
     }
 
     Pickable<Traits> ReferenceError::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) ReferenceError(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) ReferenceError(vm, AS3::fl::ReferenceErrorCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::ReferenceErrorCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -59,6 +62,11 @@ namespace fl
 {
     const TypeInfo ReferenceErrorTI = {
         TypeInfo::CompileTime | TypeInfo::DynamicObject,
+        sizeof(ClassTraits::fl::ReferenceError::InstanceType),
+        0,
+        0,
+        0,
+        0,
         "ReferenceError", "", &fl::ErrorTI,
         TypeInfo::None
     };
@@ -66,10 +74,6 @@ namespace fl
     const ClassInfo ReferenceErrorCI = {
         &ReferenceErrorTI,
         ClassTraits::fl::ReferenceError::MakeClassTraits,
-        0,
-        0,
-        0,
-        0,
         NULL,
         NULL,
         NULL,

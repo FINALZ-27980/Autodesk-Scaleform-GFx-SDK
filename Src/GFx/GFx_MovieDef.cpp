@@ -108,6 +108,24 @@ void*    DataAllocator::AllocIndividual(UPInt bytes)
     return (pblock + 1);
 }
 
+void*    DataAllocator::AllocIndividualAlign(UPInt bytes, size_t a)
+{
+    if (a == 0)
+    {
+        return AllocIndividual(bytes);
+    }
+    size_t blockSize = sizeof(Block);
+    size_t headerSize = ((blockSize + a - 1) / a) * a;
+    SF_ASSERT(headerSize % blockSize == 0);
+    Block* pblock = (Block*) SF_HEAP_MEMALIGN(pHeap, bytes + headerSize, a, StatMD_Tags_Mem);
+    if (!pblock)
+        return 0;
+    // Insert to allocated list.
+    pblock->pNext = pAllocations;
+    pAllocations = pblock;
+    return (pblock + headerSize / blockSize);
+}
+
 
 // ***** MovieDataDef
 
@@ -401,7 +419,7 @@ bool    MovieDataDef::LoadTaskData::InitImageFileMovieDef(
     // Create image resource and shape character using it.    
     if (imgCreator && pimageResource->GetImage()->GetImageType() == Render::ImageBase::Type_ImageBase)
     {
-        ImageCreateInfo icreateInfo(ImageCreateInfo::Create_FileImage, pHeap);
+        ImageCreateInfo icreateInfo(ImageCreateInfo::Create_FileImage, Memory::GetHeapByAddress(pimageResource));
 
         Ptr<Render::Image> img = *imgCreator->CreateImage(icreateInfo, static_cast<ImageSource*>(pimageResource->GetImage()));
         if (img)
@@ -435,12 +453,17 @@ bool    MovieDataDef::LoadTaskData::InitImageFileMovieDef(
 
             // Add a PlaceObject command, so that it creates a shape.
             // We use an individual allocator since we don't want a block of memory to be wasted.
-            void* ptagMem = TagMemAllocator.AllocIndividual(
-                sizeof(GFxPlaceObjectUnpacked) + sizeof(ExecuteTag*));
+
+            // ptag needs to be 16-byte aligned for SIMD, so pad the header
+            static const size_t tagAlign = 16;
+            static const size_t tagSize = sizeof(ExecuteTag*);
+            static const size_t headerSize = ((tagSize + tagAlign - 1) / tagAlign) * tagAlign;
+            void* ptagMem = TagMemAllocator.AllocIndividualAlign(
+                sizeof(GFxPlaceObjectUnpacked) + headerSize, tagAlign);
             if (ptagMem)
             {
                 ExecuteTag**  pptagArray = (ExecuteTag**) ptagMem;
-                GFxPlaceObjectUnpacked* ptag       = (GFxPlaceObjectUnpacked*) (pptagArray + 1);
+                GFxPlaceObjectUnpacked* ptag       = (GFxPlaceObjectUnpacked*) (pptagArray + headerSize / tagSize);
                 Construct<GFxPlaceObjectUnpacked>(ptag);
 
                 // Verified: Flash assigns depth -16383 to image shapes (depth value = 1 in our list).
@@ -1174,7 +1197,7 @@ MovieDefImpl::MovieDefImpl(MovieDataDef* pdataDef,
                            StateBagImpl *pdelegateState,
                            MemoryHeap* pargHeap,
                            bool fullyLoaded,
-                           UPInt memoryArena) 
+                           UPInt memoryArena)
 {    
     //printf("MovieDefImpl::MovieDefImpl: %x, thread : %d\n", this, GetCurrentThreadId());
     MemoryHeap*  pheap = pargHeap;
@@ -1211,10 +1234,29 @@ MovieDefImpl::~MovieDefImpl()
 {
     SF_DEBUG_MESSAGE2(GFX_UNLOAD_TRACE_ENABLED, 
         "~MovieDefImpl %s (%p)\n", GetDataDef()->GetFileURL(), this);
+    {
+        Lock::Locker lock(&ReleaseNotifiersLock);
+        HashSetLH<ReleaseNotifier*>::Iterator it = ReleaseNotifiers.Begin();
+        for (; it != ReleaseNotifiers.End(); ++it)
+        {
+            if (*it)
+                (*it)->OnMovieDefRelease(this);
+        }
+    }
     pBindData->OnMovieDefRelease();
 }
 
+void MovieDefImpl::AddReleaseNotifier(ReleaseNotifier* rn)
+{
+    Lock::Locker lock(&ReleaseNotifiersLock);
+    ReleaseNotifiers.Set(rn);
+}
 
+void MovieDefImpl::RemoveReleaseNotifier(ReleaseNotifier* rn)
+{
+    Lock::Locker lock(&ReleaseNotifiersLock);
+    ReleaseNotifiers.Remove(rn);
+}
 
 
 // *** GFxMovieDefBindProcess - used for MovieDefImpl Binding
@@ -1257,8 +1299,10 @@ MovieBindProcess::~MovieBindProcess()
 
     if (pBindData) 
     {
-        if (pBindData->GetBindState() == MovieDefImpl::BS_InProgress)
+        if (pBindData->GetBindStateType() == MovieDefImpl::BS_InProgress)
+        {
             pBindData->SetBindState(MovieDefImpl::BS_Canceled);
+        }
         pBindData = 0;
     }
 
@@ -1279,6 +1323,10 @@ static bool MatchFileNames(const String& path1, const String& path2)
 {
     int i1 = (int)path1.GetSize() - 1;
     int i2 = (int)path2.GetSize() - 1;
+
+    if ((i1 < 0 || i2 < 0) && i1 != i2)
+        return false;
+
     for (; i1 >= 0 && i2 >= 0; --i1, --i2)
     {
         if ((path1[i1] == '\\' || path1[i1] == '/') && (path2[i2] == '\\' || path2[i2] == '/'))
@@ -1945,9 +1993,7 @@ bool   MovieDefImpl::BindTaskData::WaitForBindStateFlags(unsigned flags)
         // Wait for for bind state flag or error. Return true for success,
         // false if bind state was changed to error without setting the flags.
         Mutex::Locker lock(&pBindUpdate->GetMutex());
-
-        while((GetBindStateType() < BS_Canceled) &&
-            !(GetBindState() & flags))
+        while(GetBindStateType() < BS_Canceled && (GetBindState() & flags) == 0)
         {
             pBindUpdate->WaitForNotify();
         }
@@ -1990,6 +2036,7 @@ void    MovieDefImpl::BindTaskData::ResolveImport(
                     LoadStates* pls, bool recursive)
 {    
     bool imported = false;
+    SF_UNUSED(imported);
 
     // Go through all character ids and resolve their handles.
     for (unsigned i=0; i< pimport->Imports.GetSize(); i++)

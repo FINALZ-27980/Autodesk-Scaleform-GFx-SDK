@@ -59,7 +59,7 @@ namespace Classes { namespace fl_system
     
 namespace ClassTraits { namespace fl_system
 {
-    class IME : public Traits
+    class IME : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -67,12 +67,16 @@ namespace ClassTraits { namespace fl_system
 #endif
     public:
         typedef Classes::fl_system::IME ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IME(VM& vm);
+        IME(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 6 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[9];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

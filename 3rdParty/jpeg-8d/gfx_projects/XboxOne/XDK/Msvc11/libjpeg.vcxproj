@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Durango">
+      <Configuration>Debug</Configuration>
+      <Platform>Durango</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Durango">
+      <Configuration>Release</Configuration>
+      <Platform>Durango</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\jaricom.c" />
+    <ClCompile Include="..\..\..\..\jcapimin.c" />
+    <ClCompile Include="..\..\..\..\jcapistd.c" />
+    <ClCompile Include="..\..\..\..\jcarith.c" />
+    <ClCompile Include="..\..\..\..\jccoefct.c" />
+    <ClCompile Include="..\..\..\..\jccolor.c" />
+    <ClCompile Include="..\..\..\..\jcdctmgr.c" />
+    <ClCompile Include="..\..\..\..\jchuff.c" />
+    <ClCompile Include="..\..\..\..\jcinit.c" />
+    <ClCompile Include="..\..\..\..\jcmainct.c" />
+    <ClCompile Include="..\..\..\..\jcmarker.c" />
+    <ClCompile Include="..\..\..\..\jcmaster.c" />
+    <ClCompile Include="..\..\..\..\jcomapi.c" />
+    <ClCompile Include="..\..\..\..\jcparam.c" />
+    <ClCompile Include="..\..\..\..\jcprepct.c" />
+    <ClCompile Include="..\..\..\..\jcsample.c" />
+    <ClCompile Include="..\..\..\..\jdapimin.c" />
+    <ClCompile Include="..\..\..\..\jdapistd.c" />
+    <ClCompile Include="..\..\..\..\jdarith.c" />
+    <ClCompile Include="..\..\..\..\jdatadst.c" />
+    <ClCompile Include="..\..\..\..\jdatasrc.c" />
+    <ClCompile Include="..\..\..\..\jdcoefct.c" />
+    <ClCompile Include="..\..\..\..\jdcolor.c" />
+    <ClCompile Include="..\..\..\..\jddctmgr.c" />
+    <ClCompile Include="..\..\..\..\jdhuff.c" />
+    <ClCompile Include="..\..\..\..\jdinput.c" />
+    <ClCompile Include="..\..\..\..\jdmainct.c" />
+    <ClCompile Include="..\..\..\..\jdmarker.c" />
+    <ClCompile Include="..\..\..\..\jdmaster.c" />
+    <ClCompile Include="..\..\..\..\jdmerge.c" />
+    <ClCompile Include="..\..\..\..\jdpostct.c" />
+    <ClCompile Include="..\..\..\..\jdsample.c" />
+    <ClCompile Include="..\..\..\..\jdtrans.c" />
+    <ClCompile Include="..\..\..\..\jerror.c" />
+    <ClCompile Include="..\..\..\..\jfdctflt.c" />
+    <ClCompile Include="..\..\..\..\jfdctfst.c" />
+    <ClCompile Include="..\..\..\..\jfdctint.c" />
+    <ClCompile Include="..\..\..\..\jidctflt.c" />
+    <ClCompile Include="..\..\..\..\jidctfst.c" />
+    <ClCompile Include="..\..\..\..\jidctint.c" />
+    <ClCompile Include="..\..\..\..\jmemmgr.c" />
+    <ClCompile Include="..\..\..\..\jmemnobs.c" />
+    <ClCompile Include="..\..\..\..\jquant1.c" />
+    <ClCompile Include="..\..\..\..\jquant2.c" />
+    <ClCompile Include="..\..\..\..\jutils.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\jchuff.h" />
+    <ClInclude Include="..\..\..\..\jconfig.h" />
+    <ClInclude Include="..\..\..\..\jdct.h" />
+    <ClInclude Include="..\..\..\..\jdhuff.h" />
+    <ClInclude Include="..\..\..\..\jerror.h" />
+    <ClInclude Include="..\..\..\..\jinclude.h" />
+    <ClInclude Include="..\..\..\..\jmemsys.h" />
+    <ClInclude Include="..\..\..\..\jmorecfg.h" />
+    <ClInclude Include="..\..\..\..\jpegint.h" />
+    <ClInclude Include="..\..\..\..\jpeglib.h" />
+    <ClInclude Include="..\..\..\..\jversion.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\jmemdosa.asm" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ApplicationEnvironment>title</ApplicationEnvironment>
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
+    <Keyword>DurangoProj</Keyword>
+    <ProjectName>libjpeg</ProjectName>
+    <RootNamespace>libjpeg</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{ED2732B3-F8C5-C59D-F751-DABC83E22285}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>..\..\..\..\Lib\XboxOne\XDK\Msvc11\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\..\Obj\XboxOne\XDK\Msvc11\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>libjpeg</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>..\..\..\..\Lib\XboxOne\XDK\Msvc11\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\..\Obj\XboxOne\XDK\Msvc11\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>libjpeg</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>__WRL_NO_DEFAULT_LIB__;NO_GETENV;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\Include;..\..\..\..\..\..\Src;..\..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\..\3rdParty\libpng-1.5.13;..\..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\..\3rdParty\glext;..\..\..\..\..\..\3rdParty\PlatformSDK;..\..\..\..\..\..\3rdParty\cri\pc\include;..\..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+    <Lib>
+      <Verbose>true</Verbose>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>__WRL_NO_DEFAULT_LIB__;NO_GETENV;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\..\Include;..\..\..\..\..\..\Src;..\..\..\..\..\..\3rdParty\zlib-1.2.7;..\..\..\..\..\..\3rdParty\jpeg-8d;..\..\..\..\..\..\3rdParty\libpng-1.5.13;..\..\..\..\..\..\3rdParty\expat-2.1.0\lib;..\..\..\..\..\..\3rdParty\glext;..\..\..\..\..\..\3rdParty\PlatformSDK;..\..\..\..\..\..\3rdParty\cri\pc\include;..\..\..\..\..\..\3rdParty\fmod\pc\$(Platform)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <CallingConvention>Cdecl</CallingConvention>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

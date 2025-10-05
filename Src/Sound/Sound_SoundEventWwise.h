@@ -121,6 +121,14 @@ public:
         AKRESULT res = AK::SoundEngine::RegisterGameObj(ObjectID);
         SF_ASSERT(res == AK_Success);
         SF_UNUSED(res);
+	}
+    SoundEventWwise(AkGameObjectID objectId) : ObjectID(objectId), PlayingID(AK_INVALID_PLAYING_ID)
+    {
+        SF_ASSERT(AK::SoundEngine::IsInitialized());
+
+        AKRESULT res = AK::SoundEngine::RegisterGameObj(ObjectID);
+        SF_ASSERT(res == AK_Success);
+        SF_UNUSED(res);
     }
     virtual ~SoundEventWwise()
     {

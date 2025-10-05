@@ -55,7 +55,7 @@ namespace Classes { namespace fl_filters
     
 namespace ClassTraits { namespace fl_filters
 {
-    class DisplacementMapFilterMode : public Traits
+    class DisplacementMapFilterMode : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -63,9 +63,11 @@ namespace ClassTraits { namespace fl_filters
 #endif
     public:
         typedef Classes::fl_filters::DisplacementMapFilterMode ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        DisplacementMapFilterMode(VM& vm);
+        DisplacementMapFilterMode(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

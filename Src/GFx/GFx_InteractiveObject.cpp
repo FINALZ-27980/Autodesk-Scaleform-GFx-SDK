@@ -235,18 +235,20 @@ void InteractiveObject::RemoveFromOptimizedPlayList()
         if (!proot->IsOptAdvanceListInvalid())
         {
             SF_ASSERT(proot);
-            SF_ASSERT(IsValidOptAdvListMember(proot));
-            proot->CheckOptPlaylistConsistency(this);
-
-            if (pPlayPrevOpt)
-                pPlayPrevOpt->pPlayNextOpt = pPlayNextOpt;
-            else
+            if (IsValidOptAdvListMember(proot))
             {
-                SF_ASSERT(proot->pPlayListOptHead == this);
-                proot->pPlayListOptHead = pPlayNextOpt;
+                proot->CheckOptPlaylistConsistency(this);
+
+                if (pPlayPrevOpt)
+                    pPlayPrevOpt->pPlayNextOpt = pPlayNextOpt;
+                else
+                {
+                    SF_ASSERT(proot->pPlayListOptHead == this);
+                    proot->pPlayListOptHead = pPlayNextOpt;
+                }
+                if (pPlayNextOpt)
+                    pPlayNextOpt->pPlayPrevOpt = pPlayPrevOpt;
             }
-            if (pPlayNextOpt)
-                pPlayNextOpt->pPlayPrevOpt = pPlayPrevOpt;
         }
         pPlayNextOpt = pPlayPrevOpt = NULL;
         ClearOptAdvListFlag();

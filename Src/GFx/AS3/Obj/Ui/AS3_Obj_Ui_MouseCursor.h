@@ -52,7 +52,7 @@ namespace Classes { namespace fl_ui
     
 namespace ClassTraits { namespace fl_ui
 {
-    class MouseCursor : public Traits
+    class MouseCursor : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_ui
 #endif
     public:
         typedef Classes::fl_ui::MouseCursor ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        MouseCursor(VM& vm);
+        MouseCursor(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 5 };
         static const MemberInfo mi[MemberInfoNum];

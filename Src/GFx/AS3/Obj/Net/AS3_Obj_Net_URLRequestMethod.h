@@ -55,7 +55,7 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class URLRequestMethod : public Traits
+    class URLRequestMethod : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -63,9 +63,11 @@ namespace ClassTraits { namespace fl_net
 #endif
     public:
         typedef Classes::fl_net::URLRequestMethod ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        URLRequestMethod(VM& vm);
+        URLRequestMethod(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 6 };
         static const MemberInfo mi[MemberInfoNum];

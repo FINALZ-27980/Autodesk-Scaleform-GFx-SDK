@@ -666,7 +666,7 @@ class EntryTable
     void            FreeEntryPage(EntryPage* ppage);
 
 public:
-    EntryTable(Context* context, MemoryHeap* heap) : pContext(context), pHeap(heap) { }
+    EntryTable(Context* context, MemoryHeap* heap) : pContext(context), pHeap(heap), pActiveSnapshot(0) { }
 
     void    SetActiveSnapshot(Snapshot* p) { pActiveSnapshot = p; }
 

@@ -82,7 +82,7 @@ void Paragraph::TextBuffer::SetString
     if (len > 0)
     {
         SF_ASSERT(pText);
-        UTF8Util::DecodeString(pText, putf8Str, utf8length);
+        UTF8Util::DecodeStringSafe(pText, len, putf8Str, utf8length);
     }
     Size = len;
 }
@@ -491,7 +491,7 @@ void Paragraph::AppendPlainText(Allocator* pallocator, const char* putf8str, UPI
 
         if (p)
         {
-            UTF8Util::DecodeString(p, putf8str, utf8StrSize);
+            UTF8Util::DecodeStringSafe(p, length, putf8str, utf8StrSize);
             ++ModCounter;
         }
         //_dump(FormatInfo);
@@ -1050,6 +1050,11 @@ UPInt StyledText::AppendString(const char* putf8String, UPInt stringSize,
             // use existing paragraph
             ppara->RemoveTermNull();
             posInPara = ppara->GetLength();
+            if (posInPara == 0 && pdefParaFmt)
+            {
+                // Paragraph is empty - we can apply pdefParaFmt
+                ppara->SetFormat(pTextAllocator, *pdefParaFmt);
+            }
         }
         SF_ASSERT(ppara);
         UPInt paraLength = 0;

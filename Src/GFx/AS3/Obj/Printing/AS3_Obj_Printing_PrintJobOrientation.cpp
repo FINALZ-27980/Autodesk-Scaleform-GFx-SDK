@@ -51,24 +51,27 @@ namespace ClassTraits { namespace fl_printing
         {"PORTRAIT", NULL, OFFSETOF(Classes::fl_printing::PrintJobOrientation, PORTRAIT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    PrintJobOrientation::PrintJobOrientation(VM& vm)
-    : Traits(vm, AS3::fl_printing::PrintJobOrientationCI)
+
+    PrintJobOrientation::PrintJobOrientation(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::PrintJobOrientation::PrintJobOrientation()"
 //##protect##"ClassTraits::PrintJobOrientation::PrintJobOrientation()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_printing::PrintJobOrientationCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_printing::PrintJobOrientation(*this));
 
     }
 
     Pickable<Traits> PrintJobOrientation::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) PrintJobOrientation(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) PrintJobOrientation(vm, AS3::fl_printing::PrintJobOrientationCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_printing::PrintJobOrientationCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -79,6 +82,11 @@ namespace fl_printing
 {
     const TypeInfo PrintJobOrientationTI = {
         TypeInfo::CompileTime | TypeInfo::Final | TypeInfo::NotImplemented,
+        sizeof(ClassTraits::fl_printing::PrintJobOrientation::InstanceType),
+        0,
+        ClassTraits::fl_printing::PrintJobOrientation::MemberInfoNum,
+        0,
+        0,
         "PrintJobOrientation", "flash.printing", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -86,10 +94,6 @@ namespace fl_printing
     const ClassInfo PrintJobOrientationCI = {
         &PrintJobOrientationTI,
         ClassTraits::fl_printing::PrintJobOrientation::MakeClassTraits,
-        0,
-        ClassTraits::fl_printing::PrintJobOrientation::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_printing::PrintJobOrientation::mi,
         NULL,

@@ -107,6 +107,10 @@ public:
     // Both "startPos" and "endPos" parameters are optional.
     virtual void SetFontSize(float fontSize, UPInt startPos = 0, UPInt endPos = UPInt(-1)) = 0;
 
+    // Sets letter spacing to whole text or to the part of text in interval [startPos..endPos].
+    // Both "startPos" and "endPos" parameters are optional.
+    virtual void SetLetterSpacing(float letterSpacing, UPInt startPos = 0, UPInt endPos = UPInt(-1)) = 0;
+
     enum FontStyle
     {
         Normal              = Render::TreeText::Normal,

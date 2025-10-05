@@ -210,7 +210,10 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
             const InsertCharCommand& cmd = *reinterpret_cast<const InsertCharCommand*>(command);
             // check for maxlength
             if (!HasMaxLength() || GetLength() + 1 <= GetMaxLength())
+            {
                 res = pDocument->InsertString(&cmd.CharCode, cmd.PosAt, 1);
+                OnDocumentChanged(ViewNotify_TextChange);
+            }
             break;
         }
     case Cmd_InsertPlainText:
@@ -224,6 +227,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
                 len = GetMaxLength() - curLen;
             res = pDocument->InsertString(cmd.pStr, cmd.PosAt, len, 
                 (!IsMultiline()) ? StyledText::NLP_IgnoreCRLF : StyledText::NLP_CompressCRLF);
+            OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     case Cmd_InsertStyledText:
@@ -242,6 +246,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
                     len = GetMaxLength() - curDstLen;
             }
             res = pDocument->InsertStyledText(*cmd.pText, cmd.PosAt, len);
+            OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     case Cmd_ReplaceTextByChar:
@@ -275,6 +280,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
                 res = pDocument->InsertString(&cmd.CharCode, stPos, 1, (
                     !IsMultiline()) ? StyledText::NLP_IgnoreCRLF : StyledText::NLP_CompressCRLF);
                 RemoveText(stPos + 1, endPos + 1);
+                OnDocumentChanged(ViewNotify_TextChange);
             }
             break;
         }
@@ -307,6 +313,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
             res = pDocument->InsertString(cmd.pStr, stPos, len, 
                 (!IsMultiline()) ? StyledText::NLP_IgnoreCRLF : StyledText::NLP_CompressCRLF);
             RemoveText(stPos + res, endPos + res);
+            OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     case Cmd_ReplaceTextByStyledText:
@@ -337,12 +344,14 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
             }
             res = pDocument->InsertStyledText(*cmd.pText, stPos, len);
             RemoveText(stPos + res, endPos + res);
+            OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     case Cmd_BackspaceChar:
         {
             SF_ASSERT(command);
             res = 1;
+            bool doNotify = false;
             const DeleteCharCommand& cmd = *reinterpret_cast<const DeleteCharCommand*>(command);
             // need to check a special case, if paragraph has indent or bullet and cursor
             // is at the beginning of para - remove these attributes first, before continuing 
@@ -362,7 +371,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
                         ParagraphFormat newFmt = *pparaFmt;
                         newFmt.SetBullet(false);
                         ppara->SetFormat(pDocument->GetAllocator(), newFmt);
-                        OnDocumentChanged(ViewNotify_TextChange);
+                        doNotify = true;
                         res = 0;
                     }
                     else if (pparaFmt->GetIndent() != 0 || pparaFmt->GetBlockIndent() != 0)
@@ -371,7 +380,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
                         newFmt.SetIndent(0);
                         newFmt.SetBlockIndent(0);
                         ppara->SetFormat(pDocument->GetAllocator(), newFmt);
-                        OnDocumentChanged(ViewNotify_TextChange);
+                        doNotify = true;
                         res = 0;
                     }
                 }
@@ -382,6 +391,8 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
             }
             else
                 res = 0;
+            if (doNotify)
+                OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     case Cmd_DeleteChar:
@@ -390,6 +401,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
             const DeleteCharCommand& cmd = *reinterpret_cast<const DeleteCharCommand*>(command);
             RemoveText(cmd.PosAt, cmd.PosAt + 1);
             res = 1;
+            OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     case Cmd_DeleteText:
@@ -410,6 +422,7 @@ UPInt DocView::EditCommand(DocView::CommandType cmdId, const void* command)
             //?SetDefaultTextAndParaFormat(stPos);
             RemoveText(stPos, endPos);
             res = endPos - stPos;
+            OnDocumentChanged(ViewNotify_TextChange);
             break;
         }
     default: break;
@@ -699,6 +712,101 @@ FontHandle* DocView::FindFont(FindFontInfo* pfontInfo, bool quietMode)
     return pfontInfo->pCurrentFont;
 }
 
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+// This iterator iterates through specified 'text' of length 'len' in reverse order.
+// Formatting info is retrieved from 'paragraph' using 'indexMap'. 'indexMap' is the 
+// mapping between indices in 'text' and 'paragraph.GetText', i.e. 
+// text[i] == paragraph->GetText()[indexMap[i]]. 
+class RightToLeftIterator
+{
+    typedef Paragraph::CharacterInfo CharacterInfo;
+public:
+    RightToLeftIterator(): pParagraph(NULL), ParaText(NULL), IndexMap(NULL), 
+        MirroredBits(NULL), ParaLen(0), Index(-1), VIndex(0)
+    {
+    }
+
+    RightToLeftIterator(const Paragraph& paragraph, 
+        const wchar_t* text, unsigned len, 
+        const unsigned* indexMap, const bool* mirroredBits) : 
+    pParagraph(&paragraph), ParaText(text), IndexMap(indexMap), 
+        MirroredBits(mirroredBits), ParaLen(len), Index(int(len) - 1), VIndex(0)
+    {
+    }
+
+    void Init(const Paragraph& paragraph, const wchar_t* text, unsigned len, 
+        const unsigned* indexMap, const bool* mirroredBits)
+    {
+        pParagraph = &paragraph;
+        ParaText   = text;
+        ParaLen    = len;
+        IndexMap   = indexMap;
+        MirroredBits=mirroredBits;
+        Index      = int(len) - 1;
+        VIndex     = 0;
+    }
+
+    bool IsFinished() const { return Index < 0; }
+
+    CharacterInfo&              operator*()
+    {
+        if (!IsFinished())
+        {
+            PlaceHolder.Character = ParaText[Index];
+            PlaceHolder.Index     = VIndex; //IndexMap[Index];
+            PlaceHolder.pFormat   = pParagraph->GetTextFormatPtr(IndexMap[Index]);
+        }
+        else
+        {
+            PlaceHolder.Character   = 0;
+            PlaceHolder.Index       = 0;
+            PlaceHolder.pFormat     = NULL;
+        }
+        return PlaceHolder; 
+    }
+    const CharacterInfo&        operator*() const
+    {
+        return const_cast<RightToLeftIterator*>(this)->operator*();
+    }
+    inline CharacterInfo*       operator->() { return &operator*(); }
+    inline const CharacterInfo* operator->() const { return &operator*(); }
+
+    void operator++()
+    {
+        if (!IsFinished())
+        {
+            --Index;
+            ++VIndex;
+        }
+    }
+    void operator++(int) { operator++(); }
+    void operator+=(UPInt n)
+    {
+        if (!IsFinished())
+        {
+            Index -= int(n);
+            VIndex += unsigned(n);
+        }
+    }
+
+    const wchar_t* GetRemainingTextPtr(UPInt * plen) const
+    {
+        *plen = 0;
+        return NULL; // @TODO? not supported yet (necessary for image substitution)
+    }
+    UPInt GetCurTextIndex() const { return Index; }
+protected: //data
+    const Paragraph*            pParagraph;
+    const wchar_t*              ParaText;
+    const unsigned*             IndexMap;
+    const bool*                 MirroredBits;
+    unsigned                    ParaLen;
+    int                         Index;
+    unsigned                    VIndex; // virtual index, [0..ParaLen-1] 
+    CharacterInfo               PlaceHolder;
+};
+#endif // #ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+
 class GFxLineCursor
 {
 public:
@@ -709,6 +817,7 @@ public:
     unsigned                    LastGlyphIndex;                 // used to correct line width
     float                       LastAdvance;                    // used to correct line width
     int                         LastGlyphWidth;                 // used to correct line width
+    int                         FirstGlyphWidth;                // used to correct line width in right-to-left text
     UInt32                      LastColor;
 
 #ifndef SF_NO_IME_SUPPORT
@@ -736,23 +845,35 @@ public:
     unsigned                    NumOfSpaces;
     unsigned                    NumOfTrailingSpaces;
     float                       FontScaleFactor;                // contains current font scale factor
+
+    // used for bidirectional text. These are weak ptrs.
+    // The owner of these is ParagraphFormatter.
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+    RightToLeftIterator         RLCharIter;
+    bool                        RightToLeft;
+#endif
+
     bool                        LastKerning;
     bool                        LineHasNewLine;
 
     UPInt                       NumChars; // num chars processed
 
     GFxLineCursor(): pPrevGrec(NULL), pLastFont(NULL), LastCharCode(0), 
-        LastGlyphIndex(0), LastAdvance(0), LastGlyphWidth(0), LastColor(0), 
+        LastGlyphIndex(0), LastAdvance(0), LastGlyphWidth(0), FirstGlyphWidth(0), LastColor(0), 
         ComposStrPosition(SF_MAX_UPINT), ComposStrLength(0),ComposStrCurPos(0),
         pDocView(NULL), pParagraph(NULL), 
         LineWidth(0), LineWidthWithoutTrailingSpaces(0), LineLength(0), 
         MaxFontAscent(0), MaxFontDescent(0), MaxFontLeading(0), Indent(0), 
         LeftMargin(0), RightMargin(0), NumOfSpaces(0), NumOfTrailingSpaces(0),
         FontScaleFactor(1.f), LastKerning(false), LineHasNewLine(false), NumChars(0)
-    { }
+    { 
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+        RightToLeft = false;
+#endif
+    }
     GFxLineCursor(DocView* pview, const Paragraph* ppara):
     pPrevGrec(NULL), pLastFont(NULL), LastCharCode(0), LastGlyphIndex(0), LastAdvance(0), 
-        LastGlyphWidth(0), LastColor(0), 
+        LastGlyphWidth(0), FirstGlyphWidth(0), LastColor(0), 
         ComposStrPosition(SF_MAX_UPINT), ComposStrLength(0), ComposStrCurPos(0),
         pDocView(pview), pParagraph(ppara), LineWidth(0), 
         LineWidthWithoutTrailingSpaces(0), LineLength(0),
@@ -760,14 +881,31 @@ public:
         CharIter(ppara->GetCharactersIterator(0)), Indent(0), LeftMargin(0), RightMargin(0), NumOfSpaces(0), 
         NumOfTrailingSpaces(0), FontScaleFactor(1.f), 
         LastKerning(false), LineHasNewLine(false), NumChars(0)
-    { }
-
-    bool IsFinished() const { return CharIter.IsFinished(); }
-
-    void operator++() 
     { 
-        (*this) += 1;
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+        RightToLeft = false;
+#endif
     }
+    ~GFxLineCursor()
+    {
+    }
+
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+    inline bool IsRightToLeft() const { return RightToLeft; }
+#else
+    inline bool IsRightToLeft() const { return false; }
+#endif
+
+    bool IsFinished() const 
+    { 
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+        return (!RightToLeft) ? CharIter.IsFinished() : RLCharIter.IsFinished(); 
+#else
+        return CharIter.IsFinished();
+#endif
+    }
+
+    void operator++()           { (*this) += 1; }
     void operator+=(unsigned n) 
     { 
 #ifndef SF_NO_IME_SUPPORT
@@ -798,7 +936,13 @@ public:
 #endif //#ifdef SF_NO_IME_SUPPORT
         if (n > 0)
         {
-            CharIter += n; 
+            if (!IsRightToLeft())
+                CharIter += n; 
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+            else 
+                RLCharIter += n;
+#endif
+
             NumChars += n;
         }
     }
@@ -844,11 +988,21 @@ public:
         }
 #endif //#ifdef SF_NO_IME_SUPPORT
 
-        CharInfoHolder.pFormat = CharIter->pFormat;
-        if (pDocView->IsPasswordMode() && CharIter->Character != '\0')
-            CharInfoHolder.Character = '*';
+        if (!IsRightToLeft())
+        {
+            CharInfoHolder = *CharIter;
+            if (pDocView->IsPasswordMode() && CharInfoHolder.Character != '\0')
+                CharInfoHolder.Character = '*';
+        }
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
         else
-            CharInfoHolder.Character = CharIter->Character;
+        {
+            // bidirectional text substitute
+            CharInfoHolder = *RLCharIter;
+            if (pDocView->IsPasswordMode() && CharInfoHolder.Character != '\0')
+                CharInfoHolder.Character = '*';
+        }
+#endif
 
         return CharInfoHolder;
     }
@@ -888,6 +1042,15 @@ public:
         MaxFontDescent = Alg::Max(MaxFontDescent, descent * scale);
         MaxFontLeading = Alg::Max(MaxFontLeading, pfont->GetLeading() * scale);
     }
+
+    const wchar_t* GetRemainingTextPtr(UPInt* remlen) const
+    {
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+        if (IsRightToLeft())
+            return RLCharIter.GetRemainingTextPtr(remlen);
+#endif
+        return CharIter.GetRemainingTextPtr(remlen);
+    }
 };
 
 class ParagraphFormatter
@@ -913,6 +1076,13 @@ class ParagraphFormatter
     wchar_t                         TextBufForCustomFormat[256];
     wchar_t*                        pTextBufForCustomFormat;
     UPInt                           TextBufLen;
+
+    // used for bidirectional text. 
+    unsigned                        NewLen;
+    unsigned                        NewSize;
+    wchar_t*                        NewParaText;
+    unsigned*                       IndexMap;
+    bool*                           MirroredBits;
 
     // local vars
     Font*                           pFont;
@@ -948,10 +1118,12 @@ public:
 
     void FinalizeLine();
     void InitParagraph(const Paragraph& paragraph);
+    void InitBidiText();
     void InitCustomWordWrapping();
     float GetActualFontSize();
     bool CheckWordWrap();
     bool HandleCustomWordWrap();
+    void TreatBidirectionalTextInLine();
 public:
     ParagraphFormatter(DocView*, Log* plog);
     ~ParagraphFormatter();
@@ -968,12 +1140,20 @@ ParagraphFormatter::ParagraphFormatter(DocView* pdoc, Log* plog)
     NeedRecenterLines  = false;
     ForceVerticalCenterAutoSize = false;
     pLog               = plog;
+
+    NewSize = NewLen = 0;
+    NewParaText = NULL;
+    IndexMap    = NULL;
+    MirroredBits= NULL;
 }
 
 ParagraphFormatter::~ParagraphFormatter()
 {
     if (pDynLine)
         pDocView->mLineBuffer.LineAllocator.FreeLine(pDynLine);
+    SF_FREE(NewParaText);
+    SF_FREE(IndexMap);
+    SF_FREE(MirroredBits);
 }
 
 void ParagraphFormatter::InitParagraph(const Paragraph& paragraph)
@@ -996,6 +1176,8 @@ void ParagraphFormatter::InitParagraph(const Paragraph& paragraph)
     }
 
     InitCustomWordWrapping();
+
+    InitBidiText();
 
     // try to estimate how much memory would be necessary for temporary line
     // Assume, glyphCount <= paragraph.GetLength()
@@ -1044,6 +1226,45 @@ void ParagraphFormatter::InitParagraph(const Paragraph& paragraph)
     isSpace                 = false;
     TextRectWidth           = pDocView->GetTextRect().Width();
     TabStopsNum = 0, TabStopsIndex = 0;
+}
+
+void ParagraphFormatter::InitBidiText()
+{
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+    if (pDocView->IsBidirectionalTextEnabled())
+    {
+        const UPInt len = pParagraph->GetLength();
+        if (len > NewSize)
+        {
+            NewSize = unsigned(len);
+            SF_FREE(NewParaText);
+            SF_FREE(IndexMap);
+            SF_FREE(MirroredBits);
+            NewParaText = (wchar_t*)SF_HEAP_ALLOC(Memory::GetGlobalHeap(), sizeof(wchar_t)*len, StatRender_Text_Mem);
+            IndexMap = (unsigned*)SF_HEAP_ALLOC(Memory::GetGlobalHeap(), sizeof(unsigned)*len, StatRender_Text_Mem);
+            MirroredBits = (bool*)SF_HEAP_ALLOC(Memory::GetGlobalHeap(), sizeof(bool)*len, StatRender_Text_Mem);
+        }
+        NewLen = unsigned(len);
+        
+        memset(NewParaText, 0, sizeof(NewParaText[0])*len);
+        memset(IndexMap, 0, sizeof(IndexMap[0])*len);
+        memset(MirroredBits, 0, sizeof(MirroredBits[0])*len);
+
+        LineCursor.RightToLeft = pDocView->pDocumentListener->View_PrepareBidiText(*pDocView, pParagraph->GetText(), 
+            len, NewParaText, IndexMap, MirroredBits);
+        if (LineCursor.RightToLeft)
+        {
+            LineCursor.RLCharIter.Init(*pParagraph, NewParaText, NewLen, IndexMap, MirroredBits);
+            pDocView->SetBidirectionalTextRTFlag();
+        }
+        else
+        {
+            LineCursor.RightToLeft = false;
+        }
+    }
+    else
+#endif
+        pDocView->ClearBidirectionalTextRTFlag();
 }
 
 void ParagraphFormatter::InitCustomWordWrapping()
@@ -1107,6 +1328,79 @@ float ParagraphFormatter::GetActualFontSize()
     return fontSize;
 }
 
+void ParagraphFormatter::TreatBidirectionalTextInLine()
+{
+#ifdef GFX_ENABLE_BIDIRECTIONAL_TEXT
+    // we will recalc line width
+    LineCursor.LineWidth = LineCursor.LineWidthWithoutTrailingSpaces = 0;
+
+    unsigned glyphsCount         = LineCursor.GlyphIns.GetGlyphIndex();
+
+    // reverse order of glyphs/format data in the target line
+    struct FormatDataEntry_
+    {
+        LineBuffer::GlyphEntry  Glyph;
+        Ptr<FontHandle>         pFont;
+        Ptr<ImageDesc>          pImage;
+        UInt32                  ColorV;
+    };
+    // allocate temporary storage for absolute format data for each glyph in the line
+    FormatDataEntry_* absFmt = new FormatDataEntry_[glyphsCount];
+    // limit scope of srcGI below.
+    {
+        LineCursor.LineWidth =  LineCursor.FirstGlyphWidth;
+        LineBuffer::GlyphIterator srcGI(pTempLine->GetGlyphs(), glyphsCount, pTempLine->GetFormatData());
+        unsigned i;
+        for (i = 0; !srcGI.IsFinished(); ++i, ++srcGI)
+        {
+            absFmt[i].Glyph = srcGI.GetGlyph();
+            absFmt[i].pFont = srcGI.GetFontHandle();
+            absFmt[i].pImage= srcGI.GetImage();
+            absFmt[i].ColorV= srcGI.GetColor().ToColor32();
+
+            if (i != 0)
+                LineCursor.LineWidth += absFmt[i].Glyph.GetAdvance();
+        }
+        SF_ASSERT(i == glyphsCount);
+    }
+    LineCursor.LineWidthWithoutTrailingSpaces = LineCursor.LineWidth;
+    LineBuffer::ReleasePartOfLine(pTempLine->GetGlyphs(), glyphsCount, pTempLine->GetFormatData());
+
+    LineBuffer::GlyphInserter dstGI(pTempLine->GetGlyphs(), glyphsCount, pTempLine->GetFormatData());
+
+    FontHandle* prevFont = NULL;
+    ImageDesc*  prevImg = NULL;
+    UInt32      prevColor = 0;
+    for (int s = int(glyphsCount) - 1; s >= 0; --s, ++dstGI)
+    {
+        LineBuffer::GlyphEntry& ge = dstGI.GetGlyph();
+        ge = absFmt[s].Glyph;
+        ge.ClearFmtData();
+        if (absFmt[s].pImage && prevImg != absFmt[s].pImage)
+        {
+            dstGI.AddImage(absFmt[s].pImage);
+            prevImg = absFmt[s].pImage;
+        }
+        else
+        {
+            if (absFmt[s].pFont && prevFont != absFmt[s].pFont)
+            {
+                dstGI.AddFont(absFmt[s].pFont);
+                prevFont = absFmt[s].pFont;
+            }
+            if (prevColor != absFmt[s].ColorV)
+            {
+                dstGI.AddColor(Color(absFmt[s].ColorV));
+                prevColor = absFmt[s].ColorV;
+            }
+        }
+        absFmt[s].pFont = NULL;
+        absFmt[s].pImage= NULL;
+    }
+    delete [] absFmt;
+#endif
+}
+
 void ParagraphFormatter::FinalizeLine()
 {
     int lastAdvance = Alg::IRound(LineCursor.LastAdvance);
@@ -1136,6 +1430,10 @@ void ParagraphFormatter::FinalizeLine()
     LineCursor.LineWidth                      = Alg::Max(0, LineCursor.LineWidth);
     LineCursor.LineWidthWithoutTrailingSpaces = Alg::Max(0, LineCursor.LineWidthWithoutTrailingSpaces);
 
+    // reorder glyphs for right-to-left text, recalc format data, width, etc
+    if (LineCursor.IsRightToLeft())
+        TreatBidirectionalTextInLine();
+
     LineBuffer::Line* pcurLine;
     // so, here we need to allocate a "real" (non temporary) line and transfer
     // all data to it.
@@ -1159,6 +1457,10 @@ void ParagraphFormatter::FinalizeLine()
     }
     pcurLine->SetParagraphId(LineCursor.pParagraph->GetId());
     pcurLine->SetParagraphModId(LineCursor.pParagraph->GetModCounter());
+    
+    // mark the line as right-to-left.
+    if (LineCursor.IsRightToLeft())
+        pcurLine->SetRightToLeft();
 
     // copy glyph and format data
     memcpy(pcurLine->GetGlyphs(), pTempLine->GetGlyphs(), 
@@ -1200,14 +1502,29 @@ void ParagraphFormatter::FinalizeLine()
     pcurLine->SetOffset(lineOffsetX, NextOffsetY);
     pcurLine->SetLeading(leading);
 
-    switch(pParaFormat->GetAlignment())
+    ParagraphFormat::AlignType align = pParaFormat->GetAlignment();
+    // inverse meaning of 'right' and 'left' alignment for RTL text
+    //if (LineCursor.IsRightToLeft())
+    //{
+    //    // inverse left & right align
+    //    if (align == ParagraphFormat::Align_Left)
+    //        align = ParagraphFormat::Align_Right;
+    //    else if (align == ParagraphFormat::Align_Right)
+    //        align = ParagraphFormat::Align_Left;
+    //}
+
+    //switch(pParaFormat->GetAlignment())
+    switch(align)
     {
     case ParagraphFormat::Align_Right:   
         pcurLine->SetAlignment(LineBuffer::Line::Align_Right); 
         pcurLine->SetDimensions(LineCursor.LineWidthWithoutTrailingSpaces, lineHeight);
 
         // align line accordingly to ViewRect
-        pcurLine->SetOffsetX(Alg::Max(0, Alg::IRound(TextRectWidth) - LineCursor.LineWidthWithoutTrailingSpaces));
+        if (LineCursor.IsRightToLeft())
+            pcurLine->SetOffsetX(Alg::IRound(TextRectWidth) - LineCursor.LineWidthWithoutTrailingSpaces);
+        else
+            pcurLine->SetOffsetX(Alg::Max(0, Alg::IRound(TextRectWidth) - LineCursor.LineWidthWithoutTrailingSpaces));
 
         if (pDocView->IsAutoSizeX() || pDocView->GetTextAutoSize() != DocView::TAS_None)
         {
@@ -1415,7 +1732,7 @@ bool ParagraphFormatter::HandleCustomWordWrap()
         RectF dashGlyphBounds;
         int   dashGlyphWidth   = Alg::IRound(Alg::Max(
                 pFont->GetGlyphBounds(dashGlyphIndex, &dashGlyphBounds).x2 * Scale + 20, dashGlyphAdvance));
-        LineCursor.LastGlyphWidth   = (int)(LineCursor.pLastFont->GetFont()->GetGlyphWidth(dashGlyphIndex) * Scale);
+        //LineCursor.LastGlyphWidth   = (int)(LineCursor.pLastFont->GetFont()->GetGlyphWidth(dashGlyphIndex) * Scale);
         LineCursor.LastAdvance      = (float)dashGlyphWidth;
         LineCursor.LastGlyphWidth   = dashGlyphWidth;
         LineCursor.LastGlyphIndex   = dashGlyphIndex;
@@ -1465,6 +1782,9 @@ bool ParagraphFormatter::CheckWordWrap()
         {
             LineCursor.pPrevGrec->SetWordWrapSeparator();
         }
+        LineCursor.LastAdvance = 0;
+        LineCursor.LastGlyphWidth = 0;
+        LineCursor.pPrevGrec = NULL;
 
         // finalize the line
         FinalizeLine();
@@ -1491,6 +1811,7 @@ bool ParagraphFormatter::CheckWordWrap()
 // Format the paragraph into temporary line buffer
 void ParagraphFormatter::Format(const Paragraph& paragraph)
 {
+    pDocView->ClearBidirectionalTextRTFlag();
     InitParagraph(paragraph);
 
     LineCursor.LeftMargin = 0;
@@ -1568,7 +1889,7 @@ void ParagraphFormatter::Format(const Paragraph& paragraph)
         if (pDocView->pImageSubstitutor)
         {
             UPInt  remlen;
-            const wchar_t* premainingStr = LineCursor.CharIter.GetRemainingTextPtr(&remlen);
+            const wchar_t* premainingStr = LineCursor.GetRemainingTextPtr(&remlen);
             UPInt  textLen;
             pimgDesc = pDocView->pImageSubstitutor->FindImageDesc(premainingStr, remlen, &textLen);
             if (pimgDesc)
@@ -1666,6 +1987,13 @@ void ParagraphFormatter::Format(const Paragraph& paragraph)
                 }
 
                 GlyphAdvance = pFont->GetAdvance(GlyphIndex) * Scale;
+
+                // Set advance value for non-spacing marks (see 'Mn' category in Unicode std)
+                // to zero, so it appears above the prev char. Mostly required for Arabic.
+                if (SFisNonSpacingMark(chInfo.Character))
+                {
+                    GlyphAdvance = 0;
+                }
             }
             else
             {
@@ -1676,7 +2004,7 @@ void ParagraphFormatter::Format(const Paragraph& paragraph)
             }
 
             // if kerning for previous glyph was on - modify its advance and the width of line
-            if (LineCursor.pPrevGrec)
+            if (LineCursor.pPrevGrec && !LineCursor.IsRightToLeft()) // no kerning support for right-to-left text
             {
                 float prevGlyphAdvanceAdj = 0;
                 if (LineCursor.LastKerning)
@@ -1715,14 +2043,14 @@ void ParagraphFormatter::Format(const Paragraph& paragraph)
 
         NewLineWidth = LineCursor.LineWidth + LastAdvance;
 
-        // Do word-wrapping?
-        if (CheckWordWrap())
-            continue;
-
         if (LineCursor.pPrevGrec)
         {
             LineCursor.pPrevGrec->SetAdvance(LastAdvance);
         }
+
+        // Do word-wrapping?
+        if (CheckWordWrap())
+            continue;
 
         LineBuffer::GlyphEntry& grec = LineCursor.GlyphIns.GetGlyph();
         grec.SetIndex(GlyphIndex);
@@ -1869,6 +2197,9 @@ void ParagraphFormatter::Format(const Paragraph& paragraph)
         if (FindFontInfo.pCurrentFormat->IsLetterSpacingSet())
             LineCursor.LastAdvance  += PixelsToFixp(FindFontInfo.pCurrentFormat->GetLetterSpacing());
         LineCursor.LastGlyphWidth   = GlyphWidth;
+
+        if (LineCursor.GlyphIns.GetGlyphIndex() == 0)
+            LineCursor.FirstGlyphWidth   = GlyphWidth;
 
         ++LineCursor.GlyphIns;
     }
@@ -2284,11 +2615,10 @@ void DocView::Format()
         // Check the very first glyph if it has a font. If it does - 
         // check if the font is "pixel aligned", meaning "bitmap font" is used.
         // Set the appropriate flag to TextParam.
-        if (mLineBuffer.Lines[0]->GetGlyphs()->HasFmtFont())
+        FontHandle* pfont;
+        if ((pfont = mLineBuffer.FindFirstFontInfo()) != NULL)
         {
-            LineBuffer::FormatDataEntry* pfmtData = mLineBuffer.Lines[0]->GetFormatData(); 
-            SF_ASSERT(pfmtData->pFont != 0); 
-            if (pfmtData->pFont->GetFont()->IsPixelAligned()) 
+            if (pfont->GetFont()->IsPixelAligned()) 
             { 
                 SetBitmapFontFlag();
             } 
@@ -2298,7 +2628,7 @@ void DocView::Format()
 
 void DocView::CreateVisibleTextLayout(TextLayout::Builder& bld)
 {
-    if (pHighlight && !pHighlight->IsValid())
+    if (!IsBidirectionalTextRTFlagSet() && pHighlight && !pHighlight->IsValid())
     {
         pHighlight->HighlightManager.UpdateGlyphIndices
             ((HasEditorKit()) ? GetEditorKit()->GetCompositionString() : NULL);
@@ -2321,9 +2651,12 @@ void DocView::CreateVisibleTextLayout(TextLayout::Builder& bld)
     param.TextParam.SetBitmapFont(IsBitmapFontFlagSet());
     param.TextParam.SetFauxBold(GetFauxBold());
     param.TextParam.SetFauxItalic(GetFauxItalic());
+    param.TextParam.SetForceVector(GetForceVector());
     param.TextParam.SetOutline((unsigned)GetOutline());
 
-    mLineBuffer.CreateVisibleTextLayout(bld, (pHighlight)?&pHighlight->HighlightManager:NULL, param);
+    mLineBuffer.CreateVisibleTextLayout(bld, 
+        (pHighlight && !IsBidirectionalTextRTFlagSet()) ? &pHighlight->HighlightManager : NULL, 
+        param);
     
     // need to add background
     if (Color(BorderColor).GetAlpha() > 0 || Color(BackgroundColor).GetAlpha() > 0)
@@ -2889,7 +3222,7 @@ bool DocView::GetCharBoundaries(RectF* pCharRect, UPInt indexOfChar)
         LineBuffer::Line& line = *it;
         UPInt indexInLine = indexOfChar - line.GetTextPos();
         LineBuffer::GlyphIterator git = line.Begin();
-        int advance = 0;
+        int advance = line.GetOffsetX();
         for(unsigned i = 0; !git.IsFinished(); ++git, ++i)
         {
             const LineBuffer::GlyphEntry& glyph = git.GetGlyph();
@@ -2946,14 +3279,20 @@ bool DocView::GetExactCharBoundaries(RectF* pCharRect, UPInt indexOfChar)
                     // Flash 9 calculates boundary box using advance only
                     // Though, it is not precise, to get precise boundary
                     // need to use GetGlyphBounds instead
-                    pfont->GetGlyphBounds(glyph.GetIndex(), pCharRect);
+                    if (pfont->IsMissingGlyph(glyph.GetIndex()))
+                    {
+                        pCharRect->x1 = 0;
+                        pCharRect->x2 = float(glyph.GetAdvance());
+                    }
+                    else
+                        pfont->GetGlyphBounds(glyph.GetIndex(), pCharRect);
                     if (glyph.IsNewLineChar())
                         pCharRect->SetWidth(pCharRect->Width()/3);
 
                     float textHeight = (pfont->GetAscent() + pfont->GetDescent()) * scale;
-                    pCharRect->x1     *= scale;
-                    pCharRect->x2    *= scale;
-                    pCharRect->y1      = line.GetBaseLineOffset() - pfont->GetAscent() * scale + GFX_TEXT_GUTTER;
+                    pCharRect->x1   *= scale;
+                    pCharRect->x2   *= scale;
+                    pCharRect->y1   = line.GetBaseLineOffset() - pfont->GetAscent() * scale + GFX_TEXT_GUTTER;
                     pCharRect->y2   = pCharRect->y1 + textHeight;
                     (*pCharRect) += Render::PointF(float(advance) + GFX_TEXT_GUTTER, float(line.GetOffsetY()));
                 }
@@ -3050,14 +3389,14 @@ bool DocView::RemoveHighlight(int id)
 void DocView::UpdateHighlight(const HighlightDesc& desc)
 {
     SF_UNUSED(desc); //?
-    if (!pHighlight)
+    if (!pHighlight || IsBidirectionalTextRTFlagSet())
         return;
     pHighlight->Invalidate();
 }
 
 HighlightDesc* DocView::GetSelectionHighlighterDesc() const
 {
-    if (!pHighlight)
+    if (!pHighlight || IsBidirectionalTextRTFlagSet())
         return NULL;
     HighlightDesc* pdesc = NULL;
     if ((pdesc = pHighlight->HighlightManager.GetHighlighterPtr(GFX_TOPMOST_HIGHLIGHTING_INDEX)) == NULL)
@@ -3076,6 +3415,8 @@ HighlightDesc* DocView::GetSelectionHighlighterDesc() const
 
 HighlightDesc* DocView::GetSelectionHighlighterDesc()
 {
+    if (IsBidirectionalTextRTFlagSet()) return NULL;
+
     if (!pHighlight)
         pHighlight = SF_HEAP_AUTO_NEW(this) HighlightDescLoc;
     return const_cast<const DocView*>(this)->GetSelectionHighlighterDesc();
@@ -3096,18 +3437,21 @@ void DocView::SetSelection(UPInt startPos, UPInt endPos, bool highlightSelection
             endPos = startPos;
             startPos = t;
         }
-        HighlightDesc* pdesc = GetSelectionHighlighterDesc();
-        SF_ASSERT(pdesc);
-
-        UPInt oldLen = 1;
-        UPInt newLen = endPos - startPos;
-        if (pdesc->StartPos != startPos || pdesc->Length != newLen)
+        if (!IsBidirectionalTextRTFlagSet())
         {
-            oldLen = pdesc->Length;
-            pdesc->StartPos = startPos;
-            pdesc->Length   = newLen;
+            HighlightDesc* pdesc = GetSelectionHighlighterDesc();
+            SF_ASSERT(pdesc);
 
-            pHighlight->Invalidate();
+            // UPInt oldLen = 1;
+            UPInt newLen = endPos - startPos;
+            if (pdesc->StartPos != startPos || pdesc->Length != newLen)
+            {
+                // oldLen = pdesc->Length;
+                pdesc->StartPos = startPos;
+                pdesc->Length   = newLen;
+
+                pHighlight->Invalidate();
+            }
         }
     }
 }
@@ -3129,6 +3473,8 @@ if ((pdesc = pHighlight->HighlightManager.GetHighlighterPtr(GFX_TOPMOST_HIGHLIGH
 
 void DocView::SetSelectionBackgroundColor(UInt32 color)
 {
+    if (IsBidirectionalTextRTFlagSet()) return;
+
     HighlightDesc* pdesc = GetSelectionHighlighterDesc();
     SF_ASSERT(pdesc);
     if (pdesc->Info.GetBackgroundColor() != color)
@@ -3140,6 +3486,8 @@ void DocView::SetSelectionBackgroundColor(UInt32 color)
 
 void DocView::SetSelectionTextColor(UInt32 color)
 {
+    if (IsBidirectionalTextRTFlagSet()) return;
+
     HighlightDesc* pdesc = GetSelectionHighlighterDesc();
     SF_ASSERT(pdesc);
     if (pdesc->Info.GetTextColor() != color)

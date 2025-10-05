@@ -211,7 +211,7 @@ typedef GFx::DrawText                   GFxDrawText;
 typedef GFx::Value                      GFxValue;
 typedef GFx::UserEventHandler           GFxUserEventHandler;
 typedef GFx::URLBuilder                 GFxURLBuilder;
-typedef GFx::TextClipboard              GFxTextClipboard;
+typedef GFx::Clipboard                  GFxTextClipboard;
 typedef GFx::ParseControl               GFxParseControl;
 #ifdef SF_ENABLE_THREADS
 typedef GFx::ThreadedTaskManager        GFxThreadedTaskManager;
@@ -287,8 +287,9 @@ enum
     GFxStatMV_Invoke_Tks = GFx::StatMV_Invoke_Tks,
     GFxStatMV_InvokeAction_Tks = GFx::StatMV_InvokeAction_Tks,
     GFxStatMV_Display_Tks = GFx::StatMV_Display_Tks,
-    GFxStatMV_Tessellate_Tks = GFx::StatMV_Tessellate_Tks,
+    GFxStatMV_FontThrash_Tks = GFx::StatMV_FontThrash_Tks,
     GFxStatMV_GradientGen_Tks = GFx::StatMV_GradientGen_Tks,
+    GFxStatMV_FontMiss_Tks = GFx::StatMV_FontMiss_Tks,
 
     // Counters.
     GFxStatMV_Counters = GFx::StatMV_Counters,

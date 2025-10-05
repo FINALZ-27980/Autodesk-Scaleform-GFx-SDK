@@ -437,13 +437,29 @@ public:
     // idx is in range [1...GetFillStyleCount()] (inclusive)
     virtual void GetFillStyle(unsigned idx, FillStyleType* p) const
     {
-        *p = FillStyles[idx-1];
+        if (idx > FillStyles.GetSize())
+        {
+            static FillStyleType defaultFillStyle = {0,0};
+            *p = defaultFillStyle;
+        }
+        else
+        {
+            *p = FillStyles[idx-1];
+        }
     }
 
     // idx is range [1...GetStrokeStyleCount()] (inclusive)
     virtual void GetStrokeStyle(unsigned idx, StrokeStyleType* p) const
     {
-        *p = StrokeStyles[idx-1];
+        if (idx > StrokeStyles.GetSize())
+        {
+            static StrokeStyleType defaultStrokeStyle = {0,0,0,0,0};
+            *p = defaultStrokeStyle;
+        }
+        else
+        {
+            *p = StrokeStyles[idx-1];
+        }
     }
 
     // The implementation must provide some abstract index (position)

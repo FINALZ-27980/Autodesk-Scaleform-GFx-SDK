@@ -598,10 +598,8 @@ public:
 
     void                Value2ASValue(const GFx::Value& gfxVal, Value* pdestVal);
     void                ASValue2Value(Environment* penv, const Value& value, GFx::Value* pdestVal) const;    
-#ifdef GFX_AS_ENABLE_USERDATA
     bool                CreateObjectValue(GFx::Value* pvalue, GFx::Value::ObjectInterface* pobjifc, 
                                      void* pdata, bool isdobj);
-#endif
 
     // Take care of this frame's actions, by executing ActionList. 
     void                DoActions();

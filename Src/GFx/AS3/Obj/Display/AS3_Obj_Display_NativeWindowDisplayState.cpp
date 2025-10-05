@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_display
         {"NORMAL", NULL, OFFSETOF(Classes::fl_display::NativeWindowDisplayState, NORMAL), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    NativeWindowDisplayState::NativeWindowDisplayState(VM& vm)
-    : Traits(vm, AS3::fl_display::NativeWindowDisplayStateCI)
+
+    NativeWindowDisplayState::NativeWindowDisplayState(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::NativeWindowDisplayState::NativeWindowDisplayState()"
 //##protect##"ClassTraits::NativeWindowDisplayState::NativeWindowDisplayState()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_display::NativeWindowDisplayStateCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_display::NativeWindowDisplayState(*this));
 
     }
 
     Pickable<Traits> NativeWindowDisplayState::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) NativeWindowDisplayState(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) NativeWindowDisplayState(vm, AS3::fl_display::NativeWindowDisplayStateCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::NativeWindowDisplayStateCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_display
 {
     const TypeInfo NativeWindowDisplayStateTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::NativeWindowDisplayState::InstanceType),
+        0,
+        ClassTraits::fl_display::NativeWindowDisplayState::MemberInfoNum,
+        0,
+        0,
         "NativeWindowDisplayState", "flash.display", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_display
     const ClassInfo NativeWindowDisplayStateCI = {
         &NativeWindowDisplayStateTI,
         ClassTraits::fl_display::NativeWindowDisplayState::MakeClassTraits,
-        0,
-        ClassTraits::fl_display::NativeWindowDisplayState::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_display::NativeWindowDisplayState::mi,
         NULL,

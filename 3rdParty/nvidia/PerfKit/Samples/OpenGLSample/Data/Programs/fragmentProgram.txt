@@ -1,0 +1,147 @@
+!!ARBfp1.0
+
+#Declarations
+TEMP r0;
+
+OUTPUT out = result.color;
+
+TEX r0, fragment.texcoord[0], texture[0], 2D;
+MUL r0.xyz, r0, fragment.color;
+MOV r0.w, 1.0;
+
+# Dummy ops to take up time
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+
+MUL r0.x, r0.x, r0.x;
+RSQ r0.x, r0.x;
+RCP r0.x, r0.x;
+
+MUL r0.y, r0.y, r0.y;
+RSQ r0.y, r0.y;
+RCP r0.y, r0.y;
+
+MUL r0.z, r0.z, r0.z;
+RSQ r0.z, r0.z;
+RCP r0.z, r0.z;
+
+MUL r0.w, r0.w, r0.w;
+RSQ r0.w, r0.w;
+RCP r0.w, r0.w;
+
+MOV out.xyzw, r0;
+
+END

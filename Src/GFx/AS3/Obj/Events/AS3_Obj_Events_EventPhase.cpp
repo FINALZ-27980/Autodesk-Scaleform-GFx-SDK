@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_events
         {"CAPTURING_PHASE", NULL, OFFSETOF(Classes::fl_events::EventPhase, CAPTURING_PHASE), Abc::NS_Public, SlotInfo::BT_UInt, 1},
     };
 
-    EventPhase::EventPhase(VM& vm)
-    : Traits(vm, AS3::fl_events::EventPhaseCI)
+
+    EventPhase::EventPhase(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::EventPhase::EventPhase()"
 //##protect##"ClassTraits::EventPhase::EventPhase()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_events::EventPhaseCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_events::EventPhase(*this));
 
     }
 
     Pickable<Traits> EventPhase::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) EventPhase(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) EventPhase(vm, AS3::fl_events::EventPhaseCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_events::EventPhaseCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_events
 {
     const TypeInfo EventPhaseTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_events::EventPhase::InstanceType),
+        0,
+        ClassTraits::fl_events::EventPhase::MemberInfoNum,
+        0,
+        0,
         "EventPhase", "flash.events", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_events
     const ClassInfo EventPhaseCI = {
         &EventPhaseTI,
         ClassTraits::fl_events::EventPhase::MakeClassTraits,
-        0,
-        ClassTraits::fl_events::EventPhase::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_events::EventPhase::mi,
         NULL,

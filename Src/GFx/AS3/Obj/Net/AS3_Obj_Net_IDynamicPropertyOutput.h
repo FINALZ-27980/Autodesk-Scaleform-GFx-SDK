@@ -31,6 +31,13 @@ namespace fl_net
     extern const TypeInfo IDynamicPropertyOutputTI;
     extern const ClassInfo IDynamicPropertyOutputCI;
 } // namespace fl_net
+namespace fl
+{
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+    extern const TypeInfo anyTI;
+    extern const ClassInfo anyCI;
+} // namespace fl
 
 namespace ClassTraits { namespace fl_net
 {
@@ -52,17 +59,19 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class IDynamicPropertyOutput : public Traits
+    class IDynamicPropertyOutput : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::IDynamicPropertyOutput"; }
 #endif
     public:
-        typedef Classes::fl_net::IDynamicPropertyOutput ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::Interface InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IDynamicPropertyOutput(VM& vm);
+        IDynamicPropertyOutput(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -87,7 +87,7 @@ namespace Instances { namespace fl_display
 
 namespace InstanceTraits { namespace fl_display
 {
-    class MorphShape : public CTraits
+    class MorphShape : public fl_display::DisplayObject
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -123,17 +123,19 @@ namespace InstanceTraits { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class MorphShape : public Traits
+    class MorphShape : public fl_display::DisplayObject
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::MorphShape"; }
 #endif
     public:
-        typedef Classes::fl_display::MorphShape ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_display::MorphShape InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        MorphShape(VM& vm);
+        MorphShape(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

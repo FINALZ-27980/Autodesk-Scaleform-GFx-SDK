@@ -57,6 +57,7 @@ enum TreeNodeFlags
     NF_HasViewMatrix3D      = 0x0800,       // indicates that the node has a ViewMatrix set
     NF_HasProjectionMatrix3D= 0x1000,       // indicates that the node has a ProjMatrix set
     NF_HasOrigScale9Parent  = 0x2000,       // indicates that the node has a original mask's parent set
+    NF_3DChild              = 0x4000,       // indicates that the node has a child which has a 3D transform
 
 
     // EdgeAA flags are stored TreeNode, with cache values propagated through
@@ -91,7 +92,7 @@ enum TreeNodeFlags
 
     // Masks
     NF_TreeNode_Mask    = NF_Visible | NF_HasMask | NF_MaskNode | NF_3D | NF_EdgeAA_Mask | NF_HasFilter |
-                          NF_HasViewMatrix3D | NF_HasProjectionMatrix3D | NF_HasOrigScale9Parent,
+                          NF_HasViewMatrix3D | NF_HasProjectionMatrix3D | NF_HasOrigScale9Parent | NF_3DChild,
     NF_CacheNode_Mask   = NF_TreeNode_Mask | 
                           NF_Culled | NF_PartOfMask | NF_PartOfScale9 | NF_ExpandedBounds | NF_3D |
                           NF_HasOrigScale9Parent | NF_PartOf3D | NF_PartOfFilter

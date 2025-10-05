@@ -94,15 +94,18 @@ public:
     bool        Unmap();
     bool        Update(const Texture::UpdateDesc* updates, unsigned count);
 
-    Texture*    GetTexture();
-
     void        Invalidate()    { Valid = false; NumGlyphsToUpdate = 0; }
     bool        IsValid() const { return Valid; }
 
     const PrimitiveFill* GetFill() const { return pFill; }
           PrimitiveFill* GetFill()       { return pFill; }
 
-    Image* GetImage() { return pRawImg.GetPtr() ? (Image*)pRawImg : (Image*)pTexImg; }
+    Image* GetImage();
+
+#ifdef SF_AMP_SERVER
+    void LockImage() { ImageLock.DoLock(); }
+    void UnlockImage() { ImageLock.Unlock(); }
+#endif
 
 private:
     bool                    Valid;
@@ -117,6 +120,7 @@ private:
     bool                    Mapped;
 public:
     unsigned                NumGlyphsToUpdate;
+    SF_AMP_CODE(LockSafe ImageLock;)
 };
 
 

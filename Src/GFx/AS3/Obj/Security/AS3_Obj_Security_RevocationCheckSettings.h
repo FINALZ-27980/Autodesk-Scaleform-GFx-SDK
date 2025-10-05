@@ -52,7 +52,7 @@ namespace Classes { namespace fl_security
     
 namespace ClassTraits { namespace fl_security
 {
-    class RevocationCheckSettings : public Traits
+    class RevocationCheckSettings : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +60,11 @@ namespace ClassTraits { namespace fl_security
 #endif
     public:
         typedef Classes::fl_security::RevocationCheckSettings ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        RevocationCheckSettings(VM& vm);
+        RevocationCheckSettings(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 4 };
         static const MemberInfo mi[MemberInfoNum];

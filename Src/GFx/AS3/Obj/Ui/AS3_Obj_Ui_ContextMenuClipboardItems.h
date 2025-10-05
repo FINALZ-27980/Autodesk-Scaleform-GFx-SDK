@@ -95,7 +95,7 @@ namespace Instances { namespace fl_ui
 
 namespace InstanceTraits { namespace fl_ui
 {
-    class ContextMenuClipboardItems : public CTraits
+    class ContextMenuClipboardItems : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -133,17 +133,19 @@ namespace InstanceTraits { namespace fl_ui
     
 namespace ClassTraits { namespace fl_ui
 {
-    class ContextMenuClipboardItems : public Traits
+    class ContextMenuClipboardItems : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::ContextMenuClipboardItems"; }
 #endif
     public:
-        typedef Classes::fl_ui::ContextMenuClipboardItems ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl_ui::ContextMenuClipboardItems InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        ContextMenuClipboardItems(VM& vm);
+        ContextMenuClipboardItems(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

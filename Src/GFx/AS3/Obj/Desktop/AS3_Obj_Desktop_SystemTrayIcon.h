@@ -70,7 +70,7 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_desktop
 {
-    class SystemTrayIcon : public Traits
+    class SystemTrayIcon : public fl_desktop::InteractiveIcon
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -78,9 +78,11 @@ namespace ClassTraits { namespace fl_desktop
 #endif
     public:
         typedef Classes::fl_desktop::SystemTrayIcon ClassType;
+        typedef InstanceTraits::fl_events::EventDispatcher InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        SystemTrayIcon(VM& vm);
+        SystemTrayIcon(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { MemberInfoNum = 1 };
         static const MemberInfo mi[MemberInfoNum];

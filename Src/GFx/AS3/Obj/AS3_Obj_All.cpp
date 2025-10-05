@@ -42,6 +42,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 #include "AS3_Obj_XML.cpp"
 #include "AS3_Obj_XMLList.cpp"
 #include "AS3_Obj_QName.cpp"
+#include "AS3_Obj_Domain.cpp"
 
 #include "AS3_Obj_Activation.cpp"
 #include "AS3_Obj_Global.cpp"

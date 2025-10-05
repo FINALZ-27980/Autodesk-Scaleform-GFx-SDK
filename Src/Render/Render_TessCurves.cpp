@@ -18,12 +18,6 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 namespace Scaleform { namespace Render {
 
-
-enum CurveRecursionLimitType
-{
-    CurveRecursionLimit = 12
-};
-
 const CoordType AngleTolerance = 0.25f;
 const CoordType CurveCollinearityEpsilon = 1e-10f;
 
@@ -89,7 +83,8 @@ bool TestQuadCollinearity(TessBase* con, const ToleranceParams& param,
 
 
 //--------------------------------------------------------------------
-void TessellateQuadRecursively(TessBase* con, CoordType toleranceSq, 
+void TessellateQuadRecursively(TessBase* con, const ToleranceParams& param, 
+                               CoordType toleranceSq, 
                                CoordType x1, CoordType y1,
                                CoordType x2, CoordType y2,
                                CoordType x3, CoordType y3,
@@ -106,7 +101,7 @@ void TessellateQuadRecursively(TessBase* con, CoordType toleranceSq,
     CoordType d = Math2D::AbsCrossProduct(x1, y1, x3, y3, x2, y2);
     if(d == 0 ||
        d * d <= toleranceSq * Math2D::SqDistance(x1, y1, x3, y3) ||
-       level >= CurveRecursionLimit)
+       level >= (int)param.CurveRecursionLimit)
     {
         // The curve is flat enough, so that we add the point 
         // and stop subdivision.
@@ -122,8 +117,8 @@ void TessellateQuadRecursively(TessBase* con, CoordType toleranceSq,
     CoordType y23  = (y2  + y3)  / 2;
     CoordType x123 = (x12 + x23) / 2;
     CoordType y123 = (y12 + y23) / 2;
-    TessellateQuadRecursively(con, toleranceSq, x1, y1, x12, y12, x123, y123, level+1);
-    TessellateQuadRecursively(con, toleranceSq, x123, y123, x23, y23, x3, y3, level+1);
+    TessellateQuadRecursively(con, param, toleranceSq, x1, y1, x12, y12, x123, y123, level+1);
+    TessellateQuadRecursively(con, param, toleranceSq, x123, y123, x23, y23, x3, y3, level+1);
 }
 
 
@@ -139,7 +134,7 @@ void TessellateQuadCurve(TessBase* con, const ToleranceParams& param,
     if(!TestQuadCollinearity(con, param, x1, y1, x2, y2, x3, y3))
     {
         CoordType toleranceSq = (param.CurveTolerance/4) * (param.CurveTolerance/4);
-        TessellateQuadRecursively(con, toleranceSq, x1, y1, x2, y2, x3, y3, 0);
+        TessellateQuadRecursively(con, param, toleranceSq, x1, y1, x2, y2, x3, y3, 0);
     }
 }
 
@@ -154,14 +149,15 @@ void TessellateQuadCurve(TessBase* con, const ToleranceParams& param,
 
 
 
-void TessellateCubicRecursively(TessBase* con, CoordType toleranceSq, 
+void TessellateCubicRecursively(TessBase* con, const ToleranceParams& param,
+                                CoordType toleranceSq, 
                                 CoordType x1, CoordType y1,
                                 CoordType x2, CoordType y2,
                                 CoordType x3, CoordType y3,
                                 CoordType x4, CoordType y4,
                                 int level)
 {
-    if(level > CurveRecursionLimit) 
+    if(level > (int)param.CurveRecursionLimit) 
     {
         return;
     }
@@ -297,8 +293,8 @@ void TessellateCubicRecursively(TessBase* con, CoordType toleranceSq,
 
     // Continue subdivision
     //----------------------
-    TessellateCubicRecursively(con, toleranceSq, x1, y1, x12, y12, x123, y123, x1234, y1234, level+1); 
-    TessellateCubicRecursively(con, toleranceSq, x1234, y1234, x234, y234, x34, y34, x4, y4, level+1); 
+    TessellateCubicRecursively(con, param, toleranceSq, x1, y1, x12, y12, x123, y123, x1234, y1234, level+1); 
+    TessellateCubicRecursively(con, param, toleranceSq, x1234, y1234, x234, y234, x34, y34, x4, y4, level+1); 
 }
 
 
@@ -311,7 +307,7 @@ void TessellateCubicCurve(TessBase* con, const ToleranceParams& param,
     CoordType x1 = con->GetLastX();
     CoordType y1 = con->GetLastY(); 
     CoordType toleranceSq = (param.CurveTolerance/4) * (param.CurveTolerance/4);
-    TessellateCubicRecursively(con, toleranceSq, x1, y1, x2, y2, x3, y3, x4, y4, 0);
+    TessellateCubicRecursively(con, param, toleranceSq, x1, y1, x2, y2, x3, y3, x4, y4, 0);
 
 }
 

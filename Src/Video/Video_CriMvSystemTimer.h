@@ -45,7 +45,7 @@ public:
 
     void Start(void);
     void Stop(void);
-    void GetTime(UInt64 &count, UInt64 &unit);
+    void GetTime(Uint64 &count, Uint64 &unit);
 
     UInt64 StartTicks;
     UInt64 StopTicks;
@@ -94,7 +94,7 @@ public:
     virtual void Pause(Bool sw) { if (pSyncObj) pSyncObj->Pause(sw == CRI_TRUE); }
     virtual void GetTime(Uint64 &count, Uint64 &unit) 
     { 
-        if (pSyncObj) pSyncObj->GetTime((UInt64*)&count, (UInt64*)&unit);
+        if (pSyncObj) pSyncObj->GetTime(&count, &unit);
         else { count = 0; unit = 1000; }
     }
 

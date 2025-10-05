@@ -132,9 +132,11 @@ namespace ClassTraits { namespace fl
 #endif
     public:
         typedef Classes::fl::Catch ClassType;
+        typedef InstanceTraits::fl::Catch InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Catch(VM& vm);
+        Catch(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -31,13 +31,20 @@ namespace Scaleform { namespace GFx { namespace AS3
 
 namespace InstanceTraits { namespace fl
 {
+    // const UInt16 Boolean::tito[Boolean::ThunkInfoNum] = {
+    //    0, 1, 
+    // };
+    const TypeInfo* Boolean::tit[2] = {
+        &AS3::fl::StringTI, 
+        &AS3::fl::BooleanTI, 
+    };
     const ThunkInfo Boolean::ti[Boolean::ThunkInfoNum] = {
-        {&InstanceTraits::fl::Boolean::AS3toString, &AS3::fl::StringTI, "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::Boolean::AS3valueOf, &AS3::fl::BooleanTI, "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::Boolean::AS3toString, &Boolean::tit[0], "toString", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Boolean::AS3valueOf, &Boolean::tit[1], "valueOf", NS_AS3, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     Boolean::Boolean(VM& vm, const ClassInfo& ci)
-    : CTraits(vm, ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"InstanceTraits::Boolean::Boolean()"
         SetTraitsType(Traits_Boolean);
@@ -101,9 +108,16 @@ namespace InstanceTraits { namespace fl
 
 namespace Classes { namespace fl
 {
+    // const UInt16 Boolean::tito[Boolean::ThunkInfoNum] = {
+    //    0, 1, 
+    // };
+    const TypeInfo* Boolean::tit[2] = {
+        &AS3::fl::StringTI, 
+        &AS3::fl::BooleanTI, 
+    };
     const ThunkInfo Boolean::ti[Boolean::ThunkInfoNum] = {
-        {&InstanceTraits::fl::Boolean::toStringProto, &AS3::fl::StringTI, "toString", NULL, Abc::NS_Public, CT_Method, 0, 0},
-        {&InstanceTraits::fl::Boolean::valueOfProto, &AS3::fl::BooleanTI, "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0},
+        {&InstanceTraits::fl::Boolean::toStringProto, &Boolean::tit[0], "toString", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
+        {&InstanceTraits::fl::Boolean::valueOfProto, &Boolean::tit[1], "valueOf", NULL, Abc::NS_Public, CT_Method, 0, 0, 0, 0, NULL},
     };
 
     Boolean::Boolean(ClassTraits::Traits& t)
@@ -143,25 +157,28 @@ namespace Classes { namespace fl
 
 namespace ClassTraits { namespace fl
 {
-    Boolean::Boolean(VM& vm)
-    : Traits(vm, AS3::fl::BooleanCI)
+
+    Boolean::Boolean(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::Boolean::Boolean()"
         SetTraitsType(Traits_Boolean);
 //##protect##"ClassTraits::Boolean::Boolean()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Boolean(vm, AS3::fl::BooleanCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl::Boolean(*this));
 
     }
 
     Pickable<Traits> Boolean::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) Boolean(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) Boolean(vm, AS3::fl::BooleanCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl::BooleanCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
     bool Boolean::Coerce(const Value& value, Value& result) const
@@ -176,6 +193,11 @@ namespace fl
 {
     const TypeInfo BooleanTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl::Boolean::InstanceType),
+        0,
+        0,
+        InstanceTraits::fl::Boolean::ThunkInfoNum,
+        0,
         "Boolean", "", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -183,10 +205,6 @@ namespace fl
     const ClassInfo BooleanCI = {
         &BooleanTI,
         ClassTraits::fl::Boolean::MakeClassTraits,
-        0,
-        0,
-        InstanceTraits::fl::Boolean::ThunkInfoNum,
-        0,
         NULL,
         NULL,
         InstanceTraits::fl::Boolean::ti,

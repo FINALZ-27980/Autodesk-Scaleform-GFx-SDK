@@ -103,7 +103,7 @@ private:
         unsigned x, y, Width, Height, Id, Node1, Node2;
     };
 
-    static bool cmpRects(const RectType& a, const RectType& b)
+    static bool cmpRectsY(const RectType& a, const RectType& b)
     {
         if(b.y != a.y) return b.y < a.y;
         return b.x < a.x;

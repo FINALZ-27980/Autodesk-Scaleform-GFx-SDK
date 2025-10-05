@@ -191,6 +191,9 @@ private:
     // in display list is changed.
     mutable DisplayObject*   pCachedChar;
 
+    // modification id to track concurrent displaylist modifications.
+    UInt16                   ModId;
+
     enum 
     {
         // indicates that DepthToIndexMap is invalid and must
@@ -276,9 +279,6 @@ public:
 
     // *** Frame processing.
 
-    // Display the referenced characters.
-//    void            Display(DisplayContext &context);
-
     // Calls all onClipEvent handlers due to a mouse event. 
     void            PropagateMouseEvent(const EventId& id);
 
@@ -295,7 +295,7 @@ public:
     // Returns -1 if not found.
     SPInt           FindDisplayIndex(const DisplayObjectBase* ch) const;
     // Like the above, but looks for an exact match, and returns SF_MAX_UPINT if failed.
-    UPInt           GetDisplayIndex(int depth);
+    UPInt           GetDisplayIndex(int depth) const;
 
     // Swaps two objects at depths.
     // Depth1 must always have a valid object. Depth2 will be inserted, if not existent.
@@ -307,11 +307,15 @@ public:
 
     UPInt           GetCount() const        { return DisplayObjectArray.GetSize(); }
     DisplayObjectBase*  GetDisplayObject(UPInt index) const  { return DisplayObjectArray[index].GetDisplayObject(); }
+    
+    DisplayObjectBase* GetCharacterAtDepth(int depth, ResourceId id, UPInt* pindex = NULL) const;
+
     // Get the display object at the given position.
-    DisplayEntry&   GetDisplayEntry(UPInt idx)      { return DisplayObjectArray[idx]; }
+    const DisplayEntry&   GetDisplayEntry(UPInt idx) const { return DisplayObjectArray[idx]; }
+    DisplayEntry&   GetDisplayEntry(UPInt idx) { return DisplayObjectArray[idx]; }
 
     // May return NULL.
-    DisplayObjectBase*  GetDisplayObjectAtDepth(int depth, bool* pisMarkedForRemove = NULL);
+    DisplayObjectBase*  GetDisplayObjectAtDepth(int depth, bool* pisMarkedForRemove = NULL) const;
     DisplayObjectBase*  GetDisplayObjectAtDepthAndUnmark(DisplayObjectBase* owner, int depth);
 
     // Note that only InteractiveObjects have names, so it's ok to return InteractiveObject.
@@ -345,6 +349,7 @@ public:
         Flags |= (Flags_DepthToIndexInvalid | Flags_MayContainForeignElems); 
     }
 
+    unsigned GetCurModId() const { return ModId; }
 #ifdef SF_BUILD_DEBUG
     void            CheckConsistency(DisplayObjectBase* owner) const;
 #else

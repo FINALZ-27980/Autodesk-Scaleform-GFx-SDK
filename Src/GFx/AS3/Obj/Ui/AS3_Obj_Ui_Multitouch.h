@@ -73,7 +73,7 @@ namespace Instances
     
 namespace ClassTraits { namespace fl_ui
 {
-    class Multitouch : public Traits
+    class Multitouch : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -81,12 +81,16 @@ namespace ClassTraits { namespace fl_ui
 #endif
     public:
         typedef Classes::fl_ui::Multitouch ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Multitouch(VM& vm);
+        Multitouch(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 6 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[7];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 

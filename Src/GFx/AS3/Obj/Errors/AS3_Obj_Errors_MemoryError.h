@@ -52,17 +52,19 @@ namespace Classes { namespace fl_errors
     
 namespace ClassTraits { namespace fl_errors
 {
-    class MemoryError : public Traits
+    class MemoryError : public fl::Error
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::MemoryError"; }
 #endif
     public:
-        typedef Classes::fl_errors::MemoryError ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::fl::Error InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        MemoryError(VM& vm);
+        MemoryError(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

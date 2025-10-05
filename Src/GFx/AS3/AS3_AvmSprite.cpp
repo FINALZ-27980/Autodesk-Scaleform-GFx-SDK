@@ -452,14 +452,6 @@ void    AvmSprite::AdvanceFrame(bool nextFrame, float framePos)
 
     SF_ASSERT(GetDef() && GetMovieImpl() != NULL);
 
-    // Adjust x,y of this character if it is being dragged.
-    if (GetMovieImpl()->IsMouseSupportEnabled())
-    {
-        unsigned mouseIdx;
-        if (GetMovieImpl()->IsDraggingCharacter(spr, &mouseIdx))
-            spr->DisplayObjContainer::DoMouseDrag(mouseIdx);
-    }
-
     // If flag "need-execute-frame" is already set then do not advance the sprite:
     // this means that current frame is already set correctly and ActionScript
     // for the frame is already queued up (by mouse/button/timer/etc events, 

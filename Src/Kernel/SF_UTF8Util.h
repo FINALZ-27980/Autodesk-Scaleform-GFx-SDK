@@ -50,11 +50,13 @@ namespace UTF8Util
     // Encodes a unicode (UCS-2 only) string into a buffer. The size of buffer must be at
     // least GetEncodeStringSize() + 1.
     void     SF_STDCALL EncodeString(char *pbuff, const wchar_t* pchar, SPInt length = -1);
+    void     SF_STDCALL EncodeStringSafe(char *pbuff, UPInt buffLen, const wchar_t* pchar, SPInt length = -1);
 
     // Decode UTF8 into a wchar_t buffer. Must have GetLength()+1 characters available.
     // Characters over 0xFFFF are replaced with 0xFFFD.
     // Returns the length of resulting string (number of characters)
     UPInt    SF_STDCALL DecodeString(wchar_t *pbuff, const char* putf8str, SPInt bytesLen = -1);
+    UPInt    SF_STDCALL DecodeStringSafe(wchar_t *pbuff, UPInt buffLen, const char* putf8str, SPInt bytesLen = -1);
 
 
     // *** Individual character Encoding/Decoding.
@@ -67,6 +69,7 @@ namespace UTF8Util
     // increments offset by the number of bytes written.
     // May write up to 6 bytes, so make sure there's room in the buffer
     void     SF_STDCALL EncodeChar(char* pbuffer, SPInt* poffset, UInt32 ucsCharacter);
+    void     SF_STDCALL EncodeCharSafe(char* pbuffer, UPInt buffLen, SPInt* poffset, UInt32 ucsCharacter);
 
     // Return the next Unicode character in the UTF-8 encoded buffer.
     // Invalid UTF-8 sequences produce a U+FFFD character as output.

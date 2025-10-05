@@ -23,6 +23,7 @@ otherwise accompanies this software in either electronic or hard copy form.
 //#include "Render/Render_Stats.h"
 #include "Render/Render_Types2D.h"
 #include "Render/Render_Color.h"
+#include "Render/Render_Gradients.h"
 
 namespace Scaleform { namespace Render {
 
@@ -41,8 +42,8 @@ enum FilterType
     Filter_Shadow           = 1,
     Filter_Glow             = 2,  // Shadow, offset 0.
     Filter_Bevel            = 3,
-    Filter_GradientGlow     = 4,  // Not implemented.
-    Filter_GradientBevel    = 5,  // Not implemented.
+    Filter_GradientGlow     = 4,
+    Filter_GradientBevel    = 5,
     Filter_Blur_End         = Filter_GradientBevel,
 
     // Non-blur filter implementations.
@@ -75,16 +76,17 @@ struct BlurFilterParams
         Mode_FlagsMask      = 0xF0
     };
 
-    unsigned    Mode;           // Combination of ModeConstants and FilterType.
-    unsigned    Passes;
-    float       BlurX, BlurY;   // In Twips.
-    PointF      Offset;
-    float       Strength;       // [0..1]
-    Color       Colors[2];      // Color[0] = Shadow color, Color[1] = Highlight color.
+    unsigned            Mode;           // Combination of ModeConstants and FilterType.
+    unsigned            Passes;
+    float               BlurX, BlurY;   // In Twips.
+    PointF              Offset;
+    float               Strength;       // [0..1]
+    Color               Colors[2];      // Color[0] = Shadow color, Color[1] = Highlight color.
+    Ptr<GradientData>   Gradient;       // Gradient, for GradientGlowFilter and GradientBevelFilter (null otherwise)
 
     
     BlurFilterParams()
-        : Mode(0), Passes(1), BlurX(100), BlurY(100), Offset(0,0), Strength(1)
+        : Mode(0), Passes(1), BlurX(100), BlurY(100), Offset(0,0), Strength(1), Gradient(0)
     {
         Colors[0].SetRGBA(0,0,0,0xFF);
         Colors[1].SetRGBA(0,0,0,0);

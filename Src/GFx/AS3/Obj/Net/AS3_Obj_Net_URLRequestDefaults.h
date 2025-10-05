@@ -31,6 +31,13 @@ namespace fl_net
     extern const TypeInfo URLRequestDefaultsTI;
     extern const ClassInfo URLRequestDefaultsCI;
 } // namespace fl_net
+namespace fl
+{
+    extern const TypeInfo BooleanTI;
+    extern const ClassInfo BooleanCI;
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+} // namespace fl
 
 namespace ClassTraits { namespace fl_net
 {
@@ -52,7 +59,7 @@ namespace Classes { namespace fl_net
     
 namespace ClassTraits { namespace fl_net
 {
-    class URLRequestDefaults : public Traits
+    class URLRequestDefaults : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -60,9 +67,11 @@ namespace ClassTraits { namespace fl_net
 #endif
     public:
         typedef Classes::fl_net::URLRequestDefaults ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        URLRequestDefaults(VM& vm);
+        URLRequestDefaults(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

@@ -127,32 +127,46 @@ template <> const TFunc_Classes_DisplayObjectEx_getRendererFloat::TMethod TFunc_
 
 namespace ClassTraits { namespace fl_gfx
 {
-    const ThunkInfo DisplayObjectEx::ti[DisplayObjectEx::ThunkInfoNum] = {
-        {TFunc_Classes_DisplayObjectEx_disableBatching::Func, NULL, "disableBatching", NULL, Abc::NS_Public, CT_Method, 2, 2},
-        {TFunc_Classes_DisplayObjectEx_isBatchingDisabled::Func, &AS3::fl::BooleanTI, "isBatchingDisabled", NULL, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Classes_DisplayObjectEx_setRendererString::Func, NULL, "setRendererString", NULL, Abc::NS_Public, CT_Method, 2, 2},
-        {TFunc_Classes_DisplayObjectEx_getRendererString::Func, &AS3::fl::StringTI, "getRendererString", NULL, Abc::NS_Public, CT_Method, 1, 1},
-        {TFunc_Classes_DisplayObjectEx_setRendererFloat::Func, NULL, "setRendererFloat", NULL, Abc::NS_Public, CT_Method, 2, 2},
-        {TFunc_Classes_DisplayObjectEx_getRendererFloat::Func, &AS3::fl::NumberTI, "getRendererFloat", NULL, Abc::NS_Public, CT_Method, 1, 1},
+    // const UInt16 DisplayObjectEx::tito[DisplayObjectEx::ThunkInfoNum] = {
+    //    0, 3, 5, 8, 10, 13, 
+    // };
+    const TypeInfo* DisplayObjectEx::tit[15] = {
+        NULL, &AS3::fl_display::DisplayObjectTI, &AS3::fl::BooleanTI, 
+        &AS3::fl::BooleanTI, &AS3::fl_display::DisplayObjectTI, 
+        NULL, &AS3::fl_display::DisplayObjectTI, &AS3::fl::StringTI, 
+        &AS3::fl::StringTI, &AS3::fl_display::DisplayObjectTI, 
+        NULL, &AS3::fl_display::DisplayObjectTI, &AS3::fl::NumberTI, 
+        &AS3::fl::NumberTI, &AS3::fl_display::DisplayObjectTI, 
     };
-    DisplayObjectEx::DisplayObjectEx(VM& vm)
-    : Traits(vm, AS3::fl_gfx::DisplayObjectExCI)
+    const ThunkInfo DisplayObjectEx::ti[DisplayObjectEx::ThunkInfoNum] = {
+        {TFunc_Classes_DisplayObjectEx_disableBatching::Func, &DisplayObjectEx::tit[0], "disableBatching", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
+        {TFunc_Classes_DisplayObjectEx_isBatchingDisabled::Func, &DisplayObjectEx::tit[3], "isBatchingDisabled", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Classes_DisplayObjectEx_setRendererString::Func, &DisplayObjectEx::tit[5], "setRendererString", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
+        {TFunc_Classes_DisplayObjectEx_getRendererString::Func, &DisplayObjectEx::tit[8], "getRendererString", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+        {TFunc_Classes_DisplayObjectEx_setRendererFloat::Func, &DisplayObjectEx::tit[10], "setRendererFloat", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
+        {TFunc_Classes_DisplayObjectEx_getRendererFloat::Func, &DisplayObjectEx::tit[13], "getRendererFloat", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+    };
+
+    DisplayObjectEx::DisplayObjectEx(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::DisplayObjectEx::DisplayObjectEx()"
 //##protect##"ClassTraits::DisplayObjectEx::DisplayObjectEx()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_gfx::DisplayObjectExCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_gfx::DisplayObjectEx(*this));
 
     }
 
     Pickable<Traits> DisplayObjectEx::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) DisplayObjectEx(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) DisplayObjectEx(vm, AS3::fl_gfx::DisplayObjectExCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_gfx::DisplayObjectExCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -163,6 +177,11 @@ namespace fl_gfx
 {
     const TypeInfo DisplayObjectExTI = {
         TypeInfo::CompileTime,
+        sizeof(ClassTraits::fl_gfx::DisplayObjectEx::InstanceType),
+        ClassTraits::fl_gfx::DisplayObjectEx::ThunkInfoNum,
+        0,
+        0,
+        0,
         "DisplayObjectEx", "scaleform.gfx", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -170,10 +189,6 @@ namespace fl_gfx
     const ClassInfo DisplayObjectExCI = {
         &DisplayObjectExTI,
         ClassTraits::fl_gfx::DisplayObjectEx::MakeClassTraits,
-        ClassTraits::fl_gfx::DisplayObjectEx::ThunkInfoNum,
-        0,
-        0,
-        0,
         ClassTraits::fl_gfx::DisplayObjectEx::ti,
         NULL,
         NULL,

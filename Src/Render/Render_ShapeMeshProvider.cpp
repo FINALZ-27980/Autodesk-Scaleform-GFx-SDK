@@ -186,6 +186,17 @@ ShapeMeshProvider::ShapeMeshProvider(ShapeDataInterface* shape, ShapeDataInterfa
     acquireShapeData();
 }
 
+//------------------------------------------------------------------------
+ShapeMeshProvider::~ShapeMeshProvider()
+{
+    // NOTE: If this mesh provider has a delegate key, this will clear it (inside lock). This is 
+    // important, because otherwise it is possible that the render thread will access this object 
+    // simultaneously after this destructor has exited, but after this derived class has destroyed
+    // its members.
+    releaseKeySet();
+
+    SF_AMP_CODE(clearStrokeCount();)
+}
 
 //------------------------------------------------------------------------
 void ShapeMeshProvider::AttachShape(ShapeDataInterface* shape, ShapeDataInterface* shapeMorph)

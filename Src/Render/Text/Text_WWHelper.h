@@ -66,7 +66,7 @@ public:
     }
     static bool SF_STDCALL IsNonStartingChar(unsigned wwMode, wchar_t c) 
     { 
-        return FindCharWithFlags(wwMode, c, CBI_NonStartingChar); 
+        return IsWhiteSpaceChar(c) || FindCharWithFlags(wwMode, c, CBI_NonStartingChar); 
     }
     static bool SF_STDCALL IsNonTerminatingChar(unsigned wwMode, wchar_t c)    
     { 
@@ -74,7 +74,7 @@ public:
     }
     static bool SF_STDCALL IsWhiteSpaceChar(wchar_t c) 
     { 
-        return c == L'\t' || c == L'\r' || c == L' ' || c == 0x3000; 
+        return SFiswspace(c) != 0;
     }
     static bool SF_STDCALL IsLineFeedChar(wchar_t c)   
     { 

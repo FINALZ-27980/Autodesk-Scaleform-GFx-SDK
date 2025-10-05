@@ -18,7 +18,11 @@ otherwise accompanies this software in either electronic or hard copy form.
 #pragma once
 
 #include "Render/D3D1x/D3D1x_Config.h"
-#include "Render/D3D1x/D3D1x_ShaderDescs.h"
+#if defined(_DURANGO)
+    #include "Render/D3D1x/XboxOne_ShaderDescs.h"
+#else
+    #include "Render/D3D1x/D3D1x_ShaderDescs.h"
+#endif
 #include "Render/Render_Shader.h"
 
 namespace Scaleform { namespace Render { namespace D3D1x {

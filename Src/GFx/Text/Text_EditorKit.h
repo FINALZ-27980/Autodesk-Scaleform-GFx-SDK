@@ -151,7 +151,7 @@ protected:
         Flags_Focused               = 0x400
     };
     Ptr<DocView>        pDocView;
-    Ptr<TextClipboard>  pClipboard;
+    Ptr<Clipboard>  pClipboard;
     Ptr<TextKeyMap>     pKeyMap;
 #ifndef SF_NO_IME_SUPPORT
     Ptr<CompositionString> pComposStr;
@@ -277,7 +277,7 @@ public:
     void OnKillFocus();
 
     DocView* GetDocument() const { return pDocView; }
-    void SetClipboard(TextClipboard* pclipbrd) { pClipboard = pclipbrd; }
+    void SetClipboard(Clipboard* pclipbrd) { pClipboard = pclipbrd; }
     void SetKeyMap(TextKeyMap* pkeymap)        { pKeyMap = pkeymap; }
 
     bool CalcCursorRectInLineBuffer
@@ -398,7 +398,7 @@ public:
     void OnKillFocus() {}
 
     DocView* GetDocument() const { return 0; }
-    void SetClipboard(TextClipboard*) { }
+    void SetClipboard(Clipboard*) { }
     void SetKeyMap(TextKeyMap*)       { }
 
     bool CalcAbsCursorRectOnScreen(UPInt , RectF* , unsigned* = NULL, unsigned* = NULL)

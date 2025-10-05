@@ -185,7 +185,7 @@ public:
 
     struct CharacterInfo
     {
-        Ptr<TextFormat> pFormat;
+        Ptr<TextFormat>     pFormat;
         UPInt               Index;
         wchar_t             Character;
 

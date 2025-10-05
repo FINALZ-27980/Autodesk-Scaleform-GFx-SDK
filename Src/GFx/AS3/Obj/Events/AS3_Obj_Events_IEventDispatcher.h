@@ -30,11 +30,19 @@ namespace fl_events
 {
     extern const TypeInfo IEventDispatcherTI;
     extern const ClassInfo IEventDispatcherCI;
+    extern const TypeInfo EventTI;
+    extern const ClassInfo EventCI;
 } // namespace fl_events
 namespace fl
 {
+    extern const TypeInfo StringTI;
+    extern const ClassInfo StringCI;
+    extern const TypeInfo FunctionTI;
+    extern const ClassInfo FunctionCI;
     extern const TypeInfo BooleanTI;
     extern const ClassInfo BooleanCI;
+    extern const TypeInfo int_TI;
+    extern const ClassInfo int_CI;
 } // namespace fl
 
 namespace ClassTraits { namespace fl_events
@@ -63,17 +71,19 @@ namespace Instances {
     
 namespace ClassTraits { namespace fl_events
 {
-    class IEventDispatcher : public Traits
+    class IEventDispatcher : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
         virtual const char* GetAS3ObjectType() const { return "ClassTraits::IEventDispatcher"; }
 #endif
     public:
-        typedef Classes::fl_events::IEventDispatcher ClassType;
+        typedef Class ClassType;
+        typedef InstanceTraits::Interface InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        IEventDispatcher(VM& vm);
+        IEventDispatcher(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

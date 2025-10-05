@@ -719,12 +719,9 @@ Double Stream::ReadDouble()
     // Go through a union to avoid pointer strict aliasing problems.
     union {
         UInt64 ival;
-        Double dval;
+        double dval;
     };
     ival = 0;
-#ifdef SF_NO_DOUBLE
-    SF_ASSERT(false);
-#else
     //AB: for XBox360 and PS3 float should be aligned on boundary of 8!
     SF_COMPILER_ASSERT(sizeof(Double) == sizeof(UInt32)*2);
     int shift = 0;
@@ -733,7 +730,6 @@ Double Stream::ReadDouble()
         ival |= (UInt64(pBuffer[Pos++]) << shift);
         shift += 8;
     }
-#endif
     return dval;
 }
 

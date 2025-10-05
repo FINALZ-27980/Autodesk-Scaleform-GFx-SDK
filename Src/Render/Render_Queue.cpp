@@ -156,7 +156,12 @@ void RenderQueueProcessor::drawProcessedPrimitives()
     {
         // Draw the front part of the batch being currently processed
         queue.GetTailItem()->EmitToHAL(*this);
-    }    
+    }
+
+    // After we draw, reset the prepare and emit buffers, as the same RQ items could
+    // be used again and the system could erroneously think that they have already started
+    // prepare/emit steps.
+    resetBufferItems();
 }
 
 

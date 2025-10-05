@@ -1,0 +1,69 @@
+Scaleform GFx SDK获取方式：https://github.com/amber-studios/bo-sfui，自己学会使用VS2022配置。
+
+使用 Scaleform 制作一个主菜单界面需要结合 Adobe Flash（或 Animate）和 ActionScript 进行设计和开发。以下是一个简要的流程和实现主菜单界面的关键步骤：
+
+1. 设计主菜单界面
+在 Adobe Animate 中：
+
+创建一个新的 .fla 文件。
+设计主菜单的视觉元素，例如背景、按钮（如“开始游戏”、“设置”、“退出”等）。
+为每个按钮创建独立的 MovieClip，并赋予实例名称（如 btnStart, btnSettings, btnExit）。
+2. 添加交互逻辑
+使用 ActionScript 2.0 或 3.0（根据项目需求）为按钮添加交互逻辑。
+
+示例代码（ActionScript 3.0）：
+
+复制代码
+import flash.events.MouseEvent;
+
+// 按钮事件监听
+btnStart.addEventListener(MouseEvent.CLICK, onStartClick);
+btnSettings.addEventListener(MouseEvent.CLICK, onSettingsClick);
+btnExit.addEventListener(MouseEvent.CLICK, onExitClick);
+
+// 按钮点击处理函数
+function onStartClick(event:MouseEvent):void {
+    trace("开始游戏");
+    // 调用游戏逻辑或发送事件到主程序
+}
+
+function onSettingsClick(event:MouseEvent):void {
+    trace("打开设置菜单");
+    // 打开设置界面
+}
+
+function onExitClick(event:MouseEvent):void {
+    trace("退出游戏");
+    // 退出游戏逻辑
+}
+3. 导出为 Scaleform 支持的格式
+将 .fla 文件导出为 .swf 文件。
+确保所有交互逻辑和资源都正确嵌入。
+4. 在游戏引擎中集成
+在支持 Scaleform 的游戏引擎（如 Unreal Engine 或自定义引擎）中：
+
+加载 .swf 文件。
+使用 Scaleform 的 API 将主菜单与游戏逻辑连接。
+示例（伪代码，基于 Scaleform GFx）：
+
+复制代码
+// 加载主菜单
+
+
+GFxMovieDef* menuDef = pLoader->LoadMovie("MainMenu.swf");
+GFxMovieView* menuView = menuDef->CreateInstance();
+
+// 显示主菜单
+menuView->SetVisible(true);
+
+// 处理按钮事件
+menuView->SetExternalInterfaceCallback("onStartClick", [](const GFxValue* args) {
+    StartGame();
+});
+menuView->SetExternalInterfaceCallback("onExitClick", [](const GFxValue* args) {
+    ExitGame();
+});
+5. 测试与优化
+确保按钮点击、动画效果、以及与游戏逻辑的交互正常工作。
+优化 .swf 文件的大小和性能，避免影响游戏运行。
+通过以上步骤，你可以成功创建一个功能齐全的主菜单界面。如果需要更复杂的功能（如动态加载内容、多语言支持等），可以进一步扩展 ActionScript 和游戏引擎的交互逻辑。

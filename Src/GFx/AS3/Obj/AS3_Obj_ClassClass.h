@@ -19,6 +19,12 @@ otherwise accompanies this software in either electronic or hard copy form.
 
 namespace Scaleform { namespace GFx { namespace AS3 
 {
+// Forward declaration.
+namespace fl
+{
+    extern const TypeInfo ClassTI;
+    extern const ClassInfo ClassCI;
+} // namespace fl
     
 namespace InstanceTraits
 {

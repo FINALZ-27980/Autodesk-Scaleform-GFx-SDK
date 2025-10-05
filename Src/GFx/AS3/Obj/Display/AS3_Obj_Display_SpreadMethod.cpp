@@ -53,24 +53,27 @@ namespace ClassTraits { namespace fl_display
         {"REPEAT", NULL, OFFSETOF(Classes::fl_display::SpreadMethod, REPEAT), Abc::NS_Public, SlotInfo::BT_ConstChar, 1},
     };
 
-    SpreadMethod::SpreadMethod(VM& vm)
-    : Traits(vm, AS3::fl_display::SpreadMethodCI)
+
+    SpreadMethod::SpreadMethod(VM& vm, const ClassInfo& ci)
+    : fl::Object(vm, ci)
     {
 //##protect##"ClassTraits::SpreadMethod::SpreadMethod()"
 //##protect##"ClassTraits::SpreadMethod::SpreadMethod()"
-        MemoryHeap* mh = vm.GetMemoryHeap();
-
-        Pickable<InstanceTraits::Traits> it(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraits::fl::Object(vm, AS3::fl_display::SpreadMethodCI));
-        SetInstanceTraits(it);
-
-        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
-        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) Classes::fl_display::SpreadMethod(*this));
 
     }
 
     Pickable<Traits> SpreadMethod::MakeClassTraits(VM& vm)
     {
-        return Pickable<Traits>(SF_HEAP_NEW_ID(vm.GetMemoryHeap(), StatMV_VM_CTraits_Mem) SpreadMethod(vm));
+        MemoryHeap* mh = vm.GetMemoryHeap();
+        Pickable<Traits> ctr(SF_HEAP_NEW_ID(mh, StatMV_VM_CTraits_Mem) SpreadMethod(vm, AS3::fl_display::SpreadMethodCI));
+
+        Pickable<InstanceTraits::Traits> itr(SF_HEAP_NEW_ID(mh, StatMV_VM_ITraits_Mem) InstanceTraitsType(vm, AS3::fl_display::SpreadMethodCI));
+        ctr->SetInstanceTraits(itr);
+
+        // There is no problem with Pickable not assigned to anything here. Class constructor takes care of this.
+        Pickable<Class> cl(SF_HEAP_NEW_ID(mh, StatMV_VM_Class_Mem) ClassType(*ctr));
+
+        return ctr;
     }
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
@@ -81,6 +84,11 @@ namespace fl_display
 {
     const TypeInfo SpreadMethodTI = {
         TypeInfo::CompileTime | TypeInfo::Final,
+        sizeof(ClassTraits::fl_display::SpreadMethod::InstanceType),
+        0,
+        ClassTraits::fl_display::SpreadMethod::MemberInfoNum,
+        0,
+        0,
         "SpreadMethod", "flash.display", &fl::ObjectTI,
         TypeInfo::None
     };
@@ -88,10 +96,6 @@ namespace fl_display
     const ClassInfo SpreadMethodCI = {
         &SpreadMethodTI,
         ClassTraits::fl_display::SpreadMethod::MakeClassTraits,
-        0,
-        ClassTraits::fl_display::SpreadMethod::MemberInfoNum,
-        0,
-        0,
         NULL,
         ClassTraits::fl_display::SpreadMethod::mi,
         NULL,

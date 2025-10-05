@@ -57,7 +57,7 @@ namespace Classes { namespace fl_accessibility
     
 namespace ClassTraits { namespace fl_accessibility
 {
-    class Accessibility : public Traits
+    class Accessibility : public fl::Object
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -65,9 +65,11 @@ namespace ClassTraits { namespace fl_accessibility
 #endif
     public:
         typedef Classes::fl_accessibility::Accessibility ClassType;
+        typedef InstanceTraits::fl::Object InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        Accessibility(VM& vm);
+        Accessibility(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"

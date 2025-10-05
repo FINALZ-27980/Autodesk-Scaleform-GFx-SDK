@@ -304,6 +304,12 @@ public:
     }
 
 public:
+    bool IsBoolean(const ConstPool& cp) const;
+    bool IsInt(const ConstPool& cp) const;
+    bool IsUInt(const ConstPool& cp) const;
+    bool IsNumber(const ConstPool& cp) const;
+    bool IsString(const ConstPool& cp) const;
+
     bool IsFixedNumType(const ConstPool& cp) const;
     bool IsNumericType(const ConstPool& cp) const;
     bool IsPrimitiveType(const ConstPool& cp) const;

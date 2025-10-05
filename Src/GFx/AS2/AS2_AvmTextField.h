@@ -141,6 +141,8 @@ public:
     // returns false, if default action should be prevented
     virtual bool            OnCharEvent(wchar_t wcharCode, unsigned controllerIdx);
     virtual void            OnScroll();
+    virtual bool            OnEditorInsertingText(UPInt, UPInt, const wchar_t*, unsigned  = 0) { return true; }
+    virtual bool            OnEditorRemovingText(UPInt, UPInt, unsigned  = 0) { return true; }
     virtual bool            UpdateTextFromVariable() ;
     virtual void            UpdateVariable();
 

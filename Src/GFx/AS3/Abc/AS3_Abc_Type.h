@@ -365,7 +365,19 @@ struct TypeInfo
     const char* GetPkgName() const { return PkgName; }
     const TypeInfo* GetParent() const { return Parent; }
 
-    UPInt               Flags;
+    bool IsBoolean() const { return (PkgName == NULL || PkgName[0] == 0) && strcmp(Name, "Boolean") == 0; }
+    bool IsInt() const { return (PkgName == NULL || PkgName[0] == 0) && strcmp(Name, "int") == 0; }
+    bool IsUInt() const { return (PkgName == NULL || PkgName[0] == 0) && strcmp(Name, "uint") == 0; }
+    bool IsNumber() const { return (PkgName == NULL || PkgName[0] == 0) && strcmp(Name, "Number") == 0; }
+    bool IsString() const { return (PkgName == NULL || PkgName[0] == 0) && strcmp(Name, "String") == 0; }
+
+    UInt32              Flags;
+    // Future development.
+    UInt16              InstanceSize;
+    UInt16              ClassMethodNum;
+    UInt16              ClassMemberNum;
+    UInt16              InstanceMethodNum;
+    UInt16              InstanceMemberNum;
     const char*         Name;
     const char*         PkgName;
     const TypeInfo*     Parent;
@@ -379,12 +391,6 @@ struct ClassInfo
 {
     const TypeInfo*     Type;
     TTraitsFactory      Factory;
-    UInt8               ClassMethodNum;
-    UInt8               ClassMemberNum;
-    UInt8               InstanceMethodNum;
-    UInt8               InstanceMemberNum;
-    // Future development.
-    // UInt16              InstanceSize;
     const ThunkInfo*    ClassMethod;
     const MemberInfo*   ClassMember;
     const ThunkInfo*    InstanceMethod;
@@ -401,6 +407,12 @@ struct ClassInfo
     const char* GetName() const { return Type->GetName(); }
     const char* GetPkgName() const { return Type->GetPkgName(); }
     const TypeInfo* GetParent() const { return Type->GetParent(); }
+
+    UInt16 GetInstanceSize() const { return Type->InstanceSize; }
+    UInt16 GetClassMethodNum() const { return Type->ClassMethodNum; }
+    UInt16 GetClassMemberNum() const { return Type->ClassMemberNum; }
+    UInt16 GetInstanceMethodNum() const { return Type->InstanceMethodNum; }
+    UInt16 GetInstanceMemberNum() const { return Type->InstanceMemberNum; }
 };
 
 namespace Classes
@@ -411,7 +423,9 @@ namespace Classes
 }
 
 ///////////////////////////////////////////////////////////////////////////
-extern const ClassInfo ClassClassCI;
+namespace fl {
+    extern const ClassInfo ClassCI;
+}
 
 ///////////////////////////////////////////////////////////////////////////
 namespace Abc
@@ -484,6 +498,8 @@ namespace Abc
         }
 
     private:
+        // Make sure the member variables stay with no padding
+        // Padding breaks the hash function that uses this struct as a key
         SInd    Ind;
     };
 

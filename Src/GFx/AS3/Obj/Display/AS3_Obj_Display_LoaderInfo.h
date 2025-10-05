@@ -137,6 +137,7 @@ namespace Instances { namespace fl_display
         void SetLoader(Loader* ploader) { pLoader = ploader; }
         void ResetContent() { Content = NULL; }
         void SetAppDomain(Instances::fl_system::ApplicationDomain* appDomain);
+        void VerifyAppDomain();
         
         GFx::DisplayObject* GetContentDispObj() const { return (Content) ? Content->pDispObj : 0; }
         void SetContent(DisplayObject* c) { Content = c; }
@@ -310,7 +311,7 @@ namespace Instances { namespace fl_display
         UInt32 BytesTotal;
         SPtr<DisplayObject> Content;
         SPtr<Loader> pLoader;
-        VMAppDomain* AppDomain;
+        SPtr<VMAppDomain> AppDomain;
 //##protect##"instance$data"
 
     };
@@ -318,7 +319,7 @@ namespace Instances { namespace fl_display
 
 namespace InstanceTraits { namespace fl_display
 {
-    class LoaderInfo : public CTraits
+    class LoaderInfo : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -344,6 +345,8 @@ namespace InstanceTraits { namespace fl_display
 
         enum { ThunkInfoNum = 23 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[25];
 //##protect##"instance_traits$methods"
 //##protect##"instance_traits$methods"
 
@@ -356,7 +359,7 @@ namespace InstanceTraits { namespace fl_display
     
 namespace ClassTraits { namespace fl_display
 {
-    class LoaderInfo : public Traits
+    class LoaderInfo : public fl_events::EventDispatcher
     {
 #ifdef GFX_AS3_VERBOSE
     private:
@@ -364,12 +367,16 @@ namespace ClassTraits { namespace fl_display
 #endif
     public:
         typedef Classes::fl_display::LoaderInfo ClassType;
+        typedef InstanceTraits::fl_display::LoaderInfo InstanceTraitsType;
+        typedef InstanceTraitsType::InstanceType InstanceType;
 
     public:
-        LoaderInfo(VM& vm);
+        LoaderInfo(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
         enum { ThunkInfoNum = 1 };
         static const ThunkInfo ti[ThunkInfoNum];
+        // static const UInt16 tito[ThunkInfoNum];
+        static const TypeInfo* tit[2];
 //##protect##"ClassTraits$methods"
 //##protect##"ClassTraits$methods"
 
