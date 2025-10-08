@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+output/
+build/
+vcpkg_installed/
+*.aps

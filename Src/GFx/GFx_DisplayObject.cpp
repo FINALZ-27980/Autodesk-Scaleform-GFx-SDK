@@ -1619,7 +1619,20 @@ bool DisplayObjectBase::IsBatchingDisabled()
     return renderNode->IsBatchingDisabled();
 }
 
+// 4.5.32 Function
+// Tutorial in https://help.autodesk.com/view/SCLFRM/ENU/?guid=__scaleform_help_as3_reference_displayobjectex_extensions_html
 
+void DisplayObjectBase::SetInvertedMask(bool b)
+{
+    Ptr<Render::TreeNode> renderNode = GetRenderNode();
+    return renderNode->SetInvertedMask(b);
+}
+
+bool DisplayObjectBase::GetInvertedMask()
+{
+    Ptr<Render::TreeNode> renderNode = GetRenderNode();
+    return renderNode->GetInvertedMask();
+}
 //////////////////////////////////////////////////////////////////////////
 DisplayObject::DisplayObject(ASMovieRootBase* pasRoot, InteractiveObject* pparent, ResourceId id)
 :   

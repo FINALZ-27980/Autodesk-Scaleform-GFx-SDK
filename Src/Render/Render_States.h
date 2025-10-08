@@ -165,11 +165,13 @@ public:
         {
             Data_String     = 0x01,
             Data_Float      = 0x02,
-            Data_Batching   = 0x04
+            Data_Batching   = 0x04,
+            Data_InvertedMask = 0x08
         };
         StringLH RendererString;
         float    RendererFloat;
         bool     BatchingDisabled;
+        bool    InvertedMask;
         unsigned Flags;
 
         Data() : RendererFloat(0), BatchingDisabled(false), Flags(0) {}

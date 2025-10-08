@@ -81,7 +81,7 @@ namespace ClassTraits { namespace fl_gfx
     public:
         DisplayObjectEx(VM& vm, const ClassInfo& ci);
         static Pickable<Traits> MakeClassTraits(VM& vm);
-        enum { ThunkInfoNum = 6 };
+        enum { ThunkInfoNum = 8 };
         static const ThunkInfo ti[ThunkInfoNum];
         // static const UInt16 tito[ThunkInfoNum];
         static const TypeInfo* tit[15];
@@ -127,6 +127,10 @@ namespace Classes { namespace fl_gfx
             mid_getRendererString, 
             mid_setRendererFloat, 
             mid_getRendererFloat, 
+
+			// Scaleform 4.5.32 Update
+            mid_setInvertedMask,
+            mid_getInvertedMask
         };
         void disableBatching(const Value& result, Instances::fl_display::DisplayObject* o, bool b);
         void isBatchingDisabled(bool& result, Instances::fl_display::DisplayObject* o);
@@ -134,6 +138,10 @@ namespace Classes { namespace fl_gfx
         void getRendererString(ASString& result, Instances::fl_display::DisplayObject* o);
         void setRendererFloat(const Value& result, Instances::fl_display::DisplayObject* o, Value::Number f);
         void getRendererFloat(Value::Number& result, Instances::fl_display::DisplayObject* o);
+
+        // Scaleform 4.5.32 Update
+        void setInvertedMask(const Value& result, Instances::fl_display::DisplayObject* o, bool b);
+        void getInvertedMask(bool& result, Instances::fl_display::DisplayObject* o);
 
         // C++ friendly wrappers for AS3 methods.
         void disableBatching(Instances::fl_display::DisplayObject* o, bool b)
@@ -164,6 +172,18 @@ namespace Classes { namespace fl_gfx
         {
             Value::Number result;
             getRendererFloat(result, o);
+            return result;
+        }
+
+        // 4.5.32 Adding
+        void setInvertedMask(Instances::fl_display::DisplayObject* o, bool b)
+        {
+            disableBatching(Value::GetUndefined(), o, b);
+        }
+        bool getInvertedMask(Instances::fl_display::DisplayObject* o)
+        {
+            bool result;
+            getInvertedMask(result, o);
             return result;
         }
 

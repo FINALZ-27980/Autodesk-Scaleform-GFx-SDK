@@ -108,7 +108,22 @@ namespace Classes { namespace fl_gfx
     }
 //##protect##"class_$methods"
 //##protect##"class_$methods"
-
+    void DisplayObjectEx::setInvertedMask(const Value& result, Instances::fl_display::DisplayObject* o, bool b) {
+        SF_UNUSED3(result, o, b);
+        if (o)
+        {
+            SF_ASSERT(o->pDispObj);
+            o->pDispObj->SetInvertedMask(b);
+        }
+    }
+    void DisplayObjectEx::getInvertedMask(bool& result, Instances::fl_display::DisplayObject* o) {
+        SF_UNUSED2(result, o);
+        if (o)
+        {
+            SF_ASSERT(o->pDispObj);
+            result = o->pDispObj->GetInvertedMask();
+        }
+    }
 }} // namespace Classes
 
 typedef ThunkFunc2<Classes::fl_gfx::DisplayObjectEx, Classes::fl_gfx::DisplayObjectEx::mid_disableBatching, const Value, Instances::fl_display::DisplayObject*, bool> TFunc_Classes_DisplayObjectEx_disableBatching;
@@ -118,12 +133,21 @@ typedef ThunkFunc1<Classes::fl_gfx::DisplayObjectEx, Classes::fl_gfx::DisplayObj
 typedef ThunkFunc2<Classes::fl_gfx::DisplayObjectEx, Classes::fl_gfx::DisplayObjectEx::mid_setRendererFloat, const Value, Instances::fl_display::DisplayObject*, Value::Number> TFunc_Classes_DisplayObjectEx_setRendererFloat;
 typedef ThunkFunc1<Classes::fl_gfx::DisplayObjectEx, Classes::fl_gfx::DisplayObjectEx::mid_getRendererFloat, Value::Number, Instances::fl_display::DisplayObject*> TFunc_Classes_DisplayObjectEx_getRendererFloat;
 
+// 4.5.32 Update Of The AS3 API
+typedef ThunkFunc2<Classes::fl_gfx::DisplayObjectEx, Classes::fl_gfx::DisplayObjectEx::mid_setInvertedMask, const Value, Instances::fl_display::DisplayObject*, bool> TFunc_Classes_DisplayObjectEx_setInvertedMask;
+typedef ThunkFunc1<Classes::fl_gfx::DisplayObjectEx, Classes::fl_gfx::DisplayObjectEx::mid_getInvertedMask, bool, Instances::fl_display::DisplayObject*> TFunc_Classes_DisplayObjectEx_getInvertedMask;
+
 template <> const TFunc_Classes_DisplayObjectEx_disableBatching::TMethod TFunc_Classes_DisplayObjectEx_disableBatching::Method = &Classes::fl_gfx::DisplayObjectEx::disableBatching;
 template <> const TFunc_Classes_DisplayObjectEx_isBatchingDisabled::TMethod TFunc_Classes_DisplayObjectEx_isBatchingDisabled::Method = &Classes::fl_gfx::DisplayObjectEx::isBatchingDisabled;
 template <> const TFunc_Classes_DisplayObjectEx_setRendererString::TMethod TFunc_Classes_DisplayObjectEx_setRendererString::Method = &Classes::fl_gfx::DisplayObjectEx::setRendererString;
 template <> const TFunc_Classes_DisplayObjectEx_getRendererString::TMethod TFunc_Classes_DisplayObjectEx_getRendererString::Method = &Classes::fl_gfx::DisplayObjectEx::getRendererString;
 template <> const TFunc_Classes_DisplayObjectEx_setRendererFloat::TMethod TFunc_Classes_DisplayObjectEx_setRendererFloat::Method = &Classes::fl_gfx::DisplayObjectEx::setRendererFloat;
 template <> const TFunc_Classes_DisplayObjectEx_getRendererFloat::TMethod TFunc_Classes_DisplayObjectEx_getRendererFloat::Method = &Classes::fl_gfx::DisplayObjectEx::getRendererFloat;
+
+// Scaleform 4.5.32 Update Of The AS3 API
+template <> const TFunc_Classes_DisplayObjectEx_setInvertedMask::TMethod TFunc_Classes_DisplayObjectEx_setInvertedMask::Method = &Classes::fl_gfx::DisplayObjectEx::setInvertedMask;
+template <> const TFunc_Classes_DisplayObjectEx_getInvertedMask::TMethod TFunc_Classes_DisplayObjectEx_getInvertedMask::Method = &Classes::fl_gfx::DisplayObjectEx::getInvertedMask;
+
 
 namespace ClassTraits { namespace fl_gfx
 {
@@ -145,6 +169,10 @@ namespace ClassTraits { namespace fl_gfx
         {TFunc_Classes_DisplayObjectEx_getRendererString::Func, &DisplayObjectEx::tit[8], "getRendererString", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
         {TFunc_Classes_DisplayObjectEx_setRendererFloat::Func, &DisplayObjectEx::tit[10], "setRendererFloat", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
         {TFunc_Classes_DisplayObjectEx_getRendererFloat::Func, &DisplayObjectEx::tit[13], "getRendererFloat", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL},
+
+        // 4.5.32 API Usued
+        {TFunc_Classes_DisplayObjectEx_setInvertedMask::Func, &DisplayObjectEx::tit[16], "setInvertedMask", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
+        {TFunc_Classes_DisplayObjectEx_getInvertedMask::Func, &DisplayObjectEx::tit[18], "getInvertedMask", NULL, Abc::NS_Public, CT_Method, 1, 1, 0, 0, NULL}
     };
 
     DisplayObjectEx::DisplayObjectEx(VM& vm, const ClassInfo& ci)

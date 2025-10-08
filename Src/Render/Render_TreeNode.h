@@ -306,6 +306,8 @@ public:
     float GetRendererFloat() const;
     void DisableBatching(bool b);
     bool IsBatchingDisabled() const;
+    void SetInvertedMask(bool b);
+    bool GetInvertedMask() const;
 
     // Internal CalcViewMatrix helper.
     void        appendAncestorMatrices(Matrix2F *m) const;

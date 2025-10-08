@@ -675,8 +675,12 @@ public:
     void            DisableBatching(bool);
     bool            IsBatchingDisabled();
 
+    // Scaleform 4.5.32 Official Update.
+    void            SetInvertedMask(bool);
+    bool            GetInvertedMask();
+
     SF_MEMORY_DEFINE_PLACEMENT_NEW;
-    SF_MEMORY_REDEFINE_NEW(DisplayObjectBase, StatMV_MovieClip_Mem);                                  \
+    SF_MEMORY_REDEFINE_NEW(DisplayObjectBase, StatMV_MovieClip_Mem);
 
 protected: // data
     ASMovieRootBase*        pASRoot;

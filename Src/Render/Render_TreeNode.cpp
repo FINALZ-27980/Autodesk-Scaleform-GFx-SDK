@@ -585,6 +585,35 @@ bool        TreeNode::IsBatchingDisabled() const
     return false;
 }
 
+// 4.5.32 Scaleform Addition
+void        TreeNode::SetInvertedMask(bool b) {
+    NodeData* pnodeData = GetWritableData(Change_State_UserData);
+    const UserDataState* state = GetState<UserDataState>();
+    Ptr<UserDataState::Data> pdata = 0;
+    if (state)
+    {
+        pdata = state->GetUserData();
+    }
+    else
+    {
+        pdata = *SF_HEAP_AUTO_NEW(this) UserDataState::Data;
+    }
+    pdata->Flags |= UserDataState::Data::Data_InvertedMask;
+    pdata->InvertedMask = b;
+    pnodeData->States.SetState(&UserDataState::InterfaceImpl, pdata.GetPtr());
+}
+
+bool        TreeNode::GetInvertedMask() const {
+    const UserDataState* state = GetState<UserDataState>();
+    if (state)
+    {
+        UserDataState::Data* data = state->GetUserData();
+        SF_ASSERT(data);
+        return data->InvertedMask;
+    }
+    return false;
+}
+
 //--------------------------------------------------------------------
 // ***** TreeNodeArray implementation
 

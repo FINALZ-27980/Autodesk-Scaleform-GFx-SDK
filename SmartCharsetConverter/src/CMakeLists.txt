@@ -1,0 +1,6 @@
+add_subdirectory(Common)
+add_subdirectory(Control)
+add_subdirectory(Core)
+add_subdirectory(Translator)
+add_subdirectory(SmartCharsetConverter)
+add_subdirectory(SmartCharsetConverter-imgui)
