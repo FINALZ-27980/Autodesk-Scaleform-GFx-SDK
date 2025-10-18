@@ -27,8 +27,9 @@ package scaleform.gfx
 
        // Scaleform 4.5.32 Using
        static public function setInvertedMask(o:DisplayObject, b:Boolean) : void { }
-       static public function getInvertedMask(o:DisplayObject) : Boolean : Boolean { return false; }
+       static public function getInvertedMask(o:DisplayObject) : Boolean { return false; }
    }
 }
+
 
 
