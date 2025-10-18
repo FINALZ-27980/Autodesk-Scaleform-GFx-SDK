@@ -152,15 +152,21 @@ template <> const TFunc_Classes_DisplayObjectEx_getInvertedMask::TMethod TFunc_C
 namespace ClassTraits { namespace fl_gfx
 {
     // const UInt16 DisplayObjectEx::tito[DisplayObjectEx::ThunkInfoNum] = {
-    //    0, 3, 5, 8, 10, 13, 
+    //    0, 3, 5, 8, 10, 13, 16, 18
     // };
-    const TypeInfo* DisplayObjectEx::tit[15] = {
+    const TypeInfo* DisplayObjectEx::tit[20] = {
         NULL, &AS3::fl_display::DisplayObjectTI, &AS3::fl::BooleanTI, 
         &AS3::fl::BooleanTI, &AS3::fl_display::DisplayObjectTI, 
         NULL, &AS3::fl_display::DisplayObjectTI, &AS3::fl::StringTI, 
         &AS3::fl::StringTI, &AS3::fl_display::DisplayObjectTI, 
         NULL, &AS3::fl_display::DisplayObjectTI, &AS3::fl::NumberTI, 
         &AS3::fl::NumberTI, &AS3::fl_display::DisplayObjectTI, 
+
+        // For Adapt Scaelform 4.5.32 API,
+        // So, DisplayObjectEx::tit Should Be 20 Is Right.
+        // OtherWise, There's Has A Bug To Fail To Load.
+        NULL, &AS3::fl_display::DisplayObjectTI,& AS3::fl::BooleanTI,
+        & AS3::fl::BooleanTI,& AS3::fl_display::DisplayObjectTI,
     };
     const ThunkInfo DisplayObjectEx::ti[DisplayObjectEx::ThunkInfoNum] = {
         {TFunc_Classes_DisplayObjectEx_disableBatching::Func, &DisplayObjectEx::tit[0], "disableBatching", NULL, Abc::NS_Public, CT_Method, 2, 2, 0, 0, NULL},
