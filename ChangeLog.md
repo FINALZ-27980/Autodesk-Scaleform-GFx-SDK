@@ -5,7 +5,7 @@ Version NEXT Preview (4.6.34-Leslie, In Developing):
  * Complement GFxIME Support.
  * Add Vulkan Render Support.
  * Fix Compiler Other Bugs.
- * And Welcome Everyone And Lover To Join US Organization, To Carry Out This Big Steak Together. (And If You Have Newest Scaleform Source Code, Audacity TO Pull Request IT!)
+ * And Welcome Everyone And Lover To Join US Organization, To Carry Out This Big Steak Together. (And If You Have Autodesk Official 4.6.34 Scaleform Source Code, Audacity TO Pull Request IT!)
 
 EVERYONE COME FROM THE WORLD, NO WAY TO BACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CHAAAAAAAAARRRRRRRRRRRGEEEEEEEEEEEEEEEEEE!!!!!!!!!! AND FREEDOM PULL REQUEST YOURSELVES!
 
