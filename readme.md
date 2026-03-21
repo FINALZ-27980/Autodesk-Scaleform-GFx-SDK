@@ -34,7 +34,7 @@ The Witcher 3 - Scaleform 4.3.27/4.6.33? <br>
 Fallout 4 - Scaleform 4.4.29/4.4.?? <br> 
 HITMAN Series For Glacier Engine - Scaleform 4.6.34? <br> 
 
-<b>But, This SDK Showcast Version Is 4.3.27 Version(Including 4.4.29 Android C++ Header Files)</b>
+<b>But, This SDK Showcase Version(With Source Code) Is Modifyed By 4.3.27 Version(Including 4.4.29 Android C++ Header Files)</b>
 
 # Scaleform Features
 
