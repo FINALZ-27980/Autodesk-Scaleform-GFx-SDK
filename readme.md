@@ -22,6 +22,18 @@ Scaleform GFx supported all major platforms, including game consoles, mobile and
 
 See In [This](https://www.pcgamingwiki.com/wiki/Scaleform_GFx) And [That](https://list.fandom.com/wiki/List_of_games_using_Scaleform)
 
+Example Like(My Knows): <br>
+Kung Fu Panda 2 - Scaleform 3 <br> 
+Counter Strike 2 - Scaleform 4.6.?? <br> 
+The King Of Fighters XII/XIII/XIV - Scaleform 3 <br> 
+Dark Souls 3 - Scaleform 4.4?/4.5.32? <br> 
+Sekiro - Scaleform 4.6.33 <br> 
+Elden Ring - Scaleform 4.6.34 <br> 
+Armored Core 6 - Scaleform 4.6.34 <br> 
+The Witcher 3 - Scaleform 4.3.27/4.6.33? <br> 
+Fallout 4 - Scaleform 4.4.29/4.4.?? <br> 
+HITMAN Series For Glacier Engine - Scaleform 4.6.34? <br> 
+
 # Scaleform Features
 
 Scaleform GFx contains several core systems, including:
