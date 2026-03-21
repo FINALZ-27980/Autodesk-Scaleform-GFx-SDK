@@ -33,6 +33,8 @@ See In [This](https://www.pcgamingwiki.com/wiki/Scaleform_GFx) And [That](https:
 <p style="margin:0; line-height:1.2;"> · The Witcher 3 - Scaleform 4.3.27/4.6.33? </p>
 <p style="margin:0; line-height:1.2;"> · Fallout 4 - Scaleform 4.4.29/4.4.?? </p>
 <p style="margin:0; line-height:1.2;"> · HITMAN Series For Glacier Engine - Scaleform 4.6.34? </p>
+<p style="margin:0; line-height:1.2;"> · Grand Theft Auto 5 - Scaleform 3.3.94 </p>
+<p style="margin:0; line-height:1.2;"> · Red Dead Redemption 2 - Scaleform 4.6.34????/Or Not???(Not Confirm) </p>
 
 <b>But, This SDK Showcase Version(With Source Code) Is Modifyed By 4.3.27 Version(Including 4.4.29 Android C++ Header Files)</b>
 
