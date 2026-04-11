@@ -1,0 +1,9 @@
+uniform vec4 cxmul;
+void main() { 
+
+    gl_FragColor = cxmul;
+    
+
+      gl_FragColor = gl_FragColor;
+    
+}
